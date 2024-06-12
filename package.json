@@ -1,0 +1,34 @@
+{
+  "name": "nuxt-app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "nuxt": "^3.10.3",
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.20.0",
+    "@nuxtjs/tailwindcss": "^6.12.0",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vicons/tabler": "^0.12.0",
+    "eslint": "^9.4.0",
+    "eslint-plugin-format": "^0.1.1",
+    "naive-ui": "^2.34.3",
+    "nuxt-svgo": "^4.0.1",
+    "nuxt-viewport": "^2.1.5",
+    "nuxtjs-naive-ui": "^1.0.2",
+    "sass": "^1.77.4",
+    "unplugin-vue-components": "^0.27.0",
+    "vite-plugin-remove-console": "^2.2.0"
+  }
+}
