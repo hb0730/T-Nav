@@ -49,7 +49,7 @@ const { isDark, toggleDark } = useGlobal()
             circle
             ghost
             tag="a"
-            href="https://github.com/hb0730/navigation"
+            href="https://github.com/hb0730/T-Nav"
             target="_blank"
             class="c-button"
           >

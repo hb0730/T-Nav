@@ -4,7 +4,7 @@ import { useGlobal } from '~/composables/useGlobal'
 import HeaderLogo from '~/assets/images/header-logo.png'
 import menuDataList from '~/data/menu'
 
-const { navCollapse, setNavCollapse } = useCollapse()
+const { navCollapse, isSmallScreen, setNavCollapse, setSmallScreen, toggleNavCollapse } = useCollapse()
 const { innerWidth } = useGlobal()
 
 watch(
@@ -12,9 +12,11 @@ watch(
   () => {
     if (innerWidth.value < 768) {
       setNavCollapse(true)
+      setSmallScreen(true)
     }
     else {
       setNavCollapse(false)
+      setSmallScreen(false)
     }
   },
 )
@@ -31,6 +33,7 @@ watch(
       :native-scrollbar="false"
       :collapsed="navCollapse"
       class="aside-wrapper"
+      :position="isSmallScreen ? 'absolute' : 'static'"
     >
       <NuxtLink to="/" class="logo-wrapper">
         <div class="logo">
@@ -57,11 +60,22 @@ watch(
       <n-layout-content class="c-content" position="absolute" content-style="padding: 24px;">
         <slot />
       </n-layout-content>
+
+      <div v-show="isSmallScreen && !navCollapse" class="content-mask" @click="toggleNavCollapse" />
     </n-layout>
   </n-layout>
 </template>
 
 <style lang="scss" scoped>
+.content-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #00000080;
+  cursor: pointer;
+}
 .content-wrapper {
   height: 100vh;
   min-height: 100%;

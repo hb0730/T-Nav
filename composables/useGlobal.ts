@@ -14,5 +14,7 @@ export function useGlobal() {
     document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light')
   }
 
+  //
+
   return { innerWidth, setInnerWidth, isDark, toggleDark }
 }

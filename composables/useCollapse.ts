@@ -8,5 +8,12 @@ export function useCollapse() {
   const setNavCollapse = (collapse: boolean) => {
     navCollapse.value = collapse
   }
-  return { navCollapse, toggleNavCollapse, setNavCollapse }
+
+  // 是否小屏幕
+  const isSmallScreen = useState('isSmallScreen', () => viewport.isLessThan('desktop'))
+  const setSmallScreen = (smallScreen: boolean) => {
+    isSmallScreen.value = smallScreen
+  }
+
+  return { navCollapse, isSmallScreen, toggleNavCollapse, setNavCollapse, setSmallScreen }
 }

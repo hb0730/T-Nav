@@ -4,6 +4,8 @@ import { darkThemeOverrides, lightThemeOverrides } from './themes'
 import { breakpoints } from './config'
 import { useGlobal } from '~/composables/useGlobal'
 
+const appConfig = useAppConfig()
+
 const { setInnerWidth, isDark, toggleDark } = useGlobal()
 
 const theme = computed(() => isDark.value ? darkTheme : null)
@@ -12,6 +14,45 @@ const themeOverrides = computed(() => isDark?.value ? darkThemeOverrides : light
 function getWindowWidth() {
   setInnerWidth(window.innerWidth)
 }
+
+function _console() {
+  // 控制台输出
+  const styleTitle1 = 'font-size: 20px;font-weight: 600;color: rgb(244,167,89);'
+  const styleTitle2 = 'font-size:12px;color: rgb(244,167,89);'
+  const styleContent = 'color: rgb(30,152,255);'
+
+  const title1 = `${appConfig.siteTitle} 主页\n`
+  const title2 = `${appConfig.siteDescription}`
+  const content = `\n\n 版本：v1.0.0 \n\n 主页：${appConfig.siteAuthorLink} \n\n 作者：${appConfig.siteAuthor} \n\n`
+
+  console.info(`%c${title1} %c${title2} %c${content}`, styleTitle1, styleTitle2, styleContent)
+}
+
+useHead({
+  title: appConfig.siteTitle,
+  link: [
+    { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+    // { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+    // { rel: 'manifest', href: '/manifest.json' },
+    // { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#ffffff' },
+    // { rel: 'shortcut icon', href: '/favicon.ico' },
+  ],
+  meta: [
+    { name: 'description', content: appConfig.siteDescription },
+    { name: 'keywords', content: appConfig.siteKeywords },
+    { name: 'author', content: appConfig.siteAuthor },
+    { name: 'copyright', content: `Copyright © 2024 - ${new Date().getFullYear()}` },
+  ],
+})
+
+useSeoMeta({
+  title: appConfig.siteTitle,
+  description: appConfig.siteDescription,
+  ogTitle: appConfig.siteTitle,
+  ogDescription: appConfig.siteDescription,
+  ogImage: appConfig.siteLogo,
+  ogUrl: appConfig.siteUrl,
+})
 
 onMounted(() => {
   // 获取窗口宽度
@@ -27,6 +68,8 @@ onMounted(() => {
       toggleDark()
     }
   })
+
+  _console()
 })
 
 onBeforeUnmount(() => {

@@ -19,7 +19,12 @@ export default {
       title: '宋子宪API',
       url: 'https://api.songzixian.com/',
       description: 'API-领先的高性能免费API数据服务平台。我们专注于提供稳定、高速的数据接口服务，助您轻松实现各类应用。 本api服务系统是自研系统，采用java以及多种设计模式和多线程开发的高性能服务，长期稳定运行，免费使用!',
-
+    },
+    {
+      title: '一言Hitokoto',
+      url: 'https://hitokoto.cn/',
+      logo: 'https://hitokoto.cn/favicon.ico',
+      description: '一言（Hitokoto）网创立于 2016 年，隶属于萌创团队，目前网站主要提供一句话服务。不论在哪里，总有那么几个句子能穿透你的心。把这些句子汇聚起来，传递更多的感动。简单来说，一言指的就是一句话，可以是动漫中的台词，也可以是网络上的各种小段子。留下你所喜欢的那一句话，与大家分享，这就是一言存在的目的。',
     },
   ],
 }

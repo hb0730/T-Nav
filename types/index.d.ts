@@ -3,28 +3,40 @@ declare module 'nuxt/schema' {
     /**
      * 站点标题
      */
-    siteTitle: string
+    siteTitle?: string
     /**
      * 站点描述
      */
-    siteDescription: string
+    siteDescription?: string
     /**
      * 站点关键字
      */
-    siteKeywords: string
+    siteKeywords?: string
     /**
      * 站点作者
      */
-    siteAuthor: string
+    siteAuthor?: string
+    /**
+     * 站点作者 url,可以是 github 地址，也可以是个人网站
+     */
+    siteAuthorLink?: string
+    /**
+     * 站点 url
+     */
+    siteUrl: string
     /**
      * 站点图标
      */
-    siteIcon: string
+    siteIcon?: string
     /**
      * 站点logo
      */
-    siteLogo: string
+    siteLogo?: string
+    /**
+     * 备案号
+     */
+    siteICP?: string
   }
 }
-
-export { }
+// It is always important to ensure you import/export something when augmenting a type
+export {}
