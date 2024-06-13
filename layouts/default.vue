@@ -73,6 +73,7 @@ watch(
   min-height: 100%;
   background: #f0f2f5;
   .aside-wrapper {
+    z-index: 99;
     .logo-wrapper {
       position: absolute;
       display: block;
