@@ -3,7 +3,8 @@
   "extends": [
     "config:base",
     "schedule:weekly",
-    "group:allNonMajor"
+    "group:allNonMajor",
+    "npm:unpublishSafe"
   ],
   "labels": ["renovate"],
   "rangeStrategy": "bump",
