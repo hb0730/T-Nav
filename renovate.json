@@ -10,8 +10,8 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "digest"],
-      "name": "Auto merge",
-      "autoMerge": true
+      "description": "Automerge non-major updates",
+      "automerge": true
     },
     {
       "depTypeList": ["peerDependencies"],
