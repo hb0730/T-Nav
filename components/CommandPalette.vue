@@ -35,8 +35,15 @@ function match(pattern: string, str: string) {
 // search
 const searchPattern = ref('')
 const searchOptions = computed(() => {
-  function getSearchableContent(item: MenuItem) {
-    return item.title
+  function getSearchableContent(item: MenuItem, isAppendTags = true) {
+    let tags = ''
+    item.tags?.forEach((tag) => {
+      tags += ` ${tag}`
+    })
+    if (isAppendTags)
+      return item.title + (tags ? ` ${tags}` : '')
+    else
+      return item.title
   }
 
   if (!searchPattern.value)
@@ -54,7 +61,7 @@ const searchOptions = computed(() => {
       .replace(replaceRegex, '')
     return match(pattern, label)
   }).map(item => ({
-    label: getSearchableContent(item),
+    label: getSearchableContent(item, false),
     value: item.title,
   }))
 })
@@ -63,6 +70,11 @@ function handleSelect(value: string) {
   isModalOpen.value = false
   document.getElementById(value)?.scrollIntoView()
 }
+watch(isModalOpen, () => {
+  if (!isModalOpen.value) {
+    searchPattern.value = ''
+  }
+})
 
 // 绑定快捷键
 // mac cmd + k
@@ -101,7 +113,14 @@ onBeforeUnmount(() => {
 
     <n-modal display-directive="if" :show="isModalOpen" class="c-modal" @after-leave="isModalOpen = false" @update-show="isModalOpen = $event">
       <n-card class="modal-content" content-style="padding:12px">
-        <n-auto-complete v-model:value="searchPattern" clear-after-select :options="searchOptions" size="large" @select="handleSelect" />
+        <n-auto-complete
+          v-model:value="searchPattern"
+          clear-after-select
+          blur-after-select
+          :options="searchOptions"
+          size="large"
+          @select="handleSelect"
+        />
       </n-card>
     </n-modal>
   </div>

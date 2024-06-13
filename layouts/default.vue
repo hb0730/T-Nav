@@ -38,14 +38,6 @@ watch(
       <NuxtLink to="/" class="logo-wrapper">
         <div class="logo">
           <img :src="HeaderLogo">
-          <!-- <div class="text-wrapper">
-            <div class="title">
-              {{ appConfig.siteTitle }}
-            </div>
-            <div class="subtitle">
-              {{ appConfig.siteDescription }}
-            </div>
-          </div> -->
         </div>
       </NuxtLink>
       <div class="aside-content">

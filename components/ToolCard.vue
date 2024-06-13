@@ -12,24 +12,38 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
 <template>
   <NuxtLink :id="model.title" :to="model.url" target="_blank" class="decoration-none">
     <n-card class="tool-card" hoverable tag="a" :href="model.url" target="_blank" :alt="model.title">
-      <div class="tool-card-content">
-        <div class="card-head flex items-center ">
-          <div class="card-logo">
-            <img :class="{ 'default-logo': isDefaultLogo }" :src="model.logo ?? DefaultLogo">
-          </div>
-          <div class="card-title">
-            {{ model.title }}
-          </div>
-        </div>
-        <n-tooltip placement="bottom" trigger="hover" width="trigger">
-          <template #trigger>
-            <div class="card-description text-sm text-gray-500 mt-2 text-clip overflow-hidden">
-              {{ model.description }}
+      <n-tooltip placement="bottom" trigger="hover" width="trigger">
+        <template #trigger>
+          <div class="card-content">
+            <div class="content">
+              <div class="logo">
+                <img :class="{ 'default-logo': isDefaultLogo }" :src="model.logo || DefaultLogo">
+              </div>
+              <div class="flex-1 flex flex-col align-center justify-center ml-4">
+                <div class="title text-lg font-bold text-gray-700 truncate overflow-hidden">
+                  {{ model.title }}
+                </div>
+                <div class="description text-sm text-gray-500 mt-2 text-clip overflow-hidden">
+                  {{ model.description }}
+                </div>
+              </div>
             </div>
-          </template>
-          {{ model.description }}
-        </n-tooltip>
-      </div>
+            <div v-if="model.tags" class="tags w-full mt-4 text-sm text-gray-500 flex gap-1 flex-wrap  pt-2">
+              <n-button
+                v-for="tag in model.tags"
+                :key="tag"
+                class="tag"
+                tag="span"
+                size="tiny"
+                secondary
+              >
+                {{ tag }}
+              </n-button>
+            </div>
+          </div>
+        </template>
+        {{ model.description }}
+      </n-tooltip>
     </n-card>
   </NuxtLink>
 </template>
@@ -41,32 +55,35 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
     width: 100%;
     border-radius: 8px;
   }
-
-  .tool-card-content {
-    .card-head {
-      .card-logo {
-        width: 40px;
-        height: 40px;
-        overflow: hidden;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .card-title {
-        margin-left: 8px;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 24px;
-        color: var(--n-text-color);
-      }
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .content {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
     }
-    .card-description {
+    .title {
+      color: var(--n-text-color);
+    }
+    .description {
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
+  }
+  .tags {
+    border-top: 1px solid rgba(136, 136, 136, 0.2);
+  }
+  .tag {
   }
 
   .default-logo {
