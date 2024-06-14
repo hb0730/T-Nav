@@ -51,7 +51,8 @@ jobs:
           password: ${{secrets.PASSWORD}}
           source: dist/*
           target: ${{secrets.TARGET}}
-      - name: Release GH
+          strip_components: 1
+      - name: Release
         uses:  softprops/action-gh-release@v2
         with:
           files: dist/*
