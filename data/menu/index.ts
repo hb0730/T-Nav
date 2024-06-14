@@ -2,6 +2,8 @@ import JavaScript from './modules/javaScript'
 import ai from './modules/ai'
 import freeApi from './modules/freeApi'
 import FrontEnd from './modules/frontEnd'
+import Blog from './modules/blog'
+import Developed from './modules/developed'
 
 interface MenuItem {
   /**
@@ -39,6 +41,8 @@ const menuDataList: MenuItem[] = [
   FrontEnd,
   JavaScript,
   freeApi,
+  Blog,
+  Developed,
 ]
 
 export type { MenuItem }

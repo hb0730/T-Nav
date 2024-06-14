@@ -54,11 +54,13 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
   .tool-card {
     width: 100%;
     border-radius: 8px;
+    &:hover {
+      border-color: var(--n-color-target);
+    }
   }
   .card-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
   }
   .content {
     display: flex;

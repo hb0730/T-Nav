@@ -50,6 +50,7 @@ watch(
     <n-layout class="content">
       <TheHeader />
       <n-layout-content class="c-content" position="absolute" content-style="padding: 24px;">
+        <n-back-top />
         <slot />
       </n-layout-content>
 
