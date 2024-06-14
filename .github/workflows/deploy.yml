@@ -49,13 +49,17 @@ jobs:
           host: ${{secrets.HOST}}
           username: ${{secrets.USERNAME}}
           password: ${{secrets.PASSWORD}}
+          rm: true
           source: dist/*
           target: ${{secrets.TARGET}}
           strip_components: 1
+      - name: Directory compression
+        run: |
+          tar -zcvf dist.tar.gz dist
       - name: Release
         uses:  softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: dist.tar.gz
 
     
 
