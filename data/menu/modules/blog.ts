@@ -8,9 +8,16 @@ export default {
     {
       title: 'V2ex',
       url: 'https://www.v2ex.com/',
-      logo: 'https://www.v2ex.com/favicon.ico',
+      logo: 'https://www.v2ex.com/static/icon-192.png',
       description: 'V2EX 是一个基于互联网的开放式技术社区，致力于提供一个安全、便捷的技术交流平台。',
       tags: ['v2ex', '博客', '论坛'],
+    },
+    {
+      title: '阮一峰的网络日志',
+      url: 'https://www.ruanyifeng.com/blog/',
+      logo: 'https://www.ruanyifeng.com/favicon.ico',
+      description: '阮一峰的网络日志，记录每周值得分享的科技内容',
+      tags: ['阮一峰', '博客'],
     },
     {
       title: '煎蛋',
