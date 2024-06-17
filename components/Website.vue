@@ -13,7 +13,7 @@ const modeList = defineModel<Array<MenuItem>>({
     <h3 class="mb-4 text-2xl font-bold">
       {{ item.title }}
     </h3>
-    <n-grid cols="md:1 lg:4" :x-gap="12" :y-gap="12" responsive="screen">
+    <n-grid cols="sm:1 xs:1 md:1 lg:4" :x-gap="12" :y-gap="12" responsive="screen">
       <!-- 移动端独占一行，pc一行四个 -->
       <n-grid-item
         v-for="tool in item.children"
