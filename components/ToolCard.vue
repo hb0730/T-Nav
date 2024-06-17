@@ -82,6 +82,11 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
       -webkit-line-clamp: 2;
     }
   }
+  @media screen and (min-width: 768px) {
+    .content {
+      height: 86px;
+    }
+  }
   .tags {
     border-top: 1px solid rgba(136, 136, 136, 0.2);
   }
