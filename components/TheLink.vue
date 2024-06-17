@@ -9,7 +9,7 @@ import LinksData from '~/data/links'
     </h3>
     <n-card hoverable>
       <div class="flex flex-wrap gap-1 card-content">
-        <n-button v-for="link in LinksData" :key="link.title" text ghost class="link-item" tag="a" :href="link.url" :alt="link.title">
+        <n-button v-for="link in LinksData" :key="link.title" text ghost class="link-item" tag="a" :href="link.url" :alt="link.title" target="_blank">
           {{ link.title }}
         </n-button>
         <n-button text ghost tag="a" class="link-item" href="/links" alt="更多链接">
