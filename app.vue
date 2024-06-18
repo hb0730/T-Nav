@@ -88,12 +88,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <n-config-provider :breakpoints="breakpoints" :theme="theme" :theme-overrides="themeOverrides">
-    <n-global-style />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </n-config-provider>
+  <ClientOnly>
+    <n-config-provider :breakpoints="breakpoints" :theme="theme" :theme-overrides="themeOverrides">
+      <n-global-style />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </n-config-provider>
+  </ClientOnly>
 </template>
 
 <style>
