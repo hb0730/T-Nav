@@ -16,7 +16,17 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
         <template #trigger>
           <div class="card-content">
             <div class="content">
-              <img class="logo" style="height: 64px; width: 64px;" :class="{ 'default-logo': isDefaultLogo }" :src="model.logo || DefaultLogo" loading="lazy" :alt="model.title">
+              <div class="logo">
+                <img
+                  height="auto"
+                  width="auto"
+                  :class="{ 'default-logo': isDefaultLogo }"
+                  :src="model.logo || DefaultLogo" loading="lazy"
+                  :alt="model.title"
+                  data-was-processed="true"
+                  :data-src="model.logo || DefaultLogo"
+                >
+              </div>
               <div class="flex-1 flex flex-col align-center justify-center ml-4">
                 <div class="title text-lg font-bold text-gray-700 truncate overflow-hidden">
                   {{ model.title }}
@@ -65,11 +75,11 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
     align-items: center;
     overflow: hidden;
     .logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       width: 64px;
       height: 64px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
     }
     .title {
       color: var(--n-text-color);

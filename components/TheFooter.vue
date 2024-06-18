@@ -5,9 +5,11 @@ const appConfig = useAppConfig()
 <template>
   <div class="copy-right text-sm text-gray-500">
     <span>Copyright © 2024 - {{ new Date().getFullYear() }}</span>
-    <span>Powered by <template v-if="appConfig.siteAuthorLink"><a :href="appConfig.siteAuthorLink" class="link" target="_blank">{{ appConfig.siteAuthor }}</a></template><template v-else><span class="link">{{ appConfig.siteAuthor }}</span></template></span>
+    <span>Powered by
+      <n-button text tag="a" target="_blank" :href="appConfig.siteAuthorLink" ghost type="primary">{{ appConfig.siteAuthor }}</n-button>
+    </span>
     <span v-if="appConfig.siteICP" class="icp">
-      <a href="https://beian.miit.gov.cn/" target="_blank">{{ appConfig.siteICP }}</a>
+      <n-button text tag="a" target="_blank" href="https://beian.miit.gov.cn/">{{ appConfig.siteICP }}</n-button>
     </span>
   </div>
 </template>
