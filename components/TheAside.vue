@@ -8,12 +8,14 @@ const menuList = defineModel <Array<MenuItem>> ({
   type: Array,
   default: () => [],
 })
-
+// 是否为首页
+const index = computed(() => requestUrl.pathname === '/')
 const menuOptions = computed(() => {
   return menuList.value.map((item) => {
     return {
       key: item.title,
-      label: () => h('a', { href: `/#${item.title}` }, item.title),
+      // 两者滚动动画不同
+      label: () => h('a', { href: `${index.value ? '' : '/'}#${item.title}`, onClick: aTagClick }, item.title),
       icon: () => h(NIcon, null, { default: () => h(item.icon ?? Grid) }),
     }
   })
@@ -25,9 +27,17 @@ function handleMenuItemClick(key: string) {
   document.getElementById(key)?.scrollIntoView({ behavior: 'smooth' })
 }
 
+/**
+ * @description 点击a标签, 如果为首页则不跳转
+ */
+function aTagClick(e: Event) {
+  if (index.value) {
+    e.preventDefault()
+  }
+}
+
 onMounted(() => {
   const hash = requestUrl?.hash
-  console.log(hash)
   if (hash) {
     // 解码 url解码
     const decodeHash = decodeURIComponent(hash.slice(1))
@@ -42,6 +52,7 @@ onMounted(() => {
       :options="menuOptions"
       :collapsed-width="64"
       :icon-size="25"
+      @update:value="handleMenuItemClick"
     />
   </div>
 </template>
