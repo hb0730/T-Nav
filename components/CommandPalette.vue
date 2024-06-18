@@ -4,6 +4,7 @@ import type { MenuItem } from '~/data/menu'
 import menuDataList from '~/data/menu'
 
 const isMac = computed(() => window.navigator.userAgent.toLowerCase().includes('mac'))
+const inputText = ref('')
 const isModalOpen = ref(false)
 
 // 将menu压缩为一级
@@ -92,6 +93,7 @@ function handleKeydown(e: KeyboardEvent) {
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
+  inputText.value = `${isMac.value ? 'Cmd' : 'Ctrl'} + K`
 })
 
 onBeforeUnmount(() => {
@@ -107,7 +109,7 @@ onBeforeUnmount(() => {
           <Search />
         </n-icon>
         <span class="ml-2 ">搜索</span>
-        <span class="ml-2 border border-current rounded px-[5px] border-solid  sm:inline">{{ isMac ? `Cmd` : 'Ctrl' }}&nbsp;+&nbsp;K</span>
+        <span class="ml-2 border border-current rounded px-[5px] border-solid  sm:inline">{{ inputText }}</span>
       </div>
     </n-button>
 

@@ -1,10 +1,25 @@
 <script setup lang="ts">
 import LinksData from '~/data/links'
 
+const { isSmallScreen } = useCollapse()
+
+const cols = ref(isSmallScreen ? '2' : '3')
+
 const appConfig = useAppConfig()
 
 useHead({
   title: `友情链接 | ${appConfig.siteTitle}`,
+})
+
+watch(isSmallScreen, (value) => {
+  console.log('isSmallScreen', value)
+  cols.value = value ? '2' : '3'
+})
+
+onMounted(() => {
+  if (isSmallScreen.value) {
+    cols.value = '2'
+  }
 })
 </script>
 
@@ -15,7 +30,8 @@ useHead({
       友情链接
     </h3>
     <!-- 响应式 pc 三个一行，移动端两个 -->
-    <n-grid cols="xs:2 sm:2 md:2 lg:3" :x-gap="12" :y-gap="12" responsive="screen">
+    <!-- https://github.com/tusen-ai/naive-ui/issues/4552 -->
+    <n-grid :cols="cols" :x-gap="12" :y-gap="12" responsive="screen">
       <n-grid-item
         v-for="link in LinksData"
         :key="link.title"

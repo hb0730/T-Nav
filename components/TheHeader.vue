@@ -35,7 +35,7 @@ const { isDark, toggleDark } = useGlobal()
       </n-tooltip>
       <n-tooltip trigger="hover" placement="bottom">
         <template #trigger>
-          <n-button circle ghost class="c-button" tag="a" href="/about-us">
+          <n-button circle ghost class="c-button" tag="a">
             <n-icon :size="25">
               <InfoCircle />
             </n-icon>

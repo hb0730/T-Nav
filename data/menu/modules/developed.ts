@@ -35,6 +35,13 @@ export default {
       description: 'iconfont-国内功能很强大且图标内容很丰富的矢量图标库，提供矢量图标下载、在线存储、格式转换等功能。阿里巴巴体验团队倾力打造，设计和前端开发的便捷工具',
       tags: ['iconfont', '编程', '开发', 'icon'],
     },
+    {
+      title: 'PageSpeed Insights',
+      url: 'https://pagespeed.web.dev',
+      logo: 'https://www.gstatic.com/pagespeed/insights/ui/logo/favicon_48.png',
+      description: 'PageSpeed Insights 是一个开源的网站性能分析工具，可以帮助网站管理员检查网站的性能。',
+      tags: ['分析', '性能', '编程', '开发'],
+    },
 
   ],
 } as MenuItem

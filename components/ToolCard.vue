@@ -17,7 +17,7 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
           <div class="card-content">
             <div class="content">
               <div class="logo">
-                <img :class="{ 'default-logo': isDefaultLogo }" :src="model.logo || DefaultLogo">
+                <img :class="{ 'default-logo': isDefaultLogo }" :src="model.logo || DefaultLogo" loading="lazy" :alt="model.title">
               </div>
               <div class="flex-1 flex flex-col align-center justify-center ml-4">
                 <div class="title text-lg font-bold text-gray-700 truncate overflow-hidden">
