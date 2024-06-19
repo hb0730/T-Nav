@@ -1,0 +1,40 @@
+name: 友链模板
+description: 申请添加友链。
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 检查清单
+      description: 请认真检查以下清单中的每一项，并在相符的项前打勾。
+      options:
+        - required: true
+          label: 合法的、非营利性、无商业广告、无木马植入。
+        - required: false
+          label: 有独立域名，非免费域名。
+        - required: false
+          label: 博客已运行至少半年，非刚搭建好。
+  - type: input
+    attributes:
+      label: 链接地址
+      description: 链接地址
+      placeholder: '如: https://t-nav.hb0730.me/'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: 标题
+      description: 一般为网站名称
+      placeholder: '如: T-Nav'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: 图标
+      description: 一般为网站logo
+      placeholder: '如: https://t-nav.hb0730.me/logo.png'
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 补充说明
+      description: 比如描述或者介绍

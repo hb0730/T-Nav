@@ -3,7 +3,7 @@ declare module 'nuxt/schema' {
     /**
      * 站点标题
      */
-    siteTitle?: string
+    siteTitle: string
     /**
      * 站点描述
      */

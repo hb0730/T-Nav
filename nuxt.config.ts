@@ -8,6 +8,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.scss'],
   modules: ['nuxtjs-naive-ui', '@nuxtjs/tailwindcss', 'nuxt-svgo', 'nuxt-viewport'],
+  app: {
+    pageTransition: { name: 'page', mode: 'in-out' },
+  },
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
     configPath: './tailwind.config.js',

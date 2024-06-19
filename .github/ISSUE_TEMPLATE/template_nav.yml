@@ -1,0 +1,56 @@
+name: 收录模版
+description: 申请收录
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 检查清单
+      description: 请认真检查以下清单中的每一项，并在相符的项前打勾。
+      options:
+        - required: true
+          label: 正规网站或公众号，不违反法律，不能涉及黄赌毒等内容
+        - required: false
+          label: 页面整洁，无多个弹窗广告和恶意跳转；
+  - type: input
+    attributes:
+      label: URL链接地址
+      description: 完整的链接或者域名
+      placeholder: '如: https://t-nav.hb0730.me/'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: 标题
+      description: 一般为网站名称
+      placeholder: '如: T-Nav'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: 图标
+      description: 一般为网站logo
+      placeholder: '如: https://t-nav.hb0730.me/logo.png'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: 分组
+      description: 一般为网站分类
+      placeholder: '如: 个人博客'
+    validations:
+      required: false
+  - type: textarea
+    id: config-file
+    attributes:
+      label: 补充说明
+      description: 比如描述或者介绍
+      value: |
+        ```json
+        {
+            "title": "",
+            "url": "",
+            "logo": "",
+            "screenshot": "",
+            "description": ""
+        }
+        ```
