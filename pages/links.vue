@@ -1,25 +1,10 @@
 <script setup lang="ts">
 import LinksData from '~/data/links'
 
-const { isSmallScreen } = useCollapse()
-
-const cols = ref(isSmallScreen ? '2' : '3')
-
 const appConfig = useAppConfig()
 
 useHead({
   title: `友情链接 | ${appConfig.siteTitle}`,
-})
-
-watch(isSmallScreen, (value) => {
-  console.log('isSmallScreen', value)
-  cols.value = value ? '2' : '3'
-})
-
-onMounted(() => {
-  if (isSmallScreen.value) {
-    cols.value = '2'
-  }
 })
 </script>
 
@@ -30,31 +15,9 @@ onMounted(() => {
       友情链接
     </h3>
     <!-- 响应式 pc 三个一行，移动端两个 -->
-    <!-- https://github.com/tusen-ai/naive-ui/issues/4552 -->
-    <n-grid :cols="cols" :x-gap="12" :y-gap="12" responsive="screen">
-      <n-grid-item
-        v-for="link in LinksData"
-        :key="link.title"
-      >
-        <NuxtLink :id="link.title" :to="link.url" target="_blank" class="decoration-none">
-          <n-card class="tool-card" hoverable tag="a" :href="link.url" target="_blank" :alt="link.title">
-            <div class="card-content">
-              <div class="logo">
-                <img :src="link.logo">
-              </div>
-              <div class="flex-1 flex flex-col align-center justify-center ml-4 overflow-hidden">
-                <div class="title text-sm font-bold text-gray-700 truncate overflow-hidden">
-                  {{ link.title }}
-                </div>
-                <div class="description text-sm text-gray-500 mt-2 text-clip overflow-hidden">
-                  {{ link.description }}
-                </div>
-              </div>
-            </div>
-          </n-card>
-        </NuxtLink>
-      </n-grid-item>
-    </n-grid>
+    <div class="grid grid-cols-2 gap-[12px] lg:grid-cols-3">
+      <LinkCard v-for="link in LinksData" :key="link.title" :model-value="link" />
+    </div>
   </div>
 </template>
 
@@ -65,51 +28,6 @@ onMounted(() => {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-}
-
-.tool-card {
-  width: 100%;
-  border-radius: 8px;
-  &:hover {
-    border-color: var(--n-color-target);
-  }
-
-  .card-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    .logo {
-      width: 64px;
-      height: 64px;
-      --webkit-box-flex: 0;
-      flex: none;
-      background: rgba(128, 128, 128, 0.1);
-      overflow: hidden;
-    }
-    .title {
-      color: var(--n-text-color);
-    }
-    .description {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
-      overflow: hidden;
-    }
-  }
-  @media screen and (max-width: 768px) {
-    :deep(.n-card__content) {
-      padding: 0;
-    }
-    .card-content {
-      .logo {
-        width: 48px;
-        height: 48px;
-      }
-      .description {
-        display: none;
-      }
-    }
-  }
 }
 
 @media screen and (max-width: 768px) {

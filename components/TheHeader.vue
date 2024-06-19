@@ -9,7 +9,7 @@ const { isDark, toggleDark } = useGlobal()
 </script>
 
 <template>
-  <n-layout-header class="nav-wrapper" bordered>
+  <n-layout-header id="navbar" class="nav-wrapper" bordered>
     <div class="nav-left">
       <n-button circle ghost @click="toggleNavCollapse">
         <n-icon :size="25">

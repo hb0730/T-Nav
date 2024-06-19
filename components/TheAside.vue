@@ -24,7 +24,12 @@ const menuOptions = computed(() => {
  * @description 点击菜单
  */
 function handleMenuItemClick(key: string) {
-  document.getElementById(key)?.scrollIntoView({ behavior: 'smooth' })
+  // scrollIntoView()定位元素显示导致页面上移,使用scrollIntoViewIfNeeded()解决
+  document.getElementById(key)?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+    inline: 'start',
+  })
 }
 
 /**

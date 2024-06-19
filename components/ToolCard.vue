@@ -11,7 +11,7 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
 
 <template>
   <NuxtLink :id="model.title" :to="model.url" target="_blank" class="decoration-none">
-    <n-card class="tool-card" hoverable tag="a" :href="model.url" target="_blank" :alt="model.title">
+    <n-card class="tool-card" hoverable>
       <n-tooltip placement="bottom" trigger="hover" width="trigger">
         <template #trigger>
           <div class="card-content">
