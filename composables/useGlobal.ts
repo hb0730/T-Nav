@@ -40,6 +40,8 @@ export function useGlobal() {
   }
 
   onMounted(() => {
+    document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light')
+
     onResize()
     window.addEventListener('resize', onResize)
     // 自动切换为暗黑模式
