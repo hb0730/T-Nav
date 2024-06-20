@@ -19,14 +19,15 @@ const { icon, title } = toRefs(props)
 </template>
 
 <style lang="scss" scoped>
+[data-theme='dark'] {
+  .colored-card {
+    background: rgb(19 72 85);
+    background: linear-gradient(48deg, #134855 0%, #5f6b9f 60%, #a68f8a 100%);
+  }
+}
 .colored-card {
   background: rgb(27, 117, 140);
-  background-image: linear-gradient(
-    48deg,
-    #1b758c 0%,
-    #8591c5 60%,
-    #cda6b5 100%
-  );
+  background: linear-gradient(48deg, #1b758c 0%, #8591c5 60%, #cda6b5 100%);
   color: white;
   border: none;
 

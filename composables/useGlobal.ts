@@ -9,15 +9,21 @@ export function useGlobal() {
   })
   // 是否暗黑模式
   const isDark = useState('isDark', () => {
+    if (isClient) {
+      return localStorage.getItem('isDark') === 'true'
+    }
     return false
   })
   // 导航栏折叠状态 true:折叠 false:展开
-  const navCollapse = useState('navCollapse', () => isSmallScreen)
+  const navCollapse = useState('navCollapse', () => isSmallScreen.value)
 
   // 切换theme-dark
   const toggleDark = () => {
     isDark.value = !isDark.value
     document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light')
+    if (isClient) {
+      localStorage.setItem('isDark', `${isDark.value}`)
+    }
   }
   // 切换导航栏折叠
   const toggleNavCollapse = () => {
