@@ -1,25 +1,9 @@
 <script setup lang="ts">
-import { useCollapse } from '~/composables/useCollapse'
-import { useGlobal } from '~/composables/useGlobal'
 import HeaderLogo from '~/assets/images/header-logo.png'
 import menuDataList from '~/data/menu'
+import { useGlobal } from '~/composables/useGlobal'
 
-const { navCollapse, isSmallScreen, setNavCollapse, setSmallScreen, toggleNavCollapse } = useCollapse()
-const { innerWidth } = useGlobal()
-
-watch(
-  innerWidth,
-  () => {
-    if (innerWidth.value < 768) {
-      setNavCollapse(true)
-      setSmallScreen(true)
-    }
-    else {
-      setNavCollapse(false)
-      setSmallScreen(false)
-    }
-  },
-)
+const { navCollapse, isSmallScreen, toggleNavCollapse } = useGlobal()
 </script>
 
 <template>

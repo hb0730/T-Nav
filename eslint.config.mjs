@@ -8,5 +8,7 @@ export default antfu({
     'no-undef': 'off',
     // 允许console
     'no-console': 'off',
+    // 允许process
+    'node/prefer-global/process': 'off',
   },
 })

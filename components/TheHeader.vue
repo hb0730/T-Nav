@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { IndentDecrease, IndentIncrease, InfoCircle, MoonStars, Search, Sun } from '@vicons/tabler'
-import { useCollapse } from '../composables/useCollapse'
-import { useGlobal } from '../composables/useGlobal'
+import { IndentDecrease, IndentIncrease, InfoCircle, MoonStars, Sun } from '@vicons/tabler'
 import Github from '~/assets/svg/github.svg?component'
+import { useGlobal } from '~/composables/useGlobal'
 
-const { navCollapse, toggleNavCollapse } = useCollapse()
-const { isDark, toggleDark } = useGlobal()
+const { isDark, toggleDark, navCollapse, toggleNavCollapse } = useGlobal()
 </script>
 
 <template>
