@@ -26,7 +26,6 @@
     "eslint-plugin-format": "^0.1.1",
     "naive-ui": "^2.34.3",
     "nuxt-svgo": "^4.0.1",
-    "nuxt-viewport": "^2.1.5",
     "nuxtjs-naive-ui": "^1.0.2",
     "sass": "^1.77.4",
     "unplugin-vue-components": "^0.27.0",

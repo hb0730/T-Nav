@@ -1,20 +1,24 @@
 export function useGlobal() {
+  const isClient = process.client || false
   // 是否小屏幕
   const isSmallScreen = useState('isSmallScreen', () => {
-    if (process.server) {
-      return false
+    if (isClient) {
+      return window.innerWidth < 768
     }
-    return window.innerWidth < 768
+    return false
   })
   // 是否暗黑模式
-  const isDark = useState('isDark', () => false)
+  const isDark = useState('isDark', () => {
+    return false
+  })
+  // 导航栏折叠状态 true:折叠 false:展开
+  const navCollapse = useState('navCollapse', () => isSmallScreen)
+
   // 切换theme-dark
   const toggleDark = () => {
     isDark.value = !isDark.value
     document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light')
   }
-  // 导航栏折叠状态 true:折叠 false:展开
-  const navCollapse = useState('navCollapse', () => isSmallScreen)
   // 切换导航栏折叠
   const toggleNavCollapse = () => {
     navCollapse.value = !navCollapse.value

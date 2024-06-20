@@ -1,13 +1,17 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
 import removeConsole from 'vite-plugin-remove-console'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.scss'],
-  modules: ['nuxtjs-naive-ui', '@nuxtjs/tailwindcss', 'nuxt-svgo', 'nuxt-viewport'],
+  ssr: true,
+  modules: [
+    'nuxtjs-naive-ui',
+    '@nuxtjs/tailwindcss',
+    'nuxt-svgo',
+  ],
   app: {
     pageTransition: { name: 'page', mode: 'in-out' },
   },
