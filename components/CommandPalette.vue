@@ -2,9 +2,9 @@
 import { Search } from '@vicons/tabler'
 import type { MenuItem } from '~/data/menu'
 import menuDataList from '~/data/menu'
+import { useCommand } from '~/composables/useCommand'
 
-const isMac = computed(() => window.navigator.userAgent.toLowerCase().includes('mac'))
-const inputText = ref('')
+const { commandActive, textCommand } = useCommand()
 const isModalOpen = ref(false)
 
 // 将menu压缩为一级
@@ -71,33 +71,8 @@ function handleSelect(value: string) {
   isModalOpen.value = false
   document.getElementById(value)?.scrollIntoView()
 }
-watch(isModalOpen, () => {
-  if (!isModalOpen.value) {
-    searchPattern.value = ''
-  }
-})
-
-// 绑定快捷键
-// mac cmd + k
-// windows ctrl + k
-function handleKeydown(e: KeyboardEvent) {
-  if (isMac.value && e.metaKey && e.key === 'k') {
-    e.preventDefault()
-    isModalOpen.value = true
-  }
-  if (!isMac.value && e.ctrlKey && e.key === 'k') {
-    e.preventDefault()
-    isModalOpen.value = true
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('keydown', handleKeydown)
-  inputText.value = `${isMac.value ? 'Cmd' : 'Ctrl'} + K`
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('keydown', handleKeydown)
+watch(commandActive, () => {
+  isModalOpen.value = true
 })
 </script>
 
@@ -109,7 +84,7 @@ onBeforeUnmount(() => {
           <Search />
         </n-icon>
         <span class="ml-2 ">搜索</span>
-        <span class="ml-2 border border-current rounded px-[5px] border-solid  sm:inline">{{ inputText }}</span>
+        <span class="ml-2 border border-current rounded px-[5px] border-solid  sm:inline">{{ textCommand }}</span>
       </div>
     </n-button>
 
