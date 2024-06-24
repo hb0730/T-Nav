@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     plugins: [
       removeConsole(),
       Components({
+        dts: './types/components.d.ts',
         resolvers: [NaiveUiResolver()],
       }),
     ],

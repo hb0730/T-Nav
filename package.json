@@ -1,7 +1,12 @@
 {
   "name": "nuxt-app",
   "type": "module",
+  "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20.13.1",
+    "pnpm": ">=9"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
