@@ -1,4 +1,3 @@
-import component from '../types/shims-vue';
 <script setup lang="ts">
 const props = defineProps<{ icon: Component, title: string }>()
 const { icon, title } = toRefs(props)

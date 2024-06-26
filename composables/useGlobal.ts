@@ -1,5 +1,5 @@
 export function useGlobal() {
-  const isClient = process.client || false
+  const isClient = import.meta.client || false
   // 是否小屏幕
   const isSmallScreen = useState('isSmallScreen', () => {
     if (isClient) {

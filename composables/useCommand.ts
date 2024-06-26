@@ -2,7 +2,7 @@ export function useCommand() {
   const commandActive = useState('commandActive', () => false)
   const textCommand = useState('commandText', () => {
     // client or server  mac/windows
-    if (process.client) {
+    if (import.meta.client) {
       if (navigator.userAgent.toLowerCase().includes('mac')) {
         console.log('mac')
         return '⌘ + K'
