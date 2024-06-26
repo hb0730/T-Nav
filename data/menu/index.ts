@@ -4,6 +4,8 @@ import freeApi from './modules/freeApi'
 import FrontEnd from './modules/frontEnd'
 import Blog from './modules/blog'
 import Developed from './modules/developed'
+import OnlineMovie from './modules/online-movie'
+import movieCollection from './modules/movie-collection'
 
 interface MenuItem {
   /**
@@ -43,6 +45,9 @@ const menuDataList: MenuItem[] = [
   freeApi,
   Blog,
   Developed,
+  OnlineMovie,
+  movieCollection,
+
 ]
 
 export type { MenuItem }
