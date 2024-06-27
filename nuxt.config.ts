@@ -6,7 +6,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.scss'],
-  ssr: false,
+  ssr: true,
   modules: [
     'nuxtjs-naive-ui',
     '@nuxtjs/tailwindcss',

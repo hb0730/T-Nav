@@ -49,12 +49,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-config-provider :theme="theme" :theme-overrides="themeOverrides" inline-theme-disabled>
-    <n-global-style />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </n-config-provider>
+  <ClientOnly>
+    <n-config-provider :theme="theme" :theme-overrides="themeOverrides" inline-theme-disabled>
+      <n-global-style />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </n-config-provider>
+  </ClientOnly>
 </template>
 
 <style>
