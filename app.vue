@@ -56,6 +56,11 @@ onMounted(() => {
         <NuxtPage />
       </NuxtLayout>
     </n-config-provider>
+    <template #fallback>
+      <div class="load-box">
+        <div class="loader" />
+      </div>
+    </template>
   </ClientOnly>
 </template>
 
@@ -74,5 +79,72 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+</style>
+
+<style lang="scss" scoped>
+.load-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  background: #000;
+  animation: fadeIn 0.5s ease-in-out forwards;
+  -webkit-animation: fadeIn 0.5s ease-in-out forwards;
+}
+.loader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 6rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  animation: pulsOut 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 1rem rgba(255, 255, 255, 0.75));
+}
+.loader:before {
+  width: 100%;
+  padding-bottom: 100%;
+  box-shadow: inset 0 0 0 1rem #fff;
+  animation-name: pulsIn;
+}
+.loader:after {
+  width: calc(100% - 2rem);
+  padding-bottom: calc(100% - 2rem);
+  box-shadow: 0 0 0 0 #fff;
+}
+
+@keyframes pulsIn {
+  0% {
+    box-shadow: inset 0 0 0 1rem #fff;
+    opacity: 1;
+  }
+  50%,
+  100% {
+    box-shadow: inset 0 0 0 0 #fff;
+    opacity: 0;
+  }
+}
+
+@keyframes pulsOut {
+  0%,
+  50% {
+    box-shadow: 0 0 0 0 #fff;
+    opacity: 0;
+  }
+  100% {
+    box-shadow: 0 0 0 1rem #fff;
+    opacity: 1;
+  }
 }
 </style>
