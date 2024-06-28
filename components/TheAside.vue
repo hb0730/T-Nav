@@ -24,12 +24,14 @@ const menuOptions = computed(() => {
  * @description 点击菜单
  */
 function handleMenuItemClick(key: string) {
-  // scrollIntoView()定位元素显示导致页面上移,使用scrollIntoViewIfNeeded()解决
-  document.getElementById(key)?.scrollIntoView({
-    behavior: 'smooth',
-    block: 'nearest',
-    inline: 'start',
-  })
+  // scrollIntoView 滚动会使fixed顶部导航导致位置不符遮挡 //好像也没解决
+  const el = document.getElementById(key)
+  if (el) {
+    document.getElementsByClassName('c-content')[0].firstElementChild?.scrollTo({
+      top: el.offsetTop - (document.getElementById('navbar')?.offsetHeight ?? 0),
+      behavior: 'smooth',
+    })
+  }
 }
 
 /**

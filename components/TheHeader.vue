@@ -69,6 +69,8 @@ const { isDark, toggleDark, navCollapse, toggleNavCollapse } = useGlobal()
   justify-content: space-between;
   height: var(--header-aside);
   padding: 0 24px;
+  position: sticky;
+  top: 0;
   .nav-main {
     flex: 1;
     display: flex;
