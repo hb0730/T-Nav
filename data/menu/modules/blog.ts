@@ -20,6 +20,12 @@ export default {
       tags: ['阮一峰', '博客'],
     },
     {
+      title: '信息差——独立开发者出海',
+      url: 'https://gapis.money',
+      logo: 'https://gapis.money/logo.svg',
+      description: 'Knowledge is power, info-gap is money!「信息差——独立开发者出海周刊」是一个帮助独立开发者缩小信息差的技术周刊。',
+    },
+    {
       title: '煎蛋',
       url: 'https://jandan.net/',
       logo: 'https://jandan.net/wp-content/themes/egg/images/logo-2018.gif',
