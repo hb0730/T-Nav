@@ -24,6 +24,7 @@ export default {
       url: 'https://gapis.money',
       logo: 'https://gapis.money/logo.svg',
       description: 'Knowledge is power, info-gap is money!「信息差——独立开发者出海周刊」是一个帮助独立开发者缩小信息差的技术周刊。',
+      tags: ['信息差', '博客', '周刊', '独立开发者'],
     },
     {
       title: '煎蛋',
