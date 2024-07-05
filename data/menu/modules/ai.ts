@@ -28,5 +28,12 @@ export default {
       description: 'ChatGPT 是一个基于 OpenAI API 的聊天机器人，它可以帮助你快速生成代码，让你的工作更加高效 | ChatGPT - OpenAI',
       tags: ['chat', 'ai', '人工智能', 'chatgpt'],
     },
+    {
+      title: 'Hugging Face',
+      logo: 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg',
+      url: 'https://huggingface.co',
+      description: 'Hugging Face 是一个开源的人工智能平台，它可以帮助你快速生成代码，让你的工作更加高效 | Hugging Face',
+      tags: ['chat', 'ai', '人工智能', 'chatgpt'],
+    },
   ],
 } as MenuItem
