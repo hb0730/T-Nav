@@ -1,5 +1,6 @@
 import { Blog } from '@vicons/fa'
 import type { MenuItem } from '..'
+import NgaLogo from '@/assets/images/nga-logo.png'
 
 export default {
   title: '博客论坛',
@@ -39,6 +40,13 @@ export default {
       logo: 'https://www.52pojie.cn/favicon.ico',
       description: '吾爱破解论坛致力于软件安全与病毒分析的前沿，丰富的技术版块交相辉映，由无数热衷于软件加密解密及反病毒爱好者共同维护 ',
       tags: ['吾爱破解', '博客', '论坛'],
+    },
+    {
+      title: 'NGA游戏玩家社区',
+      url: 'https://bbs.nga.cn/',
+      logo: NgaLogo,
+      description: 'NGA游戏玩家社区是国内知名的玩家交流平台,以暴雪游戏专题站为起点,现已囊括魔兽世界,英雄联盟,炉石传说,风暴英雄,暗黑破坏神等游戏讨论,各类热门单机/主机/网络/手机游戏版块,以及游戏界热点讨论',
+      tags: ['NGA', '博客', '论坛'],
     },
 
   ],
