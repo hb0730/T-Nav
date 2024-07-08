@@ -42,13 +42,5 @@ export default {
       description: 'PageSpeed Insights 是一个开源的网站性能分析工具，可以帮助网站管理员检查网站的性能。',
       tags: ['分析', '性能', '编程', '开发'],
     },
-    {
-      title: 'it-tools',
-      url: 'https://it-tools.tech',
-      logo: 'https://it-tools.tech/favicon.ico',
-      description: 'it-tools 是为开发人员提供的便捷在线工具集合，具有出色的用户体验。',
-      tags: ['工具', '编程', '开发'],
-    },
-
   ],
 } as MenuItem

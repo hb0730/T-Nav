@@ -6,6 +6,8 @@ import Blog from './modules/blog'
 import Developed from './modules/developed'
 import OnlineMovie from './modules/online-movie'
 import movieCollection from './modules/movie-collection'
+import tools from './modules/tools'
+import Images from './modules/images'
 
 interface MenuItem {
   /**
@@ -47,7 +49,8 @@ const menuDataList: MenuItem[] = [
   Developed,
   OnlineMovie,
   movieCollection,
-
+  tools,
+  Images,
 ]
 
 export type { MenuItem }
