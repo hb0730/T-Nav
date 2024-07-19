@@ -14,6 +14,9 @@ export default defineNuxtConfig({
   ],
   app: {
     pageTransition: { name: 'page', mode: 'in-out' },
+    head: {
+      script: [{ src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4970120746558354', crossorigin: 'anonymous' }],
+    },
   },
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
