@@ -1,6 +1,7 @@
 import { Blog } from '@vicons/fa'
 import type { MenuItem } from '..'
 import NgaLogo from '@/assets/images/nga-logo.png'
+import MeituanLogo from '@/assets/images/meituan-logo.png'
 
 export default {
   title: '博客论坛',
@@ -48,6 +49,12 @@ export default {
       description: 'NGA游戏玩家社区是国内知名的玩家交流平台,以暴雪游戏专题站为起点,现已囊括魔兽世界,英雄联盟,炉石传说,风暴英雄,暗黑破坏神等游戏讨论,各类热门单机/主机/网络/手机游戏版块,以及游戏界热点讨论',
       tags: ['NGA', '博客', '论坛'],
     },
-
+    {
+      title: '美团技术团队',
+      url: 'https://tech.meituan.com/',
+      logo: MeituanLogo,
+      description: '美团技术团队官方博客',
+      tags: ['美团', '博客', '技术团队', '技术博客'],
+    },
   ],
 } as MenuItem
