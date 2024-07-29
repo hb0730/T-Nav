@@ -3,8 +3,8 @@
   "type": "module",
   "private": true,
   "engines": {
-    "node": ">=20.15.1",
-    "pnpm": ">=9.5.0"
+    "node": ">=20.16.0",
+    "pnpm": ">=9.6.0"
   },
   "scripts": {
     "build": "nuxt build",
@@ -17,11 +17,11 @@
   },
   "dependencies": {
     "nuxt": "^3.12.4",
-    "vue": "^3.4.32",
+    "vue": "^3.4.34",
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.23.0",
+    "@antfu/eslint-config": "^2.23.2",
     "@css-render/vue3-ssr": "^0.15.14",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@vicons/fa": "^0.12.0",
@@ -38,7 +38,7 @@
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
-    "node": "20.15.1",
+    "node": "20.16.0",
     "pnpm": "9.6.0"
   }
 }
