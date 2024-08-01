@@ -64,6 +64,8 @@ const isDefaultLogo = computed(() => model.value.logo === null || model.value.lo
     border-radius: 8px;
     &:hover {
       border-color: var(--n-color-target);
+      // // 阴影突出 灰色 0.1
+      box-shadow: 2px 2px 20px var(--n-color-target);
     }
   }
   .card-content {
