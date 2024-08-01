@@ -1,7 +1,7 @@
-import JavaScript from './modules/javaScript'
 import ai from './modules/ai'
 import freeApi from './modules/freeApi'
-import FrontEnd from './modules/frontEnd'
+import Frontend from './modules/frontend'
+import Backend from './modules/backend'
 import Blog from './modules/blog'
 import Developed from './modules/developed'
 import OnlineMovie from './modules/online-movie'
@@ -42,8 +42,8 @@ interface MenuItem {
 
 const menuDataList: MenuItem[] = [
   ai,
-  FrontEnd,
-  JavaScript,
+  Frontend,
+  Backend,
   freeApi,
   Blog,
   Developed,

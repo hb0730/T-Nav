@@ -17,7 +17,7 @@ export default {
       url: 'https://it-tools.tech',
       logo: 'https://it-tools.tech/favicon.ico',
       description: 'it-tools 是为开发人员提供的便捷在线工具集合，具有出色的用户体验。',
-      tags: ['工具', '编程', '开发'],
+      tags: ['在线工具', '编程', '开发'],
     },
     {
       title: '爱资料',
