@@ -1,6 +1,8 @@
 import ai from './modules/ai'
 import freeApi from './modules/freeApi'
 import Frontend from './modules/frontend'
+import Vue from './modules/vue'
+import React from './modules/react'
 import Backend from './modules/backend'
 import Blog from './modules/blog'
 import Developed from './modules/developed'
@@ -43,6 +45,8 @@ interface MenuItem {
 const menuDataList: MenuItem[] = [
   ai,
   Frontend,
+  Vue,
+  React,
   Backend,
   freeApi,
   Blog,

@@ -19,13 +19,6 @@ export default {
       tags: ['web', 'js', '前端', 'es6'],
     },
     {
-      title: 'Vue3 Resource',
-      url: 'https://github.com/hu-snail/vue3-resource',
-      logo: 'https://vuejs.org/images/logo.png',
-      description: '收集vue3资源，包含web端&移动端&小程序&Electron等栏目',
-      tags: ['web', '移动端', '小程序', 'vue'],
-    },
-    {
       title: 'Volta',
       url: 'https://github.com/volta-cli/volta',
       logo: VoltaLogo,
