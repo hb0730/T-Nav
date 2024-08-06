@@ -1,5 +1,9 @@
 import type { MenuItem } from '..'
+import NvmLogo from '~/assets/images/nvm-logo.png'
 import VoltaLogo from '~/assets/images/volta-logo.jpg'
+import MicroAppLogo from '~/assets/images/micro-app-logo.png'
+import QiankunLogo from '~/assets/images/qiankun-logo.png'
+import WujieLogo from '~/assets/images/wujie-logo.png'
 
 export default {
   title: '前端',
@@ -19,6 +23,13 @@ export default {
       tags: ['web', 'js', '前端', 'es6'],
     },
     {
+      title: 'nvm',
+      url: 'https://github.com/nvm-sh/nvm',
+      logo: NvmLogo,
+      description: 'Node Version Manager - 符合 POSIX 标准的 bash 脚本用于管理多个活动的 Node.js 版本',
+      tags: ['nodejs', '版本管理', '工具'],
+    },
+    {
       title: 'Volta',
       url: 'https://github.com/volta-cli/volta',
       logo: VoltaLogo,
@@ -31,6 +42,27 @@ export default {
       logo: 'https://pnpm.io/img/pnpm.svg',
       description: '快速的，节省磁盘空间的包管理工具',
       tags: ['nodejs', '包管理工具', '工具'],
+    },
+    {
+      title: 'qiankun',
+      url: 'https://qiankun.umijs.org/zh',
+      logo: QiankunLogo,
+      description: '乾坤是一个基于 single-spa 的微前端实现库，旨在帮助大家能更简单、无痛的构建一个生产可用微前端架构系统。',
+      tags: ['微前端', '前端', 'react', 'vue'],
+    },
+    {
+      title: 'micro-app',
+      url: 'https://micro-zoe.github.io/micro-app/',
+      logo: MicroAppLogo,
+      description: 'MicroApp 一款简约、高效、功能强大的微前端框架',
+      tags: ['微前端', '前端', 'react', 'vue'],
+    },
+    {
+      title: 'wujie',
+      url: 'https://wujie-micro.github.io/doc/',
+      logo: WujieLogo,
+      description: '无界 | 极致的微前端框架',
+      tags: ['微前端', '前端', 'react', 'vue'],
     },
   ],
 } as MenuItem
