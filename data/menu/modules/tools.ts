@@ -1,5 +1,6 @@
 import { Tool } from '@vicons/tabler'
 import type { MenuItem } from '..'
+import FrpcDesktopLogo from '~/assets/images/frpc-desktop-logo.png'
 
 export default {
   title: '工具',
@@ -25,6 +26,13 @@ export default {
       logo: 'https://www.toolnb.com/favicon.ico',
       description: '在线工具,提供各种实用在线工具,包括单位换算,时间日期计算,密码生成器,编码解码,图片处理,音频处理,视频处理,文档处理,其他工具等。',
       tags: ['在线工具', '工具'],
+    },
+    {
+      title: 'frpc-desktop',
+      url: 'https://github.com/luckjiawei/frpc-desktop',
+      logo: FrpcDesktopLogo,
+      description: ' FRP跨平台桌面客户端，可视化配置，轻松实现内网穿透！支持所有frp版本 / 开机自启 / 可视化配置 / 免费开源',
+      tags: ['工具', 'frp', '内网穿透'],
     },
   ],
 
