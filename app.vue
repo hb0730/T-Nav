@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStyle } from './composables/useStyle'
 
-const appConfig = useAppConfig()
+const siteConfig = useSiteConfig()
 const { theme, themeOverrides } = useStyle()
 
 function _console() {
@@ -10,15 +10,15 @@ function _console() {
   const styleTitle2 = 'font-size:12px;color: rgb(244,167,89);'
   const styleContent = 'color: rgb(30,152,255);'
 
-  const title1 = `${appConfig.siteTitle} 主页\n`
-  const title2 = `${appConfig.siteDescription}`
-  const content = `\n\n 版本：v1.0.0 \n\n 主页：${appConfig.siteAuthorLink} \n\n 作者：${appConfig.siteAuthor} \n\n`
+  const title1 = `${siteConfig.name} 主页\n`
+  const title2 = `${siteConfig.description}`
+  const content = `\n\n 版本：v1.0.0 \n\n 主页：${siteConfig.authorLink} \n\n 作者：${siteConfig.author} \n\n`
 
   console.info(`%c${title1} %c${title2} %c${content}`, styleTitle1, styleTitle2, styleContent)
 }
 
 useHead({
-  title: appConfig.siteTitle,
+  title: siteConfig.name,
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
     // { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
@@ -27,20 +27,20 @@ useHead({
     // { rel: 'shortcut icon', href: '/favicon.ico' },
   ],
   meta: [
-    { name: 'description', content: appConfig.siteDescription },
-    { name: 'keywords', content: appConfig.siteKeywords },
-    { name: 'author', content: appConfig.siteAuthor },
+    { name: 'description', content: siteConfig.description },
+    { name: 'keywords', content: siteConfig.keywords },
+    { name: 'author', content: siteConfig.author },
     { name: 'copyright', content: `Copyright © 2024 - ${new Date().getFullYear()}` },
   ],
 })
 
 useSeoMeta({
-  title: appConfig.siteTitle,
-  description: appConfig.siteDescription,
-  ogTitle: appConfig.siteTitle,
-  ogDescription: appConfig.siteDescription,
-  ogImage: appConfig.siteLogo,
-  ogUrl: appConfig.siteUrl,
+  title: siteConfig.name,
+  description: siteConfig.description,
+  ogTitle: siteConfig.title,
+  ogDescription: siteConfig.description,
+  ogImage: siteConfig.logo,
+  ogUrl: siteConfig.url,
 })
 
 onMounted(() => {

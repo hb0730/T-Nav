@@ -3,14 +3,14 @@ import { Heart } from '@vicons/tabler'
 import Website from '~/components/Website.vue'
 import menuDataList from '~/data/menu'
 
-const appConfig = useAppConfig()
+const siteConfig = useSiteConfig()
 </script>
 
 <template>
   <div class="pt-50px">
     <div class="grid-wrapper">
       <div class="grid grid-cols-1 gap-[12px] lg:grid-cols-4">
-        <ColoredCard id="home" :title="appConfig.siteTitle" :icon="Heart">
+        <ColoredCard id="home" :title="siteConfig.name" :icon="Heart">
           如需申请友链，收录站点，请前往
           <a
             href="https://github.com/hb0730/T-Nav/issues"

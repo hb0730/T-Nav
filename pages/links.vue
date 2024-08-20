@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import LinksData from '~/data/links'
 
-const appConfig = useAppConfig()
+const siteConfig = useSiteConfig()
 
 useHead({
-  title: `友情链接 | ${appConfig.siteTitle}`,
+  title: `友情链接 | ${siteConfig.name}`,
 })
 </script>
 
