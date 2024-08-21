@@ -1,0 +1,44 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="400" height="400">
+    <defs>
+        <linearGradient id="d123628a-19a2-45f8-b4af-9b4d4175b0c9" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1B758C"/>
+            <stop offset="1" stop-color="#efefef"/>
+        </linearGradient>
+        <pattern id="watermark" patternUnits="userSpaceOnUse" width="100%" height="100%">
+            <image xlink:href="https://www.logosc.cn/img/watermark/LOGOSC-watermark.png" x="0" y="0" width="100%" height="100%"/>
+        </pattern>
+        <linearGradient id="d123628a-19a2-45f8-b4af-9b4d4175b0c9" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1B758C"/>
+            <stop offset="1" stop-color="#efefef"/>
+        </linearGradient>
+        <linearGradient id="d123628a-19a2-45f8-b4af-9b4d4175b0c9" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1B758C"/>
+            <stop offset="1" stop-color="#efefef"/>
+        </linearGradient>
+        <linearGradient id="d123628a-19a2-45f8-b4af-9b4d4175b0c9" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1B758C"/>
+            <stop offset="1" stop-color="#efefef"/>
+        </linearGradient>
+        <pattern id="watermark" patternUnits="userSpaceOnUse" width="100%" height="100%">
+            <image xlink:href="https://www.logosc.cn/img/watermark/LOGOSC-watermark.png" x="0" y="0" width="100%" height="100%"/>
+        </pattern>
+        <linearGradient id="d123628a-19a2-45f8-b4af-9b4d4175b0c9" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1B758C"/>
+            <stop offset="1" stop-color="#efefef"/>
+        </linearGradient>
+        <linearGradient id="d123628a-19a2-45f8-b4af-9b4d4175b0c9" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1B758C"/>
+            <stop offset="1" stop-color="#efefef"/>
+        </linearGradient>
+        <linearGradient id="d123628a-19a2-45f8-b4af-9b4d4175b0c9" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1B758C"/>
+            <stop offset="1" stop-color="#efefef"/>
+        </linearGradient>
+    </defs>
+    <g>
+        <g>
+            <path fill="url(&quot;#d123628a-19a2-45f8-b4af-9b4d4175b0c9&quot;)" d="M0 0v6.9h6.07v23.86h7.86v-6.63L6.19 0H0z"/>
+            <path fill="#1B758C" d="M19.95 6.9V0H6.19l7.74 24.13V6.9h6.02z"/>
+        </g>
+    </g>
+</svg>

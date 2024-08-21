@@ -1,0 +1,36 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" x="0" y="0" width="400" height="400" filtersec="colorsb1129859763" class="image-svg-svg primary" fill="#1B758C">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#1B758C">
+        <defs>
+            <linearGradient id="c1141a3c-55ba-4788-b58a-e8f00e995606" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#efefef"/>
+            </linearGradient>
+            <linearGradient id="c1141a3c-55ba-4788-b58a-e8f00e995606" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#efefef"/>
+            </linearGradient>
+            <linearGradient id="c1141a3c-55ba-4788-b58a-e8f00e995606" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#efefef"/>
+            </linearGradient>
+            <linearGradient id="c1141a3c-55ba-4788-b58a-e8f00e995606" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#efefef"/>
+            </linearGradient>
+            <linearGradient id="c1141a3c-55ba-4788-b58a-e8f00e995606" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#efefef"/>
+            </linearGradient>
+            <linearGradient id="c1141a3c-55ba-4788-b58a-e8f00e995606" x1="6.96" y1="30.76" x2="6.96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#efefef"/>
+            </linearGradient>
+        </defs>
+        <g fill="#1B758C">
+            <g fill="#1B758C">
+                <path fill="url(&quot;#c1141a3c-55ba-4788-b58a-e8f00e995606&quot;)" d="M0 0v6.9h6.07v23.86h7.86v-6.63L6.19 0H0z"/>
+                <path fill="#FFFFFF" d="M19.95 6.9V0H6.19l7.74 24.13V6.9h6.02z"/>
+            </g>
+        </g>
+    </svg>
+</svg>
