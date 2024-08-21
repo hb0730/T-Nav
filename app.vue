@@ -21,16 +21,13 @@ useHead({
   title: siteConfig.name,
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-    // { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
-    // { rel: 'manifest', href: '/manifest.json' },
-    // { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#ffffff' },
-    // { rel: 'shortcut icon', href: '/favicon.ico' },
   ],
   meta: [
     { name: 'description', content: siteConfig.description },
     { name: 'keywords', content: siteConfig.keywords },
     { name: 'author', content: siteConfig.author },
     { name: 'copyright', content: `Copyright © 2024 - ${new Date().getFullYear()}` },
+    { name: 'theme-color', content: 'white' },
   ],
 })
 
