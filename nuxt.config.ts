@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.scss'],
   ssr: true,
+
   modules: [
     'nuxtjs-naive-ui',
     '@nuxtjs/tailwindcss',
@@ -14,12 +15,14 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     'nuxt-svgo',
   ],
+
   app: {
     pageTransition: { name: 'page', mode: 'in-out' },
     head: {
       script: [{ src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4970120746558354', crossorigin: 'anonymous' }],
     },
   },
+
   site: {
     url: 'https://t-nav.hb0730.me',
     name: 'T-Nav 导航网站',
@@ -32,14 +35,17 @@ export default defineNuxtConfig({
     logo: 'https://t-nav.hb0730.me/logo.png',
     icp: '',
   },
+
   robots: {
     allow: '*',
     sitemap: 'https://t-nav.hb0730.me/sitemap.xml',
   },
+
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
     configPath: './tailwind.config.js',
   },
+
   vite: {
     plugins: [
       removeConsole(),
@@ -49,4 +55,6 @@ export default defineNuxtConfig({
       }),
     ],
   },
+
+  compatibilityDate: '2024-09-04',
 })
