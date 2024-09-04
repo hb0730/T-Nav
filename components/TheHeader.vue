@@ -3,7 +3,8 @@ import { IndentDecrease, IndentIncrease, InfoCircle, MoonStars, Sun } from '@vic
 import Github from '~/assets/svg/github.svg?component'
 import { useGlobal } from '~/composables/useGlobal'
 
-const { isDark, toggleDark, navCollapse, toggleNavCollapse } = useGlobal()
+const { navCollapse, toggleNavCollapse } = useGlobal()
+const { isDark, toggleTheme } = useTheme()
 </script>
 
 <template>
@@ -22,7 +23,7 @@ const { isDark, toggleDark, navCollapse, toggleNavCollapse } = useGlobal()
     <div class="nav-right">
       <n-tooltip trigger="hover" placement="bottom">
         <template #trigger>
-          <n-button circle ghost class="c-button" @click="toggleDark">
+          <n-button circle ghost class="c-button" @click="toggleTheme">
             <n-icon :size="25">
               <Sun v-if="isDark" />
               <MoonStars v-else />

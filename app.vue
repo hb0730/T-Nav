@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { useStyle } from './composables/useStyle'
+import { darkTheme } from 'naive-ui'
+import { useTheme } from '~/composables/useTheme'
+import { darkThemeOverrides, lightThemeOverrides } from '~/themes'
+
+const { isDark } = useTheme()
+const theme = computed(() => isDark.value ? darkTheme : undefined)
+const themeOverrides = computed(() => isDark.value ? darkThemeOverrides : lightThemeOverrides)
+// const nuxtApp = useNuxtApp()
+
+// nuxtApp.hook('page:finish', () => {
+//   const colorMode = useColorMode()
+//   console.log('colorMode', colorMode.value)
+//   console.log('isDark', isDark.value)
+// })
 
 const siteConfig = useSiteConfig()
-const { theme, themeOverrides } = useStyle()
-
 function _console() {
   // 控制台输出
   const styleTitle1 = 'font-size: 20px;font-weight: 600;color: rgb(244,167,89);'

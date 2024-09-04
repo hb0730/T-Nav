@@ -5,9 +5,10 @@ const siteConfig = useSiteConfig()
 
 <template>
   <div class="copy-right text-sm text-gray-500">
-    <span>Copyright © 2024 - {{ new Date().getFullYear() }}</span>
+    <span>© 2024 <n-button text tag="a" target="_blank" :href="siteConfig.authorLink" ghost type="primary">{{ siteConfig.author }}</n-button>
+    </span>
     <span>Powered by
-      <n-button text tag="a" target="_blank" :href="siteConfig.authorLink" ghost type="primary">{{ siteConfig.author }} </n-button>
+      <n-button text tag="a" target="_blank" href="https://hb0730.me" ghost type="primary">hb0730</n-button>
     </span>
     <span>Theme by
       <n-button text tag="a" target="_blank" href="https://it-tools.tech/" ghost type="primary">it-tools </n-button>

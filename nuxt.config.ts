@@ -7,13 +7,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.scss'],
   ssr: true,
-
   modules: [
     'nuxtjs-naive-ui',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
     'nuxt-svgo',
+    '@nuxtjs/color-mode',
+    '@vueuse/nuxt',
   ],
 
   app: {
@@ -34,6 +35,11 @@ export default defineNuxtConfig({
     icon: 'https://t-nav.hb0730.me/favicon.ico',
     logo: 'https://t-nav.hb0730.me/logo.png',
     icp: '',
+  },
+  colorMode: {
+    classSuffix: '',
+    classPrefix: '',
+    dataValue: 'theme',
   },
 
   robots: {
