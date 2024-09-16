@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": ">=20.17.0",
-    "pnpm": ">=9.9.0"
+    "pnpm": ">=9.10.0"
   },
   "scripts": {
     "build": "nuxt build",
@@ -17,14 +17,14 @@
   },
   "dependencies": {
     "nuxt": "^3.13.1",
-    "vue": "^3.5.3",
-    "vue-router": "^4.4.3"
+    "vue": "^3.5.4",
+    "vue-router": "^4.4.4"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.3.2",
+    "@antfu/eslint-config": "^3.6.0",
     "@css-render/vue3-ssr": "^0.15.14",
-    "@nuxtjs/color-mode": "^3.4.4",
-    "@nuxtjs/robots": "^4.1.6",
+    "@nuxtjs/color-mode": "^3.5.0",
+    "@nuxtjs/robots": "^4.1.7",
     "@nuxtjs/sitemap": "6.0.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@vicons/fa": "^0.12.0",
@@ -33,7 +33,7 @@
     "@vueuse/core": "^11.0.3",
     "@vueuse/nuxt": "^11.0.3",
     "css-render": "^0.15.14",
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "eslint-plugin-format": "^0.1.2",
     "naive-ui": "^2.39.0",
     "nuxt-svgo": "^4.0.5",
@@ -44,6 +44,6 @@
   },
   "volta": {
     "node": "20.17.0",
-    "pnpm": "9.9.0"
+    "pnpm": "9.10.0"
   }
 }
