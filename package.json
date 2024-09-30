@@ -16,22 +16,22 @@
     "vue": "latest"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.6.2",
+    "@antfu/eslint-config": "^3.7.3",
     "@bg-dev/nuxt-naiveui": "2.0.0-rc.1",
     "@iconify-json/logos": "^1.2.0",
     "@iconify-json/tabler": "^1.2.3",
     "@nuxtjs/robots": "^4.1.7",
-    "@nuxtjs/sitemap": "^6.0.1",
+    "@nuxtjs/sitemap": "^6.1.0",
     "@unocss/nuxt": "^0.62.4",
     "@vueuse/nuxt": "^11.1.0",
-    "eslint": "^9.10.0",
+    "eslint": "^9.11.1",
     "eslint-plugin-format": "^0.1.2",
-    "sass": "^1.79.2",
+    "sass": "^1.79.3",
     "unocss": "^0.62.4",
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
     "node": "20.17.0",
-    "pnpm": "9.10.0"
+    "pnpm": "9.11.0"
   }
 }
