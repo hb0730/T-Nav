@@ -31,7 +31,7 @@
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
-    "node": "20.18.0",
+    "node": "22.11.0",
     "pnpm": "9.12.3"
   }
 }
