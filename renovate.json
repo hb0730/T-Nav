@@ -1,21 +1,29 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     "schedule:weekly",
     "group:allNonMajor",
     "npm:unpublishSafe"
   ],
-  "labels": ["renovate"],
+  "labels": [
+    "renovate"
+  ],
   "rangeStrategy": "bump",
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
       "description": "Automerge non-major updates",
       "automerge": true
     },
     {
-      "depTypeList": ["peerDependencies"],
+      "matchDepTypes": [
+        "peerDependencies"
+      ],
       "enabled": false
     }
   ]
