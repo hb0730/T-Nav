@@ -12,26 +12,26 @@
     "lint:fix": "eslint --flag unstable_ts_config --fix"
   },
   "dependencies": {
-    "nuxt": "^3.14.159",
+    "nuxt": "^3.14.1592",
     "vue": "latest"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.9.1",
+    "@antfu/eslint-config": "^3.9.2",
     "@bg-dev/nuxt-naiveui": "2.0.0-rc.3",
     "@iconify-json/logos": "^1.2.3",
     "@iconify-json/tabler": "^1.2.8",
     "@nuxtjs/robots": "^4.1.11",
     "@nuxtjs/sitemap": "^6.1.5",
     "@unocss/nuxt": "^0.64.1",
-    "@vueuse/nuxt": "^11.2.0",
-    "eslint": "^9.14.0",
+    "@vueuse/nuxt": "^11.3.0",
+    "eslint": "^9.15.0",
     "eslint-plugin-format": "^0.1.2",
     "sass": "^1.81.0",
     "unocss": "^0.64.1",
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
-    "node": "20.18.0",
-    "pnpm": "9.13.2"
+    "node": "20.18.1",
+    "pnpm": "9.14.2"
   }
 }
