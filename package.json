@@ -20,7 +20,7 @@
     "@bg-dev/nuxt-naiveui": "2.0.0-rc.3",
     "@iconify-json/logos": "^1.2.3",
     "@iconify-json/tabler": "^1.2.8",
-    "@nuxtjs/robots": "^4.1.11",
+    "@nuxtjs/robots": "^5.0.0",
     "@nuxtjs/sitemap": "^6.1.5",
     "@unocss/nuxt": "^0.64.1",
     "@vueuse/nuxt": "^11.3.0",
