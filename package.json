@@ -23,7 +23,7 @@
     "@nuxtjs/robots": "^5.2.10",
     "@nuxtjs/sitemap": "^7.2.10",
     "@unocss/nuxt": "^66.0.0",
-    "@vueuse/nuxt": "^12.8.2",
+    "@vueuse/nuxt": "^13.1.0",
     "eslint": "^9.25.1",
     "eslint-plugin-format": "^1.0.1",
     "sass": "^1.87.0",
