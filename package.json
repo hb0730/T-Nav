@@ -12,7 +12,7 @@
     "lint:fix": "eslint --flag unstable_ts_config --fix"
   },
   "dependencies": {
-    "nuxt": "^3.16.2",
+    "nuxt": "^3.17.1",
     "vue": "latest"
   },
   "devDependencies": {
@@ -32,6 +32,6 @@
   },
   "volta": {
     "node": "22.15.0",
-    "pnpm": "10.9.0"
+    "pnpm": "10.10.0"
   }
 }
