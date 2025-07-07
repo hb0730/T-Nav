@@ -12,19 +12,19 @@
     "lint:fix": "eslint --flag unstable_ts_config --fix"
   },
   "dependencies": {
-    "nuxt": "^3.17.5",
+    "nuxt": "^3.17.6",
     "vue": "latest"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.16.1",
+    "@antfu/eslint-config": "^4.16.2",
     "@bg-dev/nuxt-naiveui": "2.0.0-rc.5",
     "@iconify-json/logos": "^1.2.4",
     "@iconify-json/tabler": "^1.2.19",
-    "@nuxtjs/robots": "^5.2.11",
-    "@nuxtjs/sitemap": "^7.4.2",
+    "@nuxtjs/robots": "^5.3.0",
+    "@nuxtjs/sitemap": "^7.4.3",
     "@unocss/nuxt": "^66.3.2",
-    "@vueuse/nuxt": "^13.4.0",
-    "eslint": "^9.29.0",
+    "@vueuse/nuxt": "^13.5.0",
+    "eslint": "^9.30.1",
     "eslint-plugin-format": "^1.0.1",
     "sass": "^1.89.2",
     "unocss": "^66.3.2",
