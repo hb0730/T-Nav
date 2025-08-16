@@ -26,15 +26,15 @@ WORKDIR /app
 RUN apk add --no-cache dumb-init
 
 # 复制构建产物和必要文件
-COPY --from=builder --chown=nuxt:nodejs /app/.output/ ./
-COPY --from=builder --chown=nuxt:nodejs /app/prisma/ ./prisma/
-COPY --from=builder --chown=nuxt:nodejs /app/docker/entrypoint.sh ./entrypoint.sh
+COPY --from=builder /app/.output/ ./
+COPY --from=builder /app/prisma/ ./prisma/
+COPY --from=builder /app/docker/entrypoint.sh ./entrypoint.sh
 
 # 修复 entrypoint.sh 权限并创建数据库目录
 RUN chmod +x entrypoint.sh && \
     mkdir -p /app/prisma/db && \
-    chown -R nuxt:nodejs /app/prisma && \
-    chown -R nuxt:nodejs /app
+    chown -R /app/prisma && \
+    chown -R /app
 
 # 全局安装 prisma（使用最新版本匹配 package.json）
 RUN npm install -g prisma@^6.13.0
