@@ -8,15 +8,10 @@ import {
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
-import { iconSafelist } from './lib/icon-safelist'
+
+import { iconSafelist } from './lib/icons-safelist'
 
 export default defineConfig({
-  // 配置内容扫描规则
-  content: {
-    filesystem: [
-      'lib/icons-data.ts', // 扫描图标数据文件
-    ],
-  },
   theme: {
     colors: {
       primary: '#64cc96',
@@ -40,20 +35,5 @@ export default defineConfig({
     transformerVariantGroup(),
     transformerAttributifyJsx(),
   ],
-  safelist: [
-    // 保留原有的安全列表
-    'i-logos-vue',
-    'i-logos-react',
-    'i-tabler-api',
-    'i-tabler-brand-blogger',
-    'i-tabler-brand-codesandbox',
-    'i-tabler-brand-github-filled',
-    'i-tabler-brand-github',
-    'i-tabler-device-tv',
-    'i-tabler-video',
-    'i-tabler-tool',
-    'i-tabler-photo',
-    // 动态生成的图标安全列表
-    ...iconSafelist,
-  ],
+  safelist: iconSafelist,
 })

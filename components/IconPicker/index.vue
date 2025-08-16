@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type { IconInfo } from '~/lib/icons-data'
+import type { IconCollection } from './data'
 import { useImageUtils } from '~/composables/useImageUtils'
-import {
-  ALL_ICONS,
-  getIconsPage,
-  getTotalPages,
-  ICONS_BY_PREFIX,
-  PRESET_ICONS,
+import icons, {
+  allIcons,
+  commonIcons,
+  getIconsByCollection,
   searchIcons,
-} from '~/lib/icons-data'
+} from './data'
 
 interface Props {
   modelValue?: string
@@ -24,38 +22,42 @@ const emit = defineEmits<Emits>()
 const searchQuery = ref('')
 const imageError = ref(false)
 const currentPage = ref(1)
-const activePrefix = ref<'all' | 'tabler' | 'logos'>('tabler')
+const activeCollection = ref<string>('Tabler Icons')
+const itemsPerPage = 50
 
-// 使用导入的预设图标
-const presetIcons = PRESET_ICONS
+// 使用新的常用图标
+const presetIcons = commonIcons.map(icon => ({
+  name: icon?.name.split('-').slice(2).join(' ') || '',
+  value: icon?.name || '',
+}))
 
 // 获取当前选择的图标集合
 const currentIcons = computed(() => {
-  let icons: IconInfo[]
+  let iconList = allIcons
 
-  if (activePrefix.value === 'all') {
-    icons = ALL_ICONS
-  }
-  else {
-    icons = ICONS_BY_PREFIX[activePrefix.value] || []
+  // 根据选择的集合过滤
+  if (activeCollection.value !== 'all') {
+    iconList = getIconsByCollection(activeCollection.value)
   }
 
   // 应用搜索过滤
   if (searchQuery.value.trim()) {
-    icons = searchIcons(icons, searchQuery.value)
+    iconList = searchIcons(searchQuery.value)
   }
 
-  return icons
+  return iconList
 })
 
 // 获取当前页的图标
 const currentPageIcons = computed(() => {
-  return getIconsPage(currentIcons.value, currentPage.value)
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return currentIcons.value.slice(start, end)
 })
 
 // 总页数
 const totalPages = computed(() => {
-  return getTotalPages(currentIcons.value)
+  return Math.ceil(currentIcons.value.length / itemsPerPage)
 })
 
 // 监听搜索查询变化，重置页码
@@ -63,8 +65,8 @@ watch(searchQuery, () => {
   currentPage.value = 1
 })
 
-// 监听前缀变化，重置页码
-watch(activePrefix, () => {
+// 监听集合变化，重置页码
+watch(activeCollection, () => {
   currentPage.value = 1
 })
 
@@ -78,9 +80,9 @@ const { isImageUrl, getImageUrl } = useImageUtils()
 
 <template>
   <div class="space-y-4">
-    <div v-if="modelValue" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+    <div v-if="modelValue" class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
       <div class="flex items-center space-x-3">
-        <span class="text-sm text-gray-600">当前选择：</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400">当前选择：</span>
         <div class="flex items-center space-x-2">
           <img
             v-if="isImageUrl(modelValue)"
@@ -93,7 +95,7 @@ const { isImageUrl, getImageUrl } = useImageUtils()
             :class="modelValue"
             class="text-xl"
           />
-          <span class="text-sm font-mono text-gray-700">{{ modelValue }}</span>
+          <span class="text-sm font-mono text-gray-700 dark:text-gray-300">{{ modelValue }}</span>
         </div>
       </div>
       <n-button size="small" quaternary type="error" @click="selectIcon('')">
@@ -110,12 +112,12 @@ const { isImageUrl, getImageUrl } = useImageUtils()
           <div
             v-for="icon in presetIcons"
             :key="icon.name"
-            class="flex flex-col items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors"
-            :class="{ 'border-blue-500 bg-blue-50': modelValue === icon.value }"
+            class="flex flex-col items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            :class="{ 'border-blue-500 bg-blue-50 dark:bg-blue-900/20': modelValue === icon.value }"
             @click="selectIcon(icon.value)"
           >
             <i :class="icon.value" class="text-2xl mb-1" />
-            <span class="text-xs text-gray-600 text-center">{{ icon.name }}</span>
+            <span class="text-xs text-gray-600 dark:text-gray-400 text-center">{{ icon.name }}</span>
           </div>
         </div>
       </n-tab-pane>
@@ -123,27 +125,22 @@ const { isImageUrl, getImageUrl } = useImageUtils()
       <n-tab-pane name="icons" tab="图标库">
         <div class="space-y-3">
           <!-- 图标集选择器 -->
-          <div class="flex gap-2">
+          <div class="flex gap-2 flex-wrap">
             <n-button
-              :type="activePrefix === 'tabler' ? 'primary' : 'default'"
+              v-for="collection in icons.collections"
+              :key="collection.name"
+              :type="activeCollection === collection.name ? 'primary' : 'default'"
               size="small"
-              @click="activePrefix = 'tabler'"
+              @click="activeCollection = collection.name"
             >
-              Tabler ({{ ICONS_BY_PREFIX.tabler.length }})
+              {{ collection.name }} ({{ collection.data.length }})
             </n-button>
             <n-button
-              :type="activePrefix === 'logos' ? 'primary' : 'default'"
+              :type="activeCollection === 'all' ? 'primary' : 'default'"
               size="small"
-              @click="activePrefix = 'logos'"
+              @click="activeCollection = 'all'"
             >
-              Logos ({{ ICONS_BY_PREFIX.logos.length }})
-            </n-button>
-            <n-button
-              :type="activePrefix === 'all' ? 'primary' : 'default'"
-              size="small"
-              @click="activePrefix = 'all'"
-            >
-              全部 ({{ ALL_ICONS.length }})
+              全部 ({{ allIcons.length }})
             </n-button>
           </div>
 
@@ -159,22 +156,22 @@ const { isImageUrl, getImageUrl } = useImageUtils()
           </n-input>
 
           <!-- 统计信息 -->
-          <div class="text-sm text-gray-600">
+          <div class="text-sm text-gray-600 dark:text-gray-400">
             共找到 {{ currentIcons.length }} 个图标，第 {{ currentPage }} / {{ totalPages }} 页
           </div>
 
           <!-- 图标网格 -->
-          <div class="grid grid-cols-10 gap-2 max-h-80 overflow-y-auto p-2 border rounded">
+          <div class="grid grid-cols-10 gap-2 max-h-80 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded">
             <div
               v-for="icon in currentPageIcons"
-              :key="icon.className"
-              class="flex flex-col items-center p-2 border rounded cursor-pointer hover:bg-blue-50 transition-colors"
-              :class="{ 'border-blue-500 bg-blue-50': modelValue === icon.className }"
-              :title="`${icon.name} (${icon.prefix})`"
-              @click="selectIcon(icon.className)"
+              :key="icon.name"
+              class="flex flex-col items-center p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              :class="{ 'border-blue-500 bg-blue-50 dark:bg-blue-900/20': modelValue === icon.name }"
+              :title="`${icon.name} (${icon.collection})`"
+              @click="selectIcon(icon.name)"
             >
-              <i :class="icon.className" class="text-lg mb-1" />
-              <span class="text-xs text-gray-500 text-center break-all leading-tight">{{ icon.name }}</span>
+              <i :class="icon.name" class="text-lg mb-1" />
+              <span class="text-xs text-gray-500 dark:text-gray-400 text-center break-all leading-tight">{{ icon.keywords.join(' ') }}</span>
             </div>
           </div>
 
@@ -199,7 +196,7 @@ const { isImageUrl, getImageUrl } = useImageUtils()
                   placeholder="请输入图标类名，如：i-tabler-heart"
                   @input="$emit('update:modelValue', $event)"
                 />
-                <div class="text-xs text-gray-500">
+                <div class="text-xs text-gray-500 dark:text-gray-400">
                   支持UnoCSS图标类名，如：i-tabler-heart、i-logos-vue等
                 </div>
               </div>
@@ -212,15 +209,15 @@ const { isImageUrl, getImageUrl } = useImageUtils()
                   placeholder="请输入图片URL或路径，如：/imgs/ai/ai-logo.png"
                   @input="$emit('update:modelValue', $event)"
                 />
-                <div class="text-xs text-gray-500">
+                <div class="text-xs text-gray-500 dark:text-gray-400">
                   支持网络图片URL、相对路径（/imgs/...）或绝对URL。旧的/assets/imgs/路径会自动转换。
                 </div>
               </div>
             </n-tab-pane>
           </n-tabs>
 
-          <div v-if="modelValue" class="p-4 bg-gray-50 rounded-lg">
-            <p class="text-sm text-gray-600 mb-2">
+          <div v-if="modelValue" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
               预览：
             </p>
             <div class="flex items-center space-x-2">
@@ -242,10 +239,10 @@ const { isImageUrl, getImageUrl } = useImageUtils()
                 </div>
               </div>
               <div class="flex-1">
-                <div class="text-sm text-gray-600 font-mono break-all">
+                <div class="text-sm text-gray-600 dark:text-gray-300 font-mono break-all">
                   {{ modelValue }}
                 </div>
-                <div class="text-xs text-gray-400">
+                <div class="text-xs text-gray-400 dark:text-gray-500">
                   {{ isImageUrl(modelValue) ? '图片' : '图标类' }}
                   {{ imageError && isImageUrl(modelValue) ? ' (加载失败)' : '' }}
                 </div>

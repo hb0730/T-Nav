@@ -4,7 +4,7 @@ import { useGlobal } from '~/composables/useGlobal'
 import { useDynamicSiteConfig } from '~/composables/useSiteConfig'
 
 const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
-const { isMobile, isSmallScreen } = useGlobal()
+const { isSmallScreen } = useGlobal()
 
 // 获取站点配置
 await fetchSiteConfig()

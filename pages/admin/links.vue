@@ -119,7 +119,10 @@ const columns: DataTableColumns<Link> = [
           alt: 'Logo',
         })
       }
-      return h('i', { class: row.logo })
+      return h(resolveComponent('TheIcon'), { 
+        icon: row.logo,
+        class: 'w-6 h-6 text-lg'
+      })
     },
   },
   {

@@ -17,7 +17,7 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx scripts/seed.ts",
     "icons:generate": "tsx scripts/generate-icons.ts",
-    "icons:safelist": "tsx scripts/generate-safelist.ts"
+    "icons:safelist": "tsx scripts/generate-icon-safelist.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",

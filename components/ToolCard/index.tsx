@@ -23,7 +23,7 @@ export default defineComponent({
   setup(props) {
     const model = props.modelValue
 
-    const isDefaultLogo = computed(() => model.logo === null || model.logo === undefined)
+    const isDefaultLogo = computed(() => model.logo === null || model.logo === undefined || model.logo === '')
     const isPathIcon = computed(() => model.logo && (model.logo.startsWith('/') || model.logo.startsWith('http') || model.logo.startsWith('data:image')))
     const isIcon = computed(() => model.logo && !isPathIcon.value)
     const isDeprecated = computed(() => model.deprecated)
@@ -55,8 +55,8 @@ export default defineComponent({
                 trigger: () => (
                   <>
                     <div class={['flex flex-col', styles['card-content']]}>
-                      <div class="flex items-start flex-1" overflow="hidden">
-                        <div class="w-16 h-16 flex items-center justify-center flex-shrink-0" overflow="hidden">
+                      <div class="flex items-start flex-1 overflow-hidden">
+                        <div class="w-16 h-16 flex items-center justify-center flex-shrink-0 overflow-hidden">
                           {logo.value}
                         </div>
                         <div class="flex-1 flex flex-col ml-4 justify-between min-h-16">
