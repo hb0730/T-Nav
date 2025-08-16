@@ -31,10 +31,7 @@ COPY --from=builder /app/prisma/ ./prisma/
 COPY --from=builder /app/docker/entrypoint.sh ./entrypoint.sh
 
 # 修复 entrypoint.sh 权限并创建数据库目录
-RUN chmod +x entrypoint.sh && \
-    mkdir -p /app/prisma/db && \
-    chown -R /app/prisma && \
-    chown -R /app
+RUN chmod +x entrypoint.sh 
 
 # 全局安装 prisma（使用最新版本匹配 package.json）
 RUN npm install -g prisma@^6.13.0
