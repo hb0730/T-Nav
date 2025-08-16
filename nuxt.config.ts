@@ -89,16 +89,6 @@ export default defineNuxtConfig({
     plugins: [
       removeConsole(),
     ],
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            vendor: ['vue', '@vue/runtime-core'],
-            naiveui: ['naive-ui'],
-          },
-        },
-      },
-    },
   },
 
   // 构建优化
