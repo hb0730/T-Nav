@@ -1,4 +1,4 @@
-import { Storage } from '../utils/storage'
+import { prisma } from '~/server/prisma'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -11,17 +11,22 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const links = await Storage.getLinks()
-    const filteredLinks = links.filter(link => link.id !== id)
+    // 查找要删除的链接
+    const existingLink = await prisma.link.findUnique({
+      where: { id },
+    })
 
-    if (filteredLinks.length === links.length) {
+    if (!existingLink) {
       throw createError({
         statusCode: 404,
         statusMessage: '链接不存在',
       })
     }
 
-    await Storage.saveLinks(filteredLinks)
+    // 删除链接
+    await prisma.link.delete({
+      where: { id },
+    })
 
     return {
       success: true,

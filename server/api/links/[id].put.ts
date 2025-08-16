@@ -1,5 +1,5 @@
 import type { UpdateLinkDto } from '~/types/database'
-import { Storage } from '../utils/storage'
+import { prisma } from '~/server/prisma'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -15,8 +15,9 @@ export default defineEventHandler(async (event) => {
 
     // 如果更新了分类ID，验证分类是否存在
     if (body.categoryId) {
-      const categories = await Storage.getCategories()
-      const categoryExists = categories.some(cat => cat.id === body.categoryId)
+      const categoryExists = await prisma.category.findUnique({
+        where: { id: body.categoryId },
+      })
       if (!categoryExists) {
         throw createError({
           statusCode: 400,
@@ -25,28 +26,43 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const links = await Storage.getLinks()
-    const linkIndex = links.findIndex(link => link.id === id)
+    // 查找要更新的链接
+    const existingLink = await prisma.link.findUnique({
+      where: { id },
+    })
 
-    if (linkIndex === -1) {
+    if (!existingLink) {
       throw createError({
         statusCode: 404,
         statusMessage: '链接不存在',
       })
     }
 
-    const updatedLink = {
-      ...links[linkIndex],
+    // 准备更新数据
+    const updateData: any = {
       ...body,
       updatedAt: new Date(),
     }
 
-    links[linkIndex] = updatedLink
-    await Storage.saveLinks(links)
+    // 处理tags字段
+    if (body.tags) {
+      updateData.tags = JSON.stringify(body.tags)
+    }
+
+    const updatedLink = await prisma.link.update({
+      where: { id },
+      data: updateData,
+    })
+
+    // 将序列化的tags字段转换为数组返回
+    const formattedLink = {
+      ...updatedLink,
+      tags: updatedLink.tags ? JSON.parse(updatedLink.tags) : [],
+    }
 
     return {
       success: true,
-      data: updatedLink,
+      data: formattedLink,
     }
   }
   catch (error: any) {
