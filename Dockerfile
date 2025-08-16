@@ -25,10 +25,6 @@ WORKDIR /app
 # 安装运行时依赖
 RUN apk add --no-cache dumb-init
 
-# 创建非 root 用户
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nuxt -u 1001
-
 # 复制构建产物和必要文件
 COPY --from=builder --chown=nuxt:nodejs /app/.output/ ./
 COPY --from=builder --chown=nuxt:nodejs /app/prisma/ ./prisma/
@@ -51,12 +47,6 @@ ENV DATABASE_URL="file:/app/prisma/db/t-nav.db" \
     PORT="3030" \
     NUXT_HOST="0.0.0.0" \
     NUXT_PORT="3030"
-
-# 切换到非 root 用户
-USER nuxt
-
-# 数据卷
-VOLUME ["/app/prisma/db"]
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
