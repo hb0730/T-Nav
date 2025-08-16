@@ -1,5 +1,5 @@
 import { hashPassword } from '../lib/auth'
-import { prisma } from '../lib/prisma'
+import { prisma } from '../server/prisma'
 
 async function main() {
   console.log('🌱 开始数据库种子数据初始化...')

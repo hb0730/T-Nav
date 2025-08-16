@@ -72,7 +72,7 @@ function _console() {
 
   const title1 = `${siteConfig.value.name} 主页\n`
   const title2 = `${siteConfig.value.description}`
-  const content = `\n\n 版本：v1.0.1 \n\n 主页：${siteConfig.value.authorLink} \n\n 作者：${siteConfig.value.author} \n\n`
+  const content = `\n\n 版本：v2.0.0 \n\n 主页：${siteConfig.value.authorLink} \n\n 作者：${siteConfig.value.author} \n\n`
 
   console.info(`%c${title1} %c${title2} %c${content}`, styleTitle1, styleTitle2, styleContent)
 }

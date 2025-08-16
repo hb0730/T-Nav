@@ -1,6 +1,6 @@
 import type { LoginDto } from '~/types/database'
 import { generateToken, verifyPassword } from '~/lib/auth'
-import { prisma } from '~/lib/prisma'
+import { prisma } from '~/server/prisma'
 
 export default defineEventHandler(async (event) => {
   try {

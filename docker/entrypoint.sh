@@ -22,9 +22,9 @@ echo "Starting Prisma database initialization..."
 mkdir -p /app/prisma/db
 
 # 检查数据库文件是否存在
-if [ ! -f "/app/prisma/db/mood.db" ]; then
+if [ ! -f "/app/prisma/db/t-nav.db" ]; then
   echo "Database file does not exist, creating new database..."
-  touch /app/prisma/db/mood.db
+  touch /app/prisma/db/t-nav.db
 fi
 
 # 尝试运行迁移

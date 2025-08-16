@@ -1,5 +1,5 @@
 import type { CreateCategoryDto } from '~/types/database'
-import { prisma } from '~/lib/prisma'
+import { prisma } from '~/server/prisma'
 
 export default defineEventHandler(async (event) => {
   try {
