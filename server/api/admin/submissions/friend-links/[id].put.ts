@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-import { verifyAuth } from '~/lib/auth'
-
-const prisma = new PrismaClient()
+import { prisma } from '~/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -51,7 +48,8 @@ export default defineEventHandler(async (event) => {
       data: submission,
       message: '申请状态更新成功',
     }
-  } catch (error: any) {
+  }
+  catch (error: any) {
     if (error.statusCode) {
       throw error
     }

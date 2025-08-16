@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '~/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -17,7 +15,8 @@ export default defineEventHandler(async (event) => {
     // 验证URL格式
     try {
       new URL(body.url)
-    } catch {
+    }
+    catch {
       throw createError({
         statusCode: 400,
         statusMessage: '请输入有效的URL格式',
@@ -26,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
     // 检查是否已存在相同的申请
     const existingSubmission = await prisma.friendLinkSubmission.findFirst({
-      where: { url: body.url }
+      where: { url: body.url },
     })
 
     if (existingSubmission) {
@@ -52,7 +51,8 @@ export default defineEventHandler(async (event) => {
       data: submission,
       message: '友链申请提交成功，我们会尽快审核！',
     }
-  } catch (error: any) {
+  }
+  catch (error: any) {
     if (error.statusCode) {
       throw error
     }

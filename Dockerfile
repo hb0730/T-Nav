@@ -37,6 +37,6 @@ ENV PORT="3030"
 
 VOLUME /app/prisma/db
 
-EXPOSE 3000
+EXPOSE 3030
 
 ENTRYPOINT ["/app/entrypoint.sh"]

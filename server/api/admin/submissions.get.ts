@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-import { verifyAuth } from '~/lib/auth'
-
-const prisma = new PrismaClient()
+import { prisma } from '~/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -30,7 +27,8 @@ export default defineEventHandler(async (event) => {
         links: linkSubmissions,
       },
     }
-  } catch (error: any) {
+  }
+  catch (error: any) {
     if (error.statusCode) {
       throw error
     }
