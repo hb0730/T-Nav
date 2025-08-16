@@ -29,6 +29,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
+        env:
+          DATABASE_URL: "file:./dev.db"
         run: pnpm run build
       - name: Login to DockerHub
         uses: docker/login-action@v3

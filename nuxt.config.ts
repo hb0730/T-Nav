@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: ['/'],
+      ignore: ['/sitemap.xml', '/robots.txt'],
     },
   },
   modules: [
@@ -49,5 +50,18 @@ export default defineNuxtConfig({
     plugins: [
       removeConsole(),
     ],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // 将图标库分离到单独的块
+            'iconify': ['@iconify-json/tabler', '@iconify-json/logos'],
+            // 将 bcryptjs 和 jsonwebtoken 分离到单独的块
+            'crypto': ['bcryptjs', 'jsonwebtoken'],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000, // 增加警告阈值到1000kb
+    },
   },
 })

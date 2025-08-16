@@ -5,10 +5,26 @@ export default defineEventHandler(async (event) => {
     // 获取站点配置
     const siteConfig = await prisma.siteConfig.findFirst()
     if (!siteConfig) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Site config not found',
-      })
+      // 如果没有数据库连接或配置，返回默认的sitemap
+      const defaultSitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://t-nav.hb0730.me</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://t-nav.hb0730.me/links</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>`
+      
+      setHeader(event, 'Content-Type', 'application/xml')
+      setHeader(event, 'Cache-Control', 'public, max-age=3600')
+      return defaultSitemap
     }
 
     // 获取所有分类用于生成sitemap
@@ -65,9 +81,26 @@ ${urls.map(url => `  <url>
   }
   catch (error) {
     console.error('Error generating sitemap:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
-    })
+    
+    // 数据库连接失败时返回默认sitemap
+    const defaultSitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://t-nav.hb0730.me</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://t-nav.hb0730.me/links</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>`
+    
+    setHeader(event, 'Content-Type', 'application/xml')
+    setHeader(event, 'Cache-Control', 'public, max-age=3600')
+    return defaultSitemap
   }
 })
