@@ -34,9 +34,10 @@ COPY --from=builder --chown=nuxt:nodejs /app/.output/ ./
 COPY --from=builder --chown=nuxt:nodejs /app/prisma/ ./prisma/
 COPY --from=builder --chown=nuxt:nodejs /app/docker/entrypoint.sh ./entrypoint.sh
 
-# 修复 entrypoint.sh 权限并修复数据库文件名
+# 修复 entrypoint.sh 权限并创建数据库目录
 RUN chmod +x entrypoint.sh && \
     mkdir -p /app/prisma/db && \
+    chown -R nuxt:nodejs /app/prisma && \
     chown -R nuxt:nodejs /app
 
 # 全局安装 prisma（使用最新版本匹配 package.json）
@@ -51,11 +52,11 @@ ENV DATABASE_URL="file:/app/prisma/db/t-nav.db" \
     NUXT_HOST="0.0.0.0" \
     NUXT_PORT="3030"
 
-# 数据卷
-VOLUME ["/app/prisma/db"]
-
 # 切换到非 root 用户
 USER nuxt
+
+# 数据卷
+VOLUME ["/app/prisma/db"]
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \

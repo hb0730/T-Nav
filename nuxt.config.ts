@@ -10,7 +10,6 @@ export default defineNuxtConfig({
   // 性能优化
   experimental: {
     payloadExtraction: false,
-    inlineSSRStyles: false,
     renderJsonPayloads: true,
     viewTransition: true,
   },
