@@ -6,24 +6,25 @@ function detectMobileDevice(): boolean {
       const event = useRequestEvent()
       const userAgent = event?.node?.req?.headers?.['user-agent'] || ''
       return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)
-    } catch {
+    }
+    catch {
       // 如果无法获取请求头，默认返回false（桌面端）
       return false
     }
   }
-  
+
   if (import.meta.client) {
     // 在客户端，通过屏幕宽度检测
     return window.innerWidth < 768
   }
-  
+
   return false
 }
 
 export function useGlobal() {
   // 检测是否为移动端
   const isMobile = useState('isMobile', () => detectMobileDevice())
-  
+
   // 是否小屏幕（客户端动态检测）
   const isSmallScreen = useState('isSmallScreen', () => {
     if (import.meta.client) {
@@ -32,7 +33,7 @@ export function useGlobal() {
     // 服务端使用 isMobile 的值
     return isMobile.value
   })
-  
+
   // 导航栏折叠状态 - 移动端默认折叠
   const navCollapse = useState('navCollapse', () => {
     // 服务端渲染时，如果是移动端则默认折叠菜单
@@ -69,7 +70,7 @@ export function useGlobal() {
     // 客户端挂载时立即检测屏幕尺寸
     onResize()
     window.addEventListener('resize', onResize)
-    
+
     // 如果服务端和客户端的检测结果不一致，以客户端为准
     if (isSmallScreen.value !== isMobile.value) {
       isMobile.value = isSmallScreen.value

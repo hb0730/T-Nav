@@ -71,20 +71,22 @@ export default defineComponent({
                         </div>
                       </div>
                       <div class={['w-full mt-3 text-sm text-gray-500 flex gap-1 pt-2 overflow-hidden min-h-8 flex-shrink-0', styles.tags]}>
-                        { model.tags && model.tags.length > 0 ? (
-                          model.tags.map(tag => (
-                            <n-button
-                              class="tag"
-                              tag="span"
-                              size="tiny"
-                              secondary
-                            >
-                              { tag }
-                            </n-button>
-                          ))
-                        ) : (
-                          <span class="text-xs text-gray-400 italic">暂无标签</span>
-                        )}
+                        { model.tags && model.tags.length > 0
+                          ? (
+                              model.tags.map(tag => (
+                                <n-button
+                                  class="tag"
+                                  tag="span"
+                                  size="tiny"
+                                  secondary
+                                >
+                                  { tag }
+                                </n-button>
+                              ))
+                            )
+                          : (
+                              <span class="text-xs text-gray-400 italic">暂无标签</span>
+                            )}
                       </div>
                     </div>
                   </>

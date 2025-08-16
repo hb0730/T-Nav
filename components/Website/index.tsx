@@ -1,5 +1,5 @@
-import ToolCard from '../ToolCard'
 import { useGlobal } from '~/composables/useGlobal'
+import ToolCard from '../ToolCard'
 
 interface MenuItem {
   title: string
@@ -23,7 +23,7 @@ export default defineComponent({
 
   setup(props) {
     const { isSmallScreen } = useGlobal()
-    
+
     return () => (
       <>
         {props.modelValue.map(item => (

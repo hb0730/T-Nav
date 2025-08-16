@@ -2,14 +2,14 @@
 .decoration-none {
   .tool-card {
     min-height: 7rem; /* 设置最小高度确保一致性 */
-    
+
     &:hover {
       border-color: var(--n-color-target);
       // 阴影突出 灰色 0.1
       box-shadow: 2px 2px 20px var(--n-color-target);
     }
   }
-  
+
   .card-content {
     min-height: 5.5rem; /* 内容区域最小高度 */
     display: flex;

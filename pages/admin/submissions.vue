@@ -195,13 +195,14 @@ const linkColumns: DataTableColumns<LinkSubmission> = [
     key: 'tags',
     width: 120,
     render(row) {
-      if (!row.tags || row.tags.length === 0) return h('span', '无')
+      if (!row.tags || row.tags.length === 0)
+        return h('span', '无')
       // 只显示前2个标签，其余用...表示
       const displayTags = row.tags.slice(0, 2)
       const hasMore = row.tags.length > 2
       return h('div', { class: 'flex flex-wrap gap-1' }, [
         ...displayTags.map(tag => h('n-tag', { size: 'small' }, { default: () => tag })),
-        hasMore && h('span', { class: 'text-gray-400 text-xs' }, `+${row.tags.length - 2}`)
+        hasMore && h('span', { class: 'text-gray-400 text-xs' }, `+${row.tags.length - 2}`),
       ])
     },
   },
@@ -276,13 +277,15 @@ async function fetchSubmissions() {
         ...item,
         tags: item.tags ? JSON.parse(item.tags) : [],
       })) || []
-      
+
       // 应用筛选
       applyFilters()
     }
-  } catch {
+  }
+  catch {
     message.error('获取申请数据失败')
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -291,45 +294,45 @@ async function fetchSubmissions() {
 function applyFilters() {
   // 筛选友情链接申请
   let filteredFriendLinks = [...originalFriendLinkSubmissions.value]
-  
+
   // 状态筛选
   if (statusFilter.value !== 'all') {
     filteredFriendLinks = filteredFriendLinks.filter(item => item.status === statusFilter.value)
   }
-  
+
   // 关键词搜索
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.trim().toLowerCase()
-    filteredFriendLinks = filteredFriendLinks.filter(item => 
-      item.title.toLowerCase().includes(keyword) ||
-      item.url.toLowerCase().includes(keyword) ||
-      (item.description && item.description.toLowerCase().includes(keyword)) ||
-      (item.contact && item.contact.toLowerCase().includes(keyword))
+    filteredFriendLinks = filteredFriendLinks.filter(item =>
+      item.title.toLowerCase().includes(keyword)
+      || item.url.toLowerCase().includes(keyword)
+      || (item.description && item.description.toLowerCase().includes(keyword))
+      || (item.contact && item.contact.toLowerCase().includes(keyword)),
     )
   }
-  
+
   friendLinkSubmissions.value = filteredFriendLinks
-  
+
   // 筛选导航站申请
   let filteredLinks = [...originalLinkSubmissions.value]
-  
+
   // 状态筛选
   if (statusFilter.value !== 'all') {
     filteredLinks = filteredLinks.filter(item => item.status === statusFilter.value)
   }
-  
+
   // 关键词搜索
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.trim().toLowerCase()
-    filteredLinks = filteredLinks.filter(item => 
-      item.title.toLowerCase().includes(keyword) ||
-      item.url.toLowerCase().includes(keyword) ||
-      (item.description && item.description.toLowerCase().includes(keyword)) ||
-      (item.contact && item.contact.toLowerCase().includes(keyword)) ||
-      (item.tags && item.tags.some((tag: string) => tag.toLowerCase().includes(keyword)))
+    filteredLinks = filteredLinks.filter(item =>
+      item.title.toLowerCase().includes(keyword)
+      || item.url.toLowerCase().includes(keyword)
+      || (item.description && item.description.toLowerCase().includes(keyword))
+      || (item.contact && item.contact.toLowerCase().includes(keyword))
+      || (item.tags && item.tags.some((tag: string) => tag.toLowerCase().includes(keyword))),
     )
   }
-  
+
   linkSubmissions.value = filteredLinks
 }
 
@@ -360,7 +363,8 @@ function handleApprove(type: 'friend-link' | 'link', id: string, title: string) 
 
         message.success('申请已通过')
         await fetchSubmissions()
-      } catch {
+      }
+      catch {
         message.error('操作失败')
       }
     },
@@ -393,7 +397,7 @@ function handleReject(type: 'friend-link' | 'link', id: string, title: string) {
 
         await $fetch(endpoint, {
           method: 'PUT',
-          body: { 
+          body: {
             status: 'rejected',
             reason: rejectReason.value,
           },
@@ -402,7 +406,8 @@ function handleReject(type: 'friend-link' | 'link', id: string, title: string) {
         message.success('申请已拒绝')
         rejectReason.value = ''
         await fetchSubmissions()
-      } catch {
+      }
+      catch {
         message.error('操作失败')
       }
     },
@@ -424,7 +429,9 @@ await fetchSubmissions()
   <NuxtLayout name="admin">
     <div class="space-y-6">
       <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold">申请审核管理</h1>
+        <h1 class="text-2xl font-bold">
+          申请审核管理
+        </h1>
         <div class="flex items-center space-x-4">
           <n-input
             v-model:value="searchKeyword"
@@ -436,21 +443,21 @@ await fetchSubmissions()
               <i class="i-tabler-search" />
             </template>
           </n-input>
-          
+
           <n-select
             v-model:value="statusFilter"
             :options="statusOptions"
             style="width: 120px;"
           />
-          
-          <n-button @click="resetFilters()" quaternary>
+
+          <n-button quaternary @click="resetFilters()">
             <template #icon>
               <i class="i-tabler-filter-off" />
             </template>
             重置
           </n-button>
-          
-          <n-button @click="fetchSubmissions()" :loading="loading">
+
+          <n-button :loading="loading" @click="fetchSubmissions()">
             <template #icon>
               <i class="i-tabler-refresh" />
             </template>
@@ -486,14 +493,14 @@ await fetchSubmissions()
               striped
               :single-line="false"
             />
-            
+
             <n-empty
               v-if="!loading && friendLinkSubmissions.length === 0 && (searchKeyword || statusFilter !== 'all')"
               description="没有找到符合条件的友情链接申请"
               style="margin: 40px 0;"
             >
               <template #extra>
-                <n-button @click="resetFilters()" type="primary">
+                <n-button type="primary" @click="resetFilters()">
                   清除筛选条件
                 </n-button>
               </template>
@@ -527,14 +534,14 @@ await fetchSubmissions()
               striped
               :single-line="false"
             />
-            
+
             <n-empty
               v-if="!loading && linkSubmissions.length === 0 && (searchKeyword || statusFilter !== 'all')"
               description="没有找到符合条件的导航站申请"
               style="margin: 40px 0;"
             >
               <template #extra>
-                <n-button @click="resetFilters()" type="primary">
+                <n-button type="primary" @click="resetFilters()">
                   清除筛选条件
                 </n-button>
               </template>
