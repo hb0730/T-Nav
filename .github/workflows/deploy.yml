@@ -40,7 +40,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: hb0730/t-nav:latest, hb0730/mood:${{ github.ref_name }}
+          tags: hb0730/t-nav:latest, hb0730/t-nav:${{ github.ref_name }}
           file: Dockerfile
       - name: Cleanup
         run: docker system prune -af
