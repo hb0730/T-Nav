@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import LinksData from '~/data/links'
-
 const siteConfig = useSiteConfig()
 
+// 获取友情链接数据
+const { data: friendsResponse } = await $fetch<{ success: boolean, data: any[] }>('/api/friends')
+const LinksData = friendsResponse || []
+
 useHead({
-  title: `友情链接 | ${siteConfig.name}`,
+  title: `友情链接 | ${siteConfig.value.name}`,
 })
 </script>
 

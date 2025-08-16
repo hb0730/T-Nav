@@ -10,9 +10,7 @@ const { icon, title } = toRefs(props)
       <n-ellipsis>{{ title }}</n-ellipsis>
     </n-h3>
     <div class="description">
-      <n-ellipsis :line-clamp="2" :tooltip="false">
-        <slot />
-      </n-ellipsis>
+      <slot />
     </div>
   </n-card>
 </template>
@@ -30,6 +28,8 @@ html.dark {
   background: linear-gradient(48deg, #1c758c 0%, #1385a2 60%, #02a6cf 100%);
   color: white;
   border: none;
+  overflow: hidden;
+  word-wrap: break-word;
 
   .icon {
     opacity: 0.7;
@@ -42,6 +42,8 @@ html.dark {
   .description {
     opacity: 0.8;
     margin: 5px 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     ::v-deep(a) {
       color: inherit;
       text-decoration: underline;

@@ -9,9 +9,20 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint --flag unstable_ts_config",
-    "lint:fix": "eslint --flag unstable_ts_config --fix"
+    "lint:fix": "eslint --flag unstable_ts_config --fix",
+    "migrate": "tsx scripts/migrate-data.ts",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx scripts/seed.ts",
+    "icons:generate": "tsx scripts/generate-icons.ts",
+    "icons:safelist": "tsx scripts/generate-safelist.ts"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
     "nuxt": "^4.0.2",
     "vue": "latest"
   },
@@ -22,11 +33,15 @@
     "@iconify-json/tabler": "^1.2.20",
     "@nuxtjs/robots": "^5.4.0",
     "@nuxtjs/sitemap": "^7.4.3",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
     "@unocss/nuxt": "^66.3.3",
     "@vueuse/nuxt": "^13.5.0",
     "eslint": "^9.31.0",
     "eslint-plugin-format": "^1.0.1",
+    "prisma": "^5.22.0",
     "sass": "^1.89.2",
+    "tsx": "^4.16.2",
     "unocss": "^66.3.3",
     "vite-plugin-remove-console": "^2.2.0"
   },

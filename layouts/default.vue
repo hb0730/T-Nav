@@ -1,14 +1,26 @@
 <script setup lang="ts">
 import HeaderLogo from '~/assets/imgs/site/header-logo.png'
 import { useGlobal } from '~/composables/useGlobal'
-import menuDataList from '~/data/menu'
 
-const { navCollapse, isSmallScreen, toggleNavCollapse } = useGlobal()
+const { navCollapse, isSmallScreen, isMobile, toggleNavCollapse } = useGlobal()
+
+// 从API获取菜单数据
+let menuDataList: any[] = []
+try {
+  const menuResponse = await $fetch<{ success: boolean, data: any[] }>('/api/menu')
+  menuDataList = menuResponse?.data || []
+}
+catch (error) {
+  console.error('Failed to fetch menu data:', error)
+  // 如果API失败，使用空数组作为后备
+  menuDataList = []
+}
 </script>
 
 <template>
   <n-layout has-sider class="h-100vh min-h-full" bg="#f0f2f5">
     <n-layout-sider
+      v-if="!isMobile || !navCollapse"
       bordered
       collapse-mode="width"
       :collapsed-width="0"

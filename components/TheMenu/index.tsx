@@ -1,5 +1,16 @@
-import type { MenuItem } from '~/data/menu'
+import { getImageUrl, isImageUrl } from '~/composables/useImageUtils'
 import TheIcon from '../TheIcon'
+
+interface MenuItem {
+  title: string
+  icon?: string
+  url?: string
+  logo?: string
+  description?: string
+  deprecated?: boolean
+  children?: MenuItem[]
+  tags?: string[]
+}
 
 export default defineComponent({
   name: 'TheMenu',
@@ -42,14 +53,16 @@ export default defineComponent({
 
     const menuOptions = computed(() => {
       return props.modelValue.map((item) => {
-        // 判断item的icon是否为url or path
-        const isIcon = item.icon?.startsWith('http') || item.icon?.startsWith('/') || item.icon?.startsWith('data:image')
+        // 使用新的图片工具函数判断
+        const isIcon = item.icon ? isImageUrl(item.icon) : false
         const defaultIcon = item.icon ? item.icon : 'i-tabler-layout-grid-filled'
+        const iconSrc = isIcon && item.icon ? getImageUrl(item.icon) : ''
+
         return {
           key: item.title,
           // 两者滚动动画不同
           label: () => h('a', { href: `${index.value ? '' : '/'}#${item.title}`, onClick: aTagClick }, item.title),
-          icon: () => h(TheIcon, { icon: isIcon ? '' : defaultIcon, src: isIcon ? item.icon : '' }),
+          icon: () => h(TheIcon, { icon: isIcon ? '' : defaultIcon, src: iconSrc }),
         }
       })
     })

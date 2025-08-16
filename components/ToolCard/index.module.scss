@@ -1,16 +1,27 @@
 /* 遵循父类元素的宽度*/
 .decoration-none {
   .tool-card {
+    min-height: 7rem; /* 设置最小高度确保一致性 */
+    
     &:hover {
       border-color: var(--n-color-target);
       // 阴影突出 灰色 0.1
       box-shadow: 2px 2px 20px var(--n-color-target);
     }
   }
+  
+  .card-content {
+    min-height: 5.5rem; /* 内容区域最小高度 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
   .description {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    min-height: 2.5rem; /* 确保至少两行的高度 */
+    line-height: 1.25rem; /* 明确设置行高确保一致性 */
   }
   .tags {
     border-top: 1px solid rgba(136, 136, 136, 0.2);

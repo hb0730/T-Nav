@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String?  @unique
+  password  String
+  role      String   @default("ADMIN") // ADMIN or USER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  title     String
+  icon      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  links Link[]
+
+  @@map("categories")
+}
+
+model Link {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  logo        String?
+  description String?
+  tags        String? // SQLite不支持数组，使用JSON字符串存储
+  order       Int      @default(0)
+  deprecated  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("links")
+}
+
+model FriendLink {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  logo        String?
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("friend_links")
+}
+
+model SiteConfig {
+  id            String   @id @default(cuid())
+  name          String   @default("T-Nav 导航网站")
+  description   String   @default("专门为开发者和技术爱好者设计的导航网站")
+  keywords      String   @default("T-Nav,导航网站,编程资源,开发者工具")
+  author        String   @default("hb0730")
+  authorLink    String   @default("https://hb0730.me")
+  url           String   @default("https://t-nav.hb0730.me")
+  logo          String   @default("https://t-nav.hb0730.me/logo.png")
+  icon          String   @default("https://t-nav.hb0730.me/favicon.ico")
+  icp           String   @default("")
+  defaultLocale String   @default("zh-CN")
+  env           String   @default("production")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("site_config")
+}
+
+// 友链申请模型
+model FriendLinkSubmission {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  logo        String?
+  description String?
+  contact     String? // 联系方式（邮箱或QQ等）
+  status      String   @default("pending") // pending, approved, rejected
+  reason      String? // 审核备注
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("friend_link_submissions")
+}
+
+// 导航站申请模型
+model LinkSubmission {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  logo        String?
+  description String?
+  categoryId  String? // 建议分类
+  tags        String? // 建议标签，JSON字符串
+  contact     String? // 联系方式
+  status      String   @default("pending") // pending, approved, rejected
+  reason      String? // 审核备注
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("link_submissions")
+}
+
+// SQLite不支持enum，使用String类型
+// Role values: "ADMIN", "USER"

@@ -1,12 +1,28 @@
-import type { MenuItem } from '~/data/menu'
 import { useCommandPalette } from '~/composables/useCommandPalette'
-import menuDataList from '~/data/menu'
+import { useMenuData } from '~/composables/useMenuData'
+
+interface MenuItem {
+  title: string
+  icon?: string
+  url?: string
+  logo?: string
+  description?: string
+  deprecated?: boolean
+  children?: MenuItem[]
+  tags?: string[]
+}
 
 export default defineComponent({
   name: 'TheCommandPalette',
   setup() {
     const { commandActive, textCommand } = useCommandPalette()
+    const { menuData, fetchMenuData } = useMenuData()
     const isModalOpen = ref(false)
+
+    // 初始化时获取菜单数据
+    onMounted(() => {
+      fetchMenuData()
+    })
 
     // 将menu压缩为一级
     const flattenedDocOptionsRef = computed(() => {
@@ -20,7 +36,7 @@ export default defineComponent({
           else flattenedItems.push(item)
         })
       }
-      traverse(menuDataList)
+      traverse(menuData.value)
       return flattenedItems
     })
     // match substr

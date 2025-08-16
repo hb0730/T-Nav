@@ -1,0 +1,34 @@
+[
+  {
+    "id": "cat_1755302887057_0",
+    "title": "AI",
+    "icon": "/assets/imgs/ai/ai-logo.png",
+    "order": 0,
+    "createdAt": "2025-08-16T00:08:07.057Z",
+    "updatedAt": "2025-08-16T00:08:07.057Z"
+  },
+  {
+    "id": "cat_1755302887057_1",
+    "title": "前端",
+    "icon": "i-tabler-layout-grid-filled",
+    "order": 1,
+    "createdAt": "2025-08-16T00:08:07.057Z",
+    "updatedAt": "2025-08-16T00:08:07.057Z"
+  },
+  {
+    "id": "cat_1755302887057_2",
+    "title": "Vue",
+    "icon": "i-logos-vue",
+    "order": 2,
+    "createdAt": "2025-08-16T00:08:07.057Z",
+    "updatedAt": "2025-08-16T00:08:07.057Z"
+  },
+  {
+    "id": "cat_1755302996976_4rux0321u",
+    "title": "工具",
+    "icon": "i-tabler-tool",
+    "order": 3,
+    "createdAt": "2025-08-16T00:09:56.976Z",
+    "updatedAt": "2025-08-16T00:09:56.976Z"
+  }
+]

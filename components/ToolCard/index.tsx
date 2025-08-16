@@ -1,6 +1,16 @@
-import type { MenuItem } from '~/data/menu'
 import DefaultLogo from '~/assets/imgs/site/header-logo.png'
 import styles from './index.module.scss'
+
+interface MenuItem {
+  title: string
+  icon?: string
+  url?: string
+  logo?: string
+  description?: string
+  deprecated?: boolean
+  children?: MenuItem[]
+  tags?: string[]
+}
 
 export default defineComponent({
   name: 'ToolCard',
@@ -45,37 +55,37 @@ export default defineComponent({
                 trigger: () => (
                   <>
                     <div class={['flex flex-col', styles['card-content']]}>
-                      <div class="flex items-center" overflow="hidden" md="h-22">
-                        <div class="w-16 h-16 flex items-center" overflow="hidden">
+                      <div class="flex items-start flex-1" overflow="hidden">
+                        <div class="w-16 h-16 flex items-center justify-center flex-shrink-0" overflow="hidden">
                           {logo.value}
                         </div>
-                        <div class="flex-1 flex flex-col  justify-center ml-4">
-                          <div class={[['text-lg font-bold text-gray-700 truncate overflow-hidden'], isDeprecated.value && 'line-through']} color="$n-text-color">
-                            {model.title}
-                          </div>
-                          <div class={[styles.description, 'text-sm text-gray-500 mt-2 text-clip overflow-hidden']}>
-                            { model.description }
+                        <div class="flex-1 flex flex-col ml-4 justify-between min-h-16">
+                          <div>
+                            <div class={[['text-lg font-bold text-gray-700 truncate overflow-hidden mb-1'], isDeprecated.value && 'line-through']} color="$n-text-color">
+                              {model.title}
+                            </div>
+                            <div class={[styles.description, 'text-sm text-gray-500 text-clip overflow-hidden']}>
+                              { model.description || '暂无描述' }
+                            </div>
                           </div>
                         </div>
                       </div>
-                      { model.tags && model.tags.length > 0 && (
-                        <>
-                          <div class={['w-full mt-4 text-sm text-gray-500 flex gap-1   pt-2 overflow-hidden', styles.tags]}>
-                            { model.tags.map(tag => (
-                              <>
-                                <n-button
-                                  class="tag"
-                                  tag="span"
-                                  size="tiny"
-                                  secondary
-                                >
-                                  { tag }
-                                </n-button>
-                              </>
-                            ))}
-                          </div>
-                        </>
-                      )}
+                      <div class={['w-full mt-3 text-sm text-gray-500 flex gap-1 pt-2 overflow-hidden min-h-8 flex-shrink-0', styles.tags]}>
+                        { model.tags && model.tags.length > 0 ? (
+                          model.tags.map(tag => (
+                            <n-button
+                              class="tag"
+                              tag="span"
+                              size="tiny"
+                              secondary
+                            >
+                              { tag }
+                            </n-button>
+                          ))
+                        ) : (
+                          <span class="text-xs text-gray-400 italic">暂无标签</span>
+                        )}
+                      </div>
                     </div>
                   </>
                 ),
