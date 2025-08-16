@@ -1,0 +1,13 @@
+services:
+  t-nav-app:
+    container_name: t-nav-app
+    image: hb0730/t-nav:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ./prisma/db:/app/prisma/db
+    environment:
+      - DATABASE_URL=file:/app/prisma/db/t-nav.db
+      - PRISMA_SCHEMA=/app/prisma/schema.prisma
+      - JWT_SECRET=your-secret-key
+    restart: always

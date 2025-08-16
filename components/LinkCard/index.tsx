@@ -1,11 +1,11 @@
-import type { MenuItem } from '~/data/menu'
+import type { FriendLink } from '~/types/database'
 import styles from './index.module.scss'
 
 export default defineComponent({
   name: 'LinkCard',
   props: {
     modelValue: {
-      type: Object as PropType<MenuItem>,
+      type: Object as PropType<FriendLink>,
       default: () => ({}),
     },
 

@@ -1,0 +1,55 @@
+[
+  {
+    "id": "link_1755302887057_0",
+    "title": "DeepSeek",
+    "url": "https://www.deepseek.com/",
+    "logo": "https://www.deepseek.com/favicon.ico",
+    "description": "深度求索（DeepSeek），成立于2023年，专注于研究世界领先的通用人工智能底层模型与技术",
+    "tags": [
+      "chat",
+      "ai",
+      "人工智能",
+      "deepseek"
+    ],
+    "categoryId": "cat_1755302887057_0",
+    "order": 0,
+    "deprecated": false,
+    "createdAt": "2025-08-16T00:08:07.057Z",
+    "updatedAt": "2025-08-16T00:08:07.057Z"
+  },
+  {
+    "id": "link_1755302887057_1",
+    "title": "Kimi",
+    "url": "https://kimi.moonshot.cn",
+    "logo": "https://statics.moonshot.cn/kimi-chat/favicon.ico",
+    "description": "Kimi 是一个有着超大\"内存\"的智能助手",
+    "tags": [
+      "chat",
+      "ai",
+      "人工智能",
+      "chatgpt"
+    ],
+    "categoryId": "cat_1755302887057_0",
+    "order": 1,
+    "deprecated": false,
+    "createdAt": "2025-08-16T00:08:07.057Z",
+    "updatedAt": "2025-08-16T00:08:07.057Z"
+  },
+  {
+    "id": "link_1755303006643_1ks120rt6",
+    "title": "GitHub",
+    "url": "https://github.com",
+    "logo": "https://github.com/favicon.ico",
+    "description": "全球最大的开源代码托管平台",
+    "tags": [
+      "开发",
+      "git",
+      "开源"
+    ],
+    "categoryId": "cat_1755302996976_4rux0321u",
+    "order": 0,
+    "deprecated": false,
+    "createdAt": "2025-08-16T00:10:06.643Z",
+    "updatedAt": "2025-08-16T00:10:06.643Z"
+  }
+]
