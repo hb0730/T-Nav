@@ -57,7 +57,7 @@ async function main() {
   ]
 
   const createdCategories = await Promise.all(
-    categories.map(category => prisma.category.create({ data: category }))
+    categories.map(category => prisma.category.create({ data: category })),
   )
 
   // 创建链接数据
@@ -229,7 +229,7 @@ async function main() {
   ]
 
   await Promise.all(
-    links.map(link => prisma.link.create({ data: link }))
+    links.map(link => prisma.link.create({ data: link })),
   )
 
   // 创建友链
@@ -258,7 +258,7 @@ async function main() {
   ]
 
   await Promise.all(
-    friendLinks.map(friendLink => prisma.friendLink.create({ data: friendLink }))
+    friendLinks.map(friendLink => prisma.friendLink.create({ data: friendLink })),
   )
 
   // 创建友链申请记录
@@ -291,9 +291,9 @@ async function main() {
   ]
 
   await Promise.all(
-    friendLinkSubmissions.map(submission => 
-      prisma.friendLinkSubmission.create({ data: submission })
-    )
+    friendLinkSubmissions.map(submission =>
+      prisma.friendLinkSubmission.create({ data: submission }),
+    ),
   )
 
   // 创建链接申请记录
@@ -332,9 +332,9 @@ async function main() {
   ]
 
   await Promise.all(
-    linkSubmissions.map(submission => 
-      prisma.linkSubmission.create({ data: submission })
-    )
+    linkSubmissions.map(submission =>
+      prisma.linkSubmission.create({ data: submission }),
+    ),
   )
 
   console.log('测试数据添加完成！')

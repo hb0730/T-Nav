@@ -40,6 +40,11 @@ const menuOptions = [
     key: '/admin/site-config',
     icon: () => h('i', { class: 'i-tabler-settings' }),
   },
+  {
+    label: '备份管理',
+    key: '/admin/backup',
+    icon: () => h('i', { class: 'i-tabler-database-export' }),
+  },
 ]
 
 const pageTitle = computed(() => {

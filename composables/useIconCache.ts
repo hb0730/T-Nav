@@ -15,20 +15,20 @@ export function useIconCache() {
   const cleanup = () => {
     const now = Date.now()
     const entries = Array.from(cache.value.entries())
-    
+
     // 移除过期项
     for (const [key, item] of entries) {
       if (now - item.timestamp > maxAge) {
         cache.value.delete(key)
       }
     }
-    
+
     // 如果仍然超过限制，移除最少使用的项
     if (cache.value.size > maxCacheSize) {
       const sortedEntries = entries
         .sort((a, b) => a[1].accessed - b[1].accessed)
         .slice(0, entries.length - maxCacheSize)
-      
+
       for (const [key] of sortedEntries) {
         cache.value.delete(key)
       }
@@ -49,7 +49,7 @@ export function useIconCache() {
     cache.value.set(key, {
       timestamp: Date.now(),
       accessed: Date.now(),
-      data
+      data,
     })
   }
 
@@ -75,6 +75,6 @@ export function useIconCache() {
     set,
     has,
     clear,
-    size
+    size,
   }
 }

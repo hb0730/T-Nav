@@ -11,7 +11,7 @@ export interface IconData {
 // 懒加载图标集合
 const iconCollectionLoaders = {
   'Tabler Icons': () => import('./icons.tabler'),
-  'Logos': () => import('./icons.logos')
+  'Logos': () => import('./icons.logos'),
 }
 
 // 已加载的图标集合缓存
@@ -37,7 +37,7 @@ export async function loadIconCollection(collectionName: string): Promise<IconCo
 
 // 处理图标数据
 function processIconData(collection: IconCollection): IconData[] {
-  return collection.data.map(iconKey => {
+  return collection.data.map((iconKey) => {
     // 将 iconify-tabler:robot 转换为 i-tabler-robot
     const iconName = iconKey.replace('iconify-', 'i-').replace(':', '-')
     return {
@@ -66,20 +66,21 @@ export async function getProcessedIcons(collectionName: string): Promise<IconDat
 // 同步获取图标集合信息（不包含数据）
 export const iconCollections: Pick<IconCollection, 'name' | 'prefix'>[] = [
   { name: 'Tabler Icons', prefix: 'iconify-tabler' },
-  { name: 'Logos', prefix: 'iconify-logos' }
+  { name: 'Logos', prefix: 'iconify-logos' },
 ]
 
 // 延迟初始化的全部图标
 let _allIcons: IconData[] | null = null
 
 export async function getAllIcons(): Promise<IconData[]> {
-  if (_allIcons) return _allIcons
+  if (_allIcons)
+    return _allIcons
 
   const collections = await Promise.all([
     getProcessedIcons('Tabler Icons'),
-    getProcessedIcons('Logos')
+    getProcessedIcons('Logos'),
   ])
-  
+
   _allIcons = collections.flat()
   return _allIcons
 }
@@ -92,10 +93,10 @@ export async function searchIcons(query: string): Promise<IconData[]> {
 
   const allIcons = await getAllIcons()
   const searchTerm = query.toLowerCase()
-  return allIcons.filter(icon => {
+  return allIcons.filter((icon) => {
     return (
-      icon.name.toLowerCase().includes(searchTerm) ||
-      icon.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm))
+      icon.name.toLowerCase().includes(searchTerm)
+      || icon.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm))
     )
   })
 }

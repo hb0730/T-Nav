@@ -15,14 +15,6 @@ IconPicker 是一个高性能的图标选择器组件，支持大量Iconify在�
 ## 基本使用
 
 ```vue
-<template>
-  <div>
-    <IconPicker v-model="selectedIcon" />
-    <div>选中的图标：{{ selectedIcon }}</div>
-    <TheIcon :icon="selectedIcon" class="text-2xl" />
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue'
 import IconPicker from '~/components/IconPicker/index.vue'
@@ -30,6 +22,14 @@ import TheIcon from '~/components/TheIcon/index.vue'
 
 const selectedIcon = ref('iconify-tabler:robot')
 </script>
+
+<template>
+  <div>
+    <IconPicker v-model="selectedIcon" />
+    <div>选中的图标：{{ selectedIcon }}</div>
+    <TheIcon :icon="selectedIcon" class="text-2xl" />
+  </div>
+</template>
 ```
 
 ## 图标格式说明
@@ -52,14 +52,14 @@ IconPicker 使用 Iconify 在线图标格式：
 IconPicker 与 TheIcon 组件完美配合，TheIcon 会自动识别 `iconify-` 前缀并使用在线图标：
 
 ```vue
+<script setup>
+const selectedIcon = ref('iconify-tabler:robot')
+</script>
+
 <template>
   <!-- TheIcon 自动识别 iconify- 前缀使用在线图标 -->
   <TheIcon :icon="selectedIcon" class="text-xl" />
 </template>
-
-<script setup>
-const selectedIcon = ref('iconify-tabler:robot')
-</script>
 ```
 
 ## 键盘操作
@@ -72,22 +72,27 @@ const selectedIcon = ref('iconify-tabler:robot')
 ## 性能优化
 
 ### 虚拟滚动
+
 - 只渲染可见区域的图标，显著减少DOM节点
 - 支持数万图标的流畅滚动
 
 ### 智能缓存
+
 - LRU缓存策略，避免重复加载图标数据
 - 自动清理过期缓存，控制内存占用
 
 ### 懒加载
+
 - 按需加载图标集合数据
 - 减少初始加载时间
 
 ### 防抖搜索
+
 - 300ms防抖，减少不必要的计算
 - 缓存搜索结果，提升响应速度
 
 ### Iconify优化
+
 - TheIcon组件自动处理图标缓存
 - 按需加载，只请求实际使用的图标
 
@@ -102,9 +107,9 @@ const selectedIcon = ref('iconify-tabler:robot')
 ```typescript
 // data/icons.custom.ts
 export default {
-  name: "Custom Icons",
-  prefix: "custom",
-  data: ["custom:icon1", "custom:icon2"]
+  name: 'Custom Icons',
+  prefix: 'custom',
+  data: ['custom:icon1', 'custom:icon2']
 }
 
 // data/index.ts

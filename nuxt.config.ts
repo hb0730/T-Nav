@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   ssr: true,
-  
+
   // 性能优化
   experimental: {
     payloadExtraction: false,
@@ -29,10 +29,10 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { charset: 'utf-8' },
       ],
-      script: [{ 
-        src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4970120746558354', 
+      script: [{
+        src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4970120746558354',
         crossorigin: 'anonymous',
-        async: true 
+        async: true,
       }],
     },
   },
