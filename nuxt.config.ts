@@ -99,29 +99,7 @@ export default defineNuxtConfig({
       removeConsole(),
     ],
     build: {
-      // 代码分割优化
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // 将 NaiveUI 单独打包
-            'naive-ui': ['naive-ui'],
-            // 将 Vue 相关库单独打包
-            'vue-vendor': ['vue', '@vue/shared'],
-            // 将 VueUse 单独打包
-            'vueuse': ['@vueuse/core'],
-          },
-        },
-      },
-      // 生产环境压缩
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-          pure_funcs: ['console.log'],
-        },
-      },
-      // chunk 大小警告阈值
+      // 简化配置，避免Docker构建问题
       chunkSizeWarningLimit: 1000,
     },
     optimizeDeps: {

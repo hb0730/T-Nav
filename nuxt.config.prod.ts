@@ -13,9 +13,29 @@ export default defineNuxtConfig({
     minify: true,
     // 缓存配置
     routeRules: {
-      '/': { prerender: true, headers: { 'cache-control': 's-maxage=3600' } },
-      '/api/**': { cors: true, headers: { 'cache-control': 'max-age=300' } },
-      '/admin/**': { ssr: true, index: false },
+      '/': { 
+        prerender: true, 
+        headers: { 
+          'cache-control': 's-maxage=3600',
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'SAMEORIGIN',
+          'X-XSS-Protection': '1; mode=block',
+        } 
+      },
+      '/api/**': { 
+        cors: true, 
+        headers: { 
+          'cache-control': 'max-age=300',
+          'X-Content-Type-Options': 'nosniff',
+        } 
+      },
+      '/admin/**': { 
+        ssr: true,
+        headers: {
+          'X-Frame-Options': 'SAMEORIGIN',
+          'X-Content-Type-Options': 'nosniff',
+        }
+      },
     },
     // 预渲染路由
     prerender: {
@@ -29,6 +49,19 @@ export default defineNuxtConfig({
 
   // 构建优化
   build: {
+    transpile: ['naive-ui'],
+  },
+
+  // Vite 配置
+  vite: {
+    optimizeDeps: {
+      include: ['naive-ui', '@vueuse/core'],
+    },
+    build: {
+      rollupOptions: {
+        external: [],
+      },
+    },
   },
 
   // 运行时配置
@@ -37,23 +70,6 @@ export default defineNuxtConfig({
     jwtSecret: process.env.JWT_SECRET || 'your-production-jwt-secret-key',
   },
 
-  // 安全配置
-  security: {
-    headers: {
-      crossOriginEmbedderPolicy: 'require-corp',
-      crossOriginOpenerPolicy: 'same-origin',
-      crossOriginResourcePolicy: 'same-origin',
-      originAgentCluster: '?1',
-      referrerPolicy: 'no-referrer',
-      strictTransportSecurity: 'max-age=15552000; includeSubDomains',
-      xContentTypeOptions: 'nosniff',
-      xDNSPrefetchControl: 'off',
-      xDownloadOptions: 'noopen',
-      xFrameOptions: 'SAMEORIGIN',
-      xPermittedCrossDomainPolicies: 'none',
-      xXSSProtection: '1; mode=block',
-    },
-  },
 
   // 性能优化
   experimental: {

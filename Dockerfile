@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # 生成 Prisma Client 并构建
-RUN pnpm db:generate && pnpm build
+RUN pnpm db:generate && pnpm build:prod
 
 FROM node:22-alpine3.21 AS runner
 
