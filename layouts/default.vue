@@ -48,6 +48,8 @@ catch (error) {
       <n-layout-content position="absolute" class="c-content" content-style="padding: 24px;">
         <n-back-top />
         <slot />
+        <!-- 悬浮登录按钮 -->
+        <FloatingLoginButton />
       </n-layout-content>
       <div v-show="isSmallScreen && !navCollapse" class="content-mask" @click="toggleNavCollapse" />
     </n-layout>
