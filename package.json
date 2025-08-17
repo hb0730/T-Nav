@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
+    "build:prod": "nuxt build --config nuxt.config.prod.ts",
+    "build:optimized": "tsx scripts/build-optimized.ts",
+    "build:analyze": "nuxt build --analyze",
+    "analyze:bundle": "tsx scripts/analyze-bundle.ts",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

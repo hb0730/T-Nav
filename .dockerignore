@@ -1,8 +1,49 @@
+# 减少Docker构建上下文大小
+
+# 依赖和构建产物
+node_modules/
 .nuxt/
 .output/
-.github/
-.git/
+dist/
 
-node_modules/
+# 开发文件
+.env*
+!.env.example
+
+# 版本控制
+.git/
+.github/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# 日志
+*.log
+logs/
+
+# 测试
+coverage/
+.nyc_output/
+
+# 缓存
+.cache/
+.tmp/
+
+# 数据库（开发用）
+prisma/dev.db*
+prisma/db/
 data/
+
+# 分析报告
+bundle-analysis.json
+
+# Docker相关  
+docker-compose*.yml
+
+# 文档
+README.md
+docs/
+discuss/
 doc/

@@ -1,38 +1,3 @@
-<template>
-  <div 
-    ref="floatingButton"
-    class="floating-dropdown"
-    :style="isClient ? { top: `${position.y}px`, right: `${position.x}px` } : {}"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-    @mousedown="startDrag"
-  >
-    <!-- 主按钮 -->
-    <div class="main-button" :class="{ dragging: isDragging }">
-      <i class="i-tabler-shield-lock text-4"></i>
-    </div>
-
-    <!-- Dropdown 菜单 -->
-    <div 
-      class="dropdown-menu" 
-      :class="{ 'show': isExpanded && !isDragging }"
-    >
-      <div v-if="!isLoggedIn" class="dropdown-item" @click="handleLogin">
-        <i class="i-tabler-login"></i>
-        <span>登录</span>
-      </div>
-      <div v-if="isLoggedIn" class="dropdown-item" @click="handleAdmin">
-        <i class="i-tabler-settings"></i>
-        <span>管理后台</span>
-      </div>
-      <div v-if="isLoggedIn" class="dropdown-item" @click="handleLogout">
-        <i class="i-tabler-logout"></i>
-        <span>退出登录</span>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth'
 
@@ -47,7 +12,7 @@ const isClient = ref(false)
 // 位置状态
 const position = ref({
   x: 0, // 距离右边的距离，贴右边
-  y: 300 // 默认位置，客户端挂载后会重新计算
+  y: 300, // 默认位置，客户端挂载后会重新计算
 })
 
 // 拖拽状态
@@ -55,7 +20,7 @@ const dragState = ref({
   startX: 0,
   startY: 0,
   startRight: 0,
-  startTop: 0
+  startTop: 0,
 })
 
 // 鼠标进入 - 自动展开
@@ -88,27 +53,26 @@ function handleLogout() {
   logout()
 }
 
-
 // 拖拽开始
 function startDrag(e: MouseEvent) {
   e.preventDefault()
-  
+
   const startPos = { x: e.clientX, y: e.clientY }
-  
+
   const handleFirstMove = (moveEvent: MouseEvent) => {
     const deltaX = Math.abs(moveEvent.clientX - startPos.x)
     const deltaY = Math.abs(moveEvent.clientY - startPos.y)
-    
+
     // 移动超过5px才开始拖拽
     if (deltaX > 5 || deltaY > 5) {
       isDragging.value = true
       isExpanded.value = false
-      
+
       dragState.value = {
         startX: startPos.x,
         startY: startPos.y,
         startRight: position.value.x,
-        startTop: position.value.y
+        startTop: position.value.y,
       }
 
       document.removeEventListener('mousemove', handleFirstMove)
@@ -116,7 +80,7 @@ function startDrag(e: MouseEvent) {
       document.body.style.userSelect = 'none'
     }
   }
-  
+
   const handleFirstUp = () => {
     document.removeEventListener('mousemove', handleFirstMove)
     document.removeEventListener('mouseup', handleFirstUp)
@@ -130,7 +94,8 @@ function startDrag(e: MouseEvent) {
 
 // 拖拽过程
 function onDrag(e: MouseEvent) {
-  if (!isDragging.value) return
+  if (!isDragging.value)
+    return
 
   const deltaX = dragState.value.startX - e.clientX
   const deltaY = e.clientY - dragState.value.startY
@@ -140,21 +105,22 @@ function onDrag(e: MouseEvent) {
 
   position.value = {
     x: newRight,
-    y: newTop
+    y: newTop,
   }
 }
 
 // 拖拽结束
 function stopDrag() {
-  if (!isDragging.value) return
-  
+  if (!isDragging.value)
+    return
+
   document.removeEventListener('mousemove', onDrag)
   document.removeEventListener('mouseup', stopDrag)
   document.body.style.userSelect = ''
-  
+
   // 吸附到右边
   snapToRight()
-  
+
   // 重置拖拽状态
   setTimeout(() => {
     isDragging.value = false
@@ -179,7 +145,7 @@ onMounted(async () => {
     isClient.value = true
     position.value.y = window.innerHeight / 2 - 20
     window.addEventListener('resize', handleResize)
-    
+
     // 加载登录状态
     await loadUserFromToken()
   }
@@ -194,6 +160,41 @@ onUnmounted(() => {
   }
 })
 </script>
+
+<template>
+  <div
+    ref="floatingButton"
+    class="floating-dropdown"
+    :style="isClient ? { top: `${position.y}px`, right: `${position.x}px` } : {}"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+    @mousedown="startDrag"
+  >
+    <!-- 主按钮 -->
+    <div class="main-button" :class="{ dragging: isDragging }">
+      <i class="i-tabler-shield-lock text-4" />
+    </div>
+
+    <!-- Dropdown 菜单 -->
+    <div
+      class="dropdown-menu"
+      :class="{ show: isExpanded && !isDragging }"
+    >
+      <div v-if="!isLoggedIn" class="dropdown-item" @click="handleLogin">
+        <i class="i-tabler-login" />
+        <span>登录</span>
+      </div>
+      <div v-if="isLoggedIn" class="dropdown-item" @click="handleAdmin">
+        <i class="i-tabler-settings" />
+        <span>管理后台</span>
+      </div>
+      <div v-if="isLoggedIn" class="dropdown-item" @click="handleLogout">
+        <i class="i-tabler-logout" />
+        <span>退出登录</span>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .floating-dropdown {

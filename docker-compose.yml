@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  t-nav:
+    build: .
+    ports:
+      - "3030:3030"
+    environment:
+      - DATABASE_URL=file:/app/data/t-nav.db
+      - JWT_SECRET=${JWT_SECRET:-your-secret-key}
+      - NODE_ENV=production
+    volumes:
+      # 数据持久化
+      - t-nav-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3030/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  t-nav-data:
+    driver: local

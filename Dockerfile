@@ -37,13 +37,16 @@ RUN chmod +x entrypoint.sh
 RUN npm install -g prisma@^6.13.0
 
 # 环境变量配置
-ENV DATABASE_URL="file:/app/prisma/db/t-nav.db" \
+ENV DATABASE_URL="file:/app/data/t-nav.db" \
     JWT_SECRET="your-secret-key" \
     NODE_ENV="production" \
     HOST="0.0.0.0" \
     PORT="3030" \
     NUXT_HOST="0.0.0.0" \
     NUXT_PORT="3030"
+
+# 创建数据目录
+RUN mkdir -p /app/data
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \

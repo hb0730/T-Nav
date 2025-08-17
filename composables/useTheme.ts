@@ -1,4 +1,5 @@
 import { darkTheme } from 'naive-ui'
+import { useColorMode, usePreferredDark } from '@vueuse/core'
 import { darkThemeOverrides, lightThemeOverrides } from '~/themes'
 
 export function useTheme() {

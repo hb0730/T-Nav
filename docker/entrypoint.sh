@@ -7,7 +7,7 @@ echo "============================================="
 
 # 设置默认环境变量
 if [ -z "$DATABASE_URL" ]; then
-  export DATABASE_URL="file:/app/prisma/db/t-nav.db"
+  export DATABASE_URL="file:/app/data/t-nav.db"
 fi
 
 if [ -z "$PRISMA_SCHEMA" ]; then
@@ -19,12 +19,12 @@ echo "Prisma Schema: $PRISMA_SCHEMA"
 echo "Starting Prisma database initialization..."
 
 # 确保数据库目录存在
-mkdir -p /app/prisma/db
+mkdir -p /app/data
 
 # 检查数据库文件是否存在
-if [ ! -f "/app/prisma/db/t-nav.db" ]; then
+if [ ! -f "/app/data/t-nav.db" ]; then
   echo "Database file does not exist, creating new database..."
-  touch /app/prisma/db/t-nav.db
+  touch /app/data/t-nav.db
 fi
 
 # 尝试运行迁移

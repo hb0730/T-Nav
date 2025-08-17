@@ -12,12 +12,13 @@ export default defineNuxtConfig({
     payloadExtraction: false,
     renderJsonPayloads: true,
     viewTransition: true,
+    componentIslands: true,
+    asyncContext: true,
   },
 
   // 模块配置
   modules: [
     '@unocss/nuxt',
-    '@vueuse/nuxt',
     '@bg-dev/nuxt-naiveui',
   ],
 
@@ -55,9 +56,9 @@ export default defineNuxtConfig({
     },
   },
 
-  // VueUse 配置
-  vueuse: {
-    ssrHandlers: true,
+  // 自动导入配置
+  imports: {
+    dirs: ['composables/**'],
   },
 
   // 运行时配置
@@ -74,6 +75,15 @@ export default defineNuxtConfig({
       gzip: true,
       brotli: true,
     },
+    minify: true,
+    // 暂时禁用预渲染
+    prerender: {
+      routes: [],
+    },
+    // 静态资源优化
+    experimental: {
+      wasm: true,
+    },
   },
 
   // Vite 配置
@@ -88,10 +98,53 @@ export default defineNuxtConfig({
     plugins: [
       removeConsole(),
     ],
+    build: {
+      // 代码分割优化
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // 将 NaiveUI 单独打包
+            'naive-ui': ['naive-ui'],
+            // 将 Vue 相关库单独打包
+            'vue-vendor': ['vue', '@vue/shared'],
+            // 将 VueUse 单独打包
+            'vueuse': ['@vueuse/core'],
+          },
+        },
+      },
+      // 生产环境压缩
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log'],
+        },
+      },
+      // chunk 大小警告阈值
+      chunkSizeWarningLimit: 1000,
+    },
+    optimizeDeps: {
+      include: ['naive-ui', '@vueuse/core'],
+    },
   },
 
   // 构建优化
   build: {
     analyze: false,
+    transpile: ['naive-ui'],
+  },
+
+  // 路由优化
+  router: {
+    options: {
+      strict: true,
+    },
+  },
+
+  // 功能配置
+  features: {
+    devLogs: false,
+    inlineStyles: true,
   },
 })

@@ -6,8 +6,25 @@ export default defineNuxtConfig({
   // 生产环境特定配置
   nitro: {
     preset: 'node-server',
-    compressPublicAssets: true,
+    compressPublicAssets: {
+      gzip: true,
+      brotli: true,
+    },
     minify: true,
+    // 缓存配置
+    routeRules: {
+      '/': { prerender: true, headers: { 'cache-control': 's-maxage=3600' } },
+      '/api/**': { cors: true, headers: { 'cache-control': 'max-age=300' } },
+      '/admin/**': { ssr: true, index: false },
+    },
+    // 预渲染路由
+    prerender: {
+      concurrency: 16,
+      routes: ['/'],
+    },
+    experimental: {
+      wasm: true,
+    },
   },
 
   // 构建优化
@@ -41,8 +58,8 @@ export default defineNuxtConfig({
   // 性能优化
   experimental: {
     payloadExtraction: false,
-    inlineSSRStyles: false,
     renderJsonPayloads: true,
+    typedPages: true,
   },
 
   // 开发工具（生产环境禁用）
