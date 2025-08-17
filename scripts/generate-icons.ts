@@ -29,22 +29,16 @@ const ICON_SETS = [
 ]
 
 function generateIcons() {
-  // 读取 JSON 文件 IconPicker/data/icons.[tabler|logos].ts
-  // 结构 export default {
-  //   name: 'Tabler Icons',
-  // .  data:[
-  //     'i-tabler-robot'
-  // ]
-  // }
-
   for (const iconSet of ICON_SETS) {
     console.log(`Generating ${iconSet.name} icons...`)
     const iconPath = join(process.cwd(), 'node_modules', iconSet.path)
     const iconData: IconifyData = JSON.parse(readFileSync(iconPath, 'utf-8'))
-    const iconNames = Object.keys(iconData.icons)
-    const iconFile = join(process.cwd(), 'components', 'IconPicker', 'data', `icons.${iconSet.name}.ts`)
-    const iconFileContent = `export default {name: '${iconSet.name} Icons',prefix: '${iconData.prefix}',data: [${iconNames.map(iconName => `'i-${iconData.prefix}-${iconName}'`).join(',')}],}`
-    writeFileSync(iconFile, iconFileContent)
+    const prefix = `iconify-${iconData.prefix}`
+    const data = Object.keys(iconData.icons).map(item => `${prefix}:${item}`)
+    writeFileSync(
+      join(process.cwd(), 'components', 'IconPicker', 'data', `icons.${iconSet.name}.ts`),
+      `export default ${JSON.stringify({ name: `${iconSet.name} Icons`, prefix, data })}`,
+    )
   }
   console.log('Done.')
 }

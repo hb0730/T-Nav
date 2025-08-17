@@ -52,11 +52,10 @@ const columns: DataTableColumns<Category> = [
           alt: '图标',
         })
       }
-      // return h(resolveComponent('TheIcon'), {
-      //   icon: row.icon,
-      //   class: 'w-6 h-6 text-lg'
-      // })
-      return h('div', { class: `w-6 h-6 text-lg ${row.icon}` })
+      return h(resolveComponent('TheIcon'), {
+        icon: row.icon,
+        class: 'w-6 h-6 text-lg',
+      })
     },
   },
   {

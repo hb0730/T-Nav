@@ -9,8 +9,6 @@ import {
   transformerVariantGroup,
 } from 'unocss'
 
-import { iconSafelist } from './lib/icons-safelist'
-
 export default defineConfig({
   theme: {
     colors: {
@@ -23,11 +21,6 @@ export default defineConfig({
     presetTypography(),
     presetIcons({
       scale: 1.2,
-      // 确保包含所需的图标集
-      collections: {
-        tabler: () => import('@iconify-json/tabler/icons.json').then(i => i.default as any),
-        logos: () => import('@iconify-json/logos/icons.json').then(i => i.default as any),
-      },
     }),
   ],
   transformers: [
@@ -35,5 +28,18 @@ export default defineConfig({
     transformerVariantGroup(),
     transformerAttributifyJsx(),
   ],
-  safelist: iconSafelist,
+  safelist: [
+    // 保留原有的安全列表
+    'i-logos-vue',
+    'i-logos-react',
+    'i-tabler-api',
+    'i-tabler-brand-blogger',
+    'i-tabler-brand-codesandbox',
+    'i-tabler-brand-github-filled',
+    'i-tabler-brand-github',
+    'i-tabler-device-tv',
+    'i-tabler-video',
+    'i-tabler-tool',
+    'i-tabler-photo',
+  ],
 })

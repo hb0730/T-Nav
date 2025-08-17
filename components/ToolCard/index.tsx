@@ -1,4 +1,5 @@
 import DefaultLogo from '~/assets/imgs/site/header-logo.png'
+import TheIcon from '../TheIcon'
 import styles from './index.module.scss'
 
 interface MenuItem {
@@ -30,7 +31,7 @@ export default defineComponent({
 
     const logo = computed(() => {
       if (isIcon.value) {
-        return <i class={[model.logo, 'w-full h-full']}></i>
+        return <TheIcon icon={model.logo} class="w-full h-full text-4xl" />
       }
       return (
         <img
