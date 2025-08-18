@@ -1,5 +1,8 @@
+import { h } from 'vue'
 import { useCommandPalette } from '~/composables/useCommandPalette'
 import { useMenuData } from '~/composables/useMenuData'
+import { useAdvancedSearch, type SearchableItem } from '~/composables/useAdvancedSearch'
+import { useGlobalSearchInstance } from '~/composables/useGlobalSearch'
 
 interface MenuItem {
   title: string
@@ -17,111 +20,152 @@ export default defineComponent({
   setup() {
     const { commandActive, textCommand } = useCommandPalette()
     const { menuData, fetchMenuData } = useMenuData()
-    const isModalOpen = ref(false)
+    const { isSearchModalOpen, searchQuery, openSearch, closeSearch, setupGlobalShortcuts } = useGlobalSearchInstance()
 
-    // 初始化时获取菜单数据
+    // 初始化时获取菜单数据和设置快捷键
     onMounted(() => {
       fetchMenuData()
+      setupGlobalShortcuts()
     })
 
-    // 将menu压缩为一级
+    // 将menu压缩为一级并转换为SearchableItem格式
     const flattenedDocOptionsRef = computed(() => {
-      const flattenedItems: MenuItem[] = []
+      const flattenedItems: SearchableItem[] = []
       const traverse = (items: MenuItem[]) => {
         if (!items)
           return
         items.forEach((item) => {
-          if (item.children)
+          if (item.children) {
             traverse(item.children)
-          else flattenedItems.push(item)
+          } else {
+            flattenedItems.push({
+              id: item.title,
+              title: item.title,
+              url: item.url,
+              description: item.description,
+              tags: item.tags,
+              logo: item.logo,
+              deprecated: item.deprecated,
+            })
+          }
         })
       }
       traverse(menuData.value)
       return flattenedItems
     })
-    // match substr
-    function match(pattern: string, str: string) {
-      if (!pattern.length)
-        return true
-      if (!str.length)
-        return false
-      if (pattern[0] === str[0])
-        return match(pattern.slice(1), str.slice(1))
-      return match(pattern, str.slice(1))
-    }
 
-    // search
-    const searchPattern = ref('')
+    // 使用高级搜索，传入全局搜索查询
+    const {
+      searchResults,
+      highlightedResults,
+      isSearching,
+    } = useAdvancedSearch(flattenedDocOptionsRef, {
+      fields: ['title', 'description', 'tags'],
+      threshold: 0.2,
+      maxResults: 8,
+      debounceMs: 200,
+    }, searchQuery)
+
+    // 搜索选项（用于自动完成组件）
     const searchOptions = computed(() => {
-      function getSearchableContent(item: MenuItem, isAppendTags = true) {
-        let tags = ''
-        item.tags?.forEach((tag) => {
-          tags += ` ${tag}`
-        })
-        if (isAppendTags)
-          return item.title + (tags ? ` ${tags}` : '')
-        else
-          return item.title
-      }
-
-      if (!searchPattern.value)
-        return []
-
-      const replaceRegex = / |-/g
-
-      return flattenedDocOptionsRef.value.filter((item) => {
-        const pattern = searchPattern.value
-          .toLowerCase()
-          .replace(replaceRegex, '')
-          .slice(0, 20)
-        const label = getSearchableContent(item)
-          .toLowerCase()
-          .replace(replaceRegex, '')
-        return match(pattern, label)
-      }).map(item => ({
-        label: getSearchableContent(item, false),
-        value: item.title,
+      return highlightedResults.value.map(result => ({
+        label: result.title,
+        value: result.title,
+        data: result,
+        highlightedLabel: result.displayTitle || result.title,
       }))
     })
 
-    function handleSelect(value: string) {
-      isModalOpen.value = false
-      document.getElementById(value)?.scrollIntoView()
+    function handleSelect(value: string, option?: any) {
+      closeSearch()
+      
+      // 优先使用option中的data，如果没有则从搜索结果中查找
+      let result = option?.data
+      if (!result) {
+        result = highlightedResults.value.find(item => item.title === value)
+      }
+      
+      if (result?.url) {
+        // 打开外部链接
+        window.open(result.url, '_blank')
+      } else {
+        // 滚动到对应元素（用于页面内导航）
+        const element = document.getElementById(value)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
     }
+
+    // 监听命令面板激活
     watch(commandActive, () => {
-      isModalOpen.value = true
+      openSearch()
     })
 
-    watch(isModalOpen, () => {
-      if (!isModalOpen.value)
-        searchPattern.value = ''
+    // 监听搜索模态框状态
+    watch(isSearchModalOpen, (isOpen) => {
+      if (!isOpen) {
+        searchQuery.value = ''
+      }
     })
     return () => (
       <>
         <div class="flex items-center gap-1 flex-1">
-          <n-button class="flex-1 flex justify-start items-center text-4" overflow="hidden" bg="#2e33380d" onClick={() => isModalOpen.value = true}>
-            <div class="flex items-center  gap-1 text-gray-500 text-sm opacity-50">
+          <n-button 
+            class="flex-1 flex justify-start items-center text-4" 
+            overflow="hidden" 
+            bg="#2e33380d" 
+            onClick={() => openSearch()}
+          >
+            <div class="flex items-center gap-1 text-gray-500 text-sm opacity-50">
               <i class="i-tabler-search text-4"></i>
-              <span class="ml-2 ">搜索</span>
-              <span class="ml-2 border border-current rounded px-[5px] border-solid  sm:inline">{textCommand.value}</span>
+              <span class="ml-2">搜索</span>
+              <span class="ml-2 border border-current rounded px-[5px] border-solid sm:inline">
+                {textCommand.value}
+              </span>
             </div>
           </n-button>
-          {isModalOpen.value && (
+          {isSearchModalOpen.value && (
             <n-modal
               display-directive="if"
-              show={isModalOpen.value}
+              show={isSearchModalOpen.value}
               class="w-screen-md m-t-20"
-              onAfterLeave={() => isModalOpen.value = false}
-              onUpdateShow={(value: boolean) => isModalOpen.value = value}
+              onAfterLeave={() => closeSearch()}
+              onUpdateShow={(value: boolean) => {
+                if (!value) closeSearch()
+              }}
             >
               <n-card content-style="padding:12px">
-                <n-auto-complete
-                  v-model:value={searchPattern.value}
-                  options={searchOptions.value}
-                  size="large"
-                  onSelect={handleSelect}
-                >
-                </n-auto-complete>
+                <div class="space-y-3">
+                  <n-auto-complete
+                    v-model:value={searchQuery.value}
+                    options={searchOptions.value}
+                    size="large"
+                    placeholder="搜索网站、标签或描述... (Ctrl+K / Cmd+K)"
+                    clearable
+                    loading={isSearching.value}
+                    onSelect={(value: string, option: any) => handleSelect(value, option)}
+                    autofocus
+                    renderLabel={(option: any) => {
+                      if (option.highlightedLabel && option.highlightedLabel !== option.label) {
+                        return h('span', { innerHTML: option.highlightedLabel })
+                      }
+                      return option.label
+                    }}
+                  />
+                  {searchResults.value.length > 0 && (
+                    <div class="text-xs text-gray-500 px-1">
+                      找到 {searchResults.value.length} 个结果
+                    </div>
+                  )}
+                  <div class="text-xs text-gray-400 px-1 border-t pt-2">
+                    <div class="flex gap-4">
+                      <span><kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd> 打开</span>
+                      <span><kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Esc</kbd> 关闭</span>
+                      <span><kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">↑↓</kbd> 选择</span>
+                    </div>
+                  </div>
+                </div>
               </n-card>
             </n-modal>
           )}

@@ -1,5 +1,4 @@
 export class BackupService {
-
   async exportDatabaseData(): Promise<any> {
     const { PrismaClient } = await import('@prisma/client')
     const prisma = new PrismaClient()

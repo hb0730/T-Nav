@@ -181,10 +181,10 @@ watch(showCreateModal, (show) => {
 async function exportCategories() {
   try {
     isExporting.value = true
-    
+
     const response = await fetch('/api/admin/categories/export')
     const blob = await response.blob()
-    
+
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -193,7 +193,7 @@ async function exportCategories() {
     a.click()
     document.body.removeChild(a)
     window.URL.revokeObjectURL(url)
-    
+
     message.success('分类数据导出成功')
   }
   catch (error) {
@@ -228,27 +228,27 @@ async function importCategories() {
 
   try {
     isImporting.value = true
-    
+
     const formData = new FormData()
     formData.append('file', selectedFile.value)
-    
+
     const response = await $fetch('/api/admin/categories/import', {
       method: 'POST',
       body: formData,
     })
-    
+
     message.success(`导入完成！新增${response.statistics.imported}个，更新${response.statistics.updated}个，跳过${response.statistics.skipped}个`)
-    
+
     if (response.errors && response.errors.length > 0) {
       dialog.info({
         title: '导入警告',
         content: `以下项目处理时出现问题：\n${response.errors.join('\n')}`,
       })
     }
-    
+
     // 刷新数据
     await refresh()
-    
+
     // 重置状态
     showImportModal.value = false
     selectedFile.value = null
@@ -346,21 +346,29 @@ async function importCategories() {
       <n-modal v-model:show="showImportModal" preset="dialog" title="确认导入分类数据" style="width: 500px;">
         <div class="space-y-4">
           <n-alert type="warning" show-icon>
-            <template #header>注意事项</template>
+            <template #header>
+              注意事项
+            </template>
             <ul class="list-disc list-inside space-y-1 text-sm">
               <li>导入操作会根据ID或标题更新现有分类</li>
               <li>如果分类不存在，将创建新的分类</li>
               <li>请确保JSON文件格式正确</li>
             </ul>
           </n-alert>
-          
+
           <div v-if="selectedFile" class="bg-gray-50 p-3 rounded">
-            <div class="text-sm text-gray-600">选择的文件：</div>
-            <div class="font-medium">{{ selectedFile.name }}</div>
-            <div class="text-xs text-gray-500">大小：{{ (selectedFile.size / 1024).toFixed(1) }} KB</div>
+            <div class="text-sm text-gray-600">
+              选择的文件：
+            </div>
+            <div class="font-medium">
+              {{ selectedFile.name }}
+            </div>
+            <div class="text-xs text-gray-500">
+              大小：{{ (selectedFile.size / 1024).toFixed(1) }} KB
+            </div>
           </div>
         </div>
-        
+
         <template #action>
           <div class="flex gap-2">
             <n-button @click="showImportModal = false">

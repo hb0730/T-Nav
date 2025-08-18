@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Website from '~/components/Website'
+import WebsiteScrollBased from '~/components/Website/ScrollBased'
 import { useGlobal } from '~/composables/useGlobal'
 import { useDynamicSiteConfig } from '~/composables/useSiteConfig'
 
@@ -9,9 +9,14 @@ const { isSmallScreen } = useGlobal()
 // 获取站点配置
 await fetchSiteConfig()
 
-// 从API获取菜单数据
-const menuResponse = await $fetch<{ success: boolean, data: any[] }>('/api/menu')
-const menuDataList = menuResponse?.data || []
+// 获取首页数据（包含预加载的分类和导航菜单）
+const { data: homepageData } = await useFetch('/api/homepage/categories?limit=6', {
+  transform: (data: any) => data.data || { categories: [], navigationMenu: [], totalCategories: 0 },
+  server: true,
+})
+
+// 从首页数据中提取导航菜单
+const allMenuCategories = computed(() => homepageData.value?.navigationMenu || [])
 
 // 提交表单状态
 const showFriendLinkForm = ref(false)
@@ -87,7 +92,12 @@ function handleSubmissionSuccess() {
         </div>
       </div>
       <div class="mt-[25px]">
-        <Website :model-value="menuDataList" />
+        <WebsiteScrollBased
+          :all-menu-categories="allMenuCategories"
+          :preloaded-categories="homepageData?.categories || []"
+          :estimated-category-height="350"
+          :load-threshold="800"
+        />
         <TheLink />
       </div>
     </div>

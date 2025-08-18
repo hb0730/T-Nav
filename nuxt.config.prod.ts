@@ -13,28 +13,28 @@ export default defineNuxtConfig({
     minify: true,
     // 缓存配置
     routeRules: {
-      '/': { 
-        prerender: true, 
-        headers: { 
+      '/': {
+        prerender: true,
+        headers: {
           'cache-control': 's-maxage=3600',
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'SAMEORIGIN',
           'X-XSS-Protection': '1; mode=block',
-        } 
+        },
       },
-      '/api/**': { 
-        cors: true, 
-        headers: { 
+      '/api/**': {
+        cors: true,
+        headers: {
           'cache-control': 'max-age=300',
           'X-Content-Type-Options': 'nosniff',
-        } 
+        },
       },
-      '/admin/**': { 
+      '/admin/**': {
         ssr: true,
         headers: {
           'X-Frame-Options': 'SAMEORIGIN',
           'X-Content-Type-Options': 'nosniff',
-        }
+        },
       },
     },
     // 预渲染路由
@@ -69,7 +69,6 @@ export default defineNuxtConfig({
     // 私有配置（仅在服务端可用）
     jwtSecret: process.env.JWT_SECRET || 'your-production-jwt-secret-key',
   },
-
 
   // 性能优化
   experimental: {

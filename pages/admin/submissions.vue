@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
 import type { FriendLinkSubmission, LinkSubmission } from '~/types/database'
+import { useAdvancedSearch, type SearchableItem } from '~/composables/useAdvancedSearch'
 
 definePageMeta({
   layout: false,
@@ -290,49 +291,20 @@ async function fetchSubmissions() {
   }
 }
 
-// 应用筛选条件
+// 应用筛选条件（改为基于状态的基础筛选，搜索交给高级搜索组件处理）
 function applyFilters() {
-  // 筛选友情链接申请
+  // 筛选友情链接申请（只做状态筛选）
   let filteredFriendLinks = [...originalFriendLinkSubmissions.value]
-
-  // 状态筛选
   if (statusFilter.value !== 'all') {
     filteredFriendLinks = filteredFriendLinks.filter(item => item.status === statusFilter.value)
   }
-
-  // 关键词搜索
-  if (searchKeyword.value.trim()) {
-    const keyword = searchKeyword.value.trim().toLowerCase()
-    filteredFriendLinks = filteredFriendLinks.filter(item =>
-      item.title.toLowerCase().includes(keyword)
-      || item.url.toLowerCase().includes(keyword)
-      || (item.description && item.description.toLowerCase().includes(keyword))
-      || (item.contact && item.contact.toLowerCase().includes(keyword)),
-    )
-  }
-
   friendLinkSubmissions.value = filteredFriendLinks
 
-  // 筛选导航站申请
+  // 筛选导航站申请（只做状态筛选）
   let filteredLinks = [...originalLinkSubmissions.value]
-
-  // 状态筛选
   if (statusFilter.value !== 'all') {
     filteredLinks = filteredLinks.filter(item => item.status === statusFilter.value)
   }
-
-  // 关键词搜索
-  if (searchKeyword.value.trim()) {
-    const keyword = searchKeyword.value.trim().toLowerCase()
-    filteredLinks = filteredLinks.filter(item =>
-      item.title.toLowerCase().includes(keyword)
-      || item.url.toLowerCase().includes(keyword)
-      || (item.description && item.description.toLowerCase().includes(keyword))
-      || (item.contact && item.contact.toLowerCase().includes(keyword))
-      || (item.tags && item.tags.some((tag: string) => tag.toLowerCase().includes(keyword))),
-    )
-  }
-
   linkSubmissions.value = filteredLinks
 }
 
@@ -416,8 +388,75 @@ function handleReject(type: 'friend-link' | 'link', id: string, title: string) {
 
 const rejectReason = ref('')
 
+// 转换为SearchableItem格式
+const friendLinkSearchItems = computed(() => {
+  return friendLinkSubmissions.value.map(item => ({
+    id: item.id,
+    title: item.title,
+    url: item.url,
+    description: item.description || '',
+    contact: item.contact || '',
+    status: item.status,
+  } as SearchableItem & { contact: string; status: string }))
+})
+
+const linkSearchItems = computed(() => {
+  return linkSubmissions.value.map(item => ({
+    id: item.id,
+    title: item.title,
+    url: item.url,
+    description: item.description || '',
+    tags: item.tags || [],
+    contact: item.contact || '',
+    status: item.status,
+  } as SearchableItem & { contact: string; status: string }))
+})
+
+// 友链搜索
+const {
+  searchQuery: friendLinkSearchQuery,
+  searchResults: friendLinkSearchResults,
+  isSearching: friendLinkSearching,
+} = useAdvancedSearch(friendLinkSearchItems, {
+  fields: ['title', 'url', 'description', 'contact'],
+  threshold: 0.3,
+  debounceMs: 300,
+})
+
+// 导航站搜索
+const {
+  searchQuery: linkSearchQuery,
+  searchResults: linkSearchResults,
+  isSearching: linkSearching,
+} = useAdvancedSearch(linkSearchItems, {
+  fields: ['title', 'url', 'description', 'contact', 'tags'],
+  threshold: 0.3,
+  debounceMs: 300,
+})
+
+// 最终显示的数据（搜索结果优先）
+const displayFriendLinkSubmissions = computed(() => {
+  if (friendLinkSearchQuery.value.trim()) {
+    return friendLinkSearchResults.value
+  }
+  return friendLinkSubmissions.value
+})
+
+const displayLinkSubmissions = computed(() => {
+  if (linkSearchQuery.value.trim()) {
+    return linkSearchResults.value
+  }
+  return linkSubmissions.value
+})
+
+// 同步搜索查询
+watch(searchKeyword, (newKeyword) => {
+  friendLinkSearchQuery.value = newKeyword
+  linkSearchQuery.value = newKeyword
+})
+
 // 监听筛选条件变化
-watch([statusFilter, searchKeyword], () => {
+watch([statusFilter], () => {
   applyFilters()
 })
 
@@ -474,7 +513,7 @@ await fetchSubmissions()
                 <span>友情链接申请列表</span>
                 <div class="flex items-center space-x-2">
                   <n-tag v-if="searchKeyword || statusFilter !== 'all'" type="info" size="small">
-                    筛选结果: {{ friendLinkSubmissions.length }} 条
+                    筛选结果: {{ displayFriendLinkSubmissions.length }} 条
                   </n-tag>
                   <n-tag v-if="originalFriendLinkSubmissions.length > 0" size="small">
                     总计: {{ originalFriendLinkSubmissions.length }} 条
@@ -485,8 +524,8 @@ await fetchSubmissions()
 
             <n-data-table
               :columns="friendLinkColumns"
-              :data="friendLinkSubmissions"
-              :loading="loading"
+              :data="displayFriendLinkSubmissions"
+              :loading="loading || friendLinkSearching"
               :pagination="pagination"
               :row-key="(row) => row.id"
               :scroll-x="1200"
@@ -495,7 +534,7 @@ await fetchSubmissions()
             />
 
             <n-empty
-              v-if="!loading && friendLinkSubmissions.length === 0 && (searchKeyword || statusFilter !== 'all')"
+              v-if="!loading && !friendLinkSearching && displayFriendLinkSubmissions.length === 0 && (searchKeyword || statusFilter !== 'all')"
               description="没有找到符合条件的友情链接申请"
               style="margin: 40px 0;"
             >
@@ -515,7 +554,7 @@ await fetchSubmissions()
                 <span>导航站申请列表</span>
                 <div class="flex items-center space-x-2">
                   <n-tag v-if="searchKeyword || statusFilter !== 'all'" type="info" size="small">
-                    筛选结果: {{ linkSubmissions.length }} 条
+                    筛选结果: {{ displayLinkSubmissions.length }} 条
                   </n-tag>
                   <n-tag v-if="originalLinkSubmissions.length > 0" size="small">
                     总计: {{ originalLinkSubmissions.length }} 条
@@ -526,8 +565,8 @@ await fetchSubmissions()
 
             <n-data-table
               :columns="linkColumns"
-              :data="linkSubmissions"
-              :loading="loading"
+              :data="displayLinkSubmissions"
+              :loading="loading || linkSearching"
               :pagination="pagination"
               :row-key="(row) => row.id"
               :scroll-x="1200"
@@ -536,7 +575,7 @@ await fetchSubmissions()
             />
 
             <n-empty
-              v-if="!loading && linkSubmissions.length === 0 && (searchKeyword || statusFilter !== 'all')"
+              v-if="!loading && !linkSearching && displayLinkSubmissions.length === 0 && (searchKeyword || statusFilter !== 'all')"
               description="没有找到符合条件的导航站申请"
               style="margin: 40px 0;"
             >

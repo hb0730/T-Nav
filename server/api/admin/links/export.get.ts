@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
     try {
       const whereCondition = categoryId ? { categoryId } : {}
-      
+
       const links = await prisma.link.findMany({
         where: whereCondition,
         include: {
@@ -23,10 +23,10 @@ export default defineEventHandler(async (event) => {
       })
 
       // 设置响应头为JSON下载
-      const filename = categoryId 
+      const filename = categoryId
         ? `links-category-${categoryId}-export-${new Date().toISOString().split('T')[0]}.json`
         : `links-export-${new Date().toISOString().split('T')[0]}.json`
-      
+
       setHeader(event, 'Content-Type', 'application/json')
       setHeader(event, 'Content-Disposition', `attachment; filename="${filename}"`)
 

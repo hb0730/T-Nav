@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   try {
     const formData = await readMultipartFormData(event)
-    
+
     if (!formData || formData.length === 0) {
       throw createError({
         statusCode: 400,
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const data = JSON.parse(file.data.toString())
-    
+
     // 验证数据格式
     if (!data.categories || !Array.isArray(data.categories)) {
       throw createError({
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     try {
       let imported = 0
       let updated = 0
-      let skipped = 0
+      const skipped = 0
 
       // 开始事务
       await prisma.$transaction(async (tx) => {

@@ -397,32 +397,32 @@ watch(() => formData.value.url, (newUrl) => {
 async function exportLinks() {
   try {
     isExporting.value = true
-    
-    const url = selectedCategory.value 
+
+    const url = selectedCategory.value
       ? `/api/admin/links/export?categoryId=${selectedCategory.value}`
       : '/api/admin/links/export'
-    
+
     const response = await fetch(url)
     const blob = await response.blob()
-    
+
     const downloadUrl = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = downloadUrl
-    
-    const filename = selectedCategory.value 
+
+    const filename = selectedCategory.value
       ? `links-category-${selectedCategory.value}-export-${new Date().toISOString().split('T')[0]}.json`
       : `links-export-${new Date().toISOString().split('T')[0]}.json`
-    
+
     a.download = filename
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     window.URL.revokeObjectURL(downloadUrl)
-    
-    const categoryName = selectedCategory.value 
+
+    const categoryName = selectedCategory.value
       ? categories.value?.find(c => c.id === selectedCategory.value)?.title || '选定分类'
       : '全部'
-    
+
     message.success(`${categoryName}链接数据导出成功`)
   }
   catch (error) {
@@ -457,27 +457,27 @@ async function importLinks() {
 
   try {
     isImporting.value = true
-    
+
     const formData = new FormData()
     formData.append('file', selectedFile.value)
-    
+
     const response = await $fetch('/api/admin/links/import', {
       method: 'POST',
       body: formData,
     })
-    
+
     message.success(`导入完成！新增${response.statistics.imported}个，更新${response.statistics.updated}个，跳过${response.statistics.skipped}个`)
-    
+
     if (response.errors && response.errors.length > 0) {
       dialog.info({
         title: '导入警告',
         content: `以下项目处理时出现问题：\n${response.errors.join('\n')}`,
       })
     }
-    
+
     // 刷新数据
     await refresh()
-    
+
     // 重置状态
     showImportModal.value = false
     selectedFile.value = null
@@ -690,7 +690,9 @@ async function importLinks() {
       <n-modal v-model:show="showImportModal" preset="dialog" title="确认导入链接数据" style="width: 500px;">
         <div class="space-y-4">
           <n-alert type="warning" show-icon>
-            <template #header>注意事项</template>
+            <template #header>
+              注意事项
+            </template>
             <ul class="list-disc list-inside space-y-1 text-sm">
               <li>导入操作会根据ID或URL更新现有链接</li>
               <li>如果链接不存在，将创建新的链接</li>
@@ -698,14 +700,20 @@ async function importLinks() {
               <li>请确保JSON文件格式正确</li>
             </ul>
           </n-alert>
-          
+
           <div v-if="selectedFile" class="bg-gray-50 p-3 rounded">
-            <div class="text-sm text-gray-600">选择的文件：</div>
-            <div class="font-medium">{{ selectedFile.name }}</div>
-            <div class="text-xs text-gray-500">大小：{{ (selectedFile.size / 1024).toFixed(1) }} KB</div>
+            <div class="text-sm text-gray-600">
+              选择的文件：
+            </div>
+            <div class="font-medium">
+              {{ selectedFile.name }}
+            </div>
+            <div class="text-xs text-gray-500">
+              大小：{{ (selectedFile.size / 1024).toFixed(1) }} KB
+            </div>
           </div>
         </div>
-        
+
         <template #action>
           <div class="flex gap-2">
             <n-button @click="showImportModal = false">

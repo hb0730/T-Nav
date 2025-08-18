@@ -4,14 +4,14 @@ import { useGlobal } from '~/composables/useGlobal'
 
 const { navCollapse, isSmallScreen, isMobile, toggleNavCollapse } = useGlobal()
 
-// 从API获取菜单数据
+// 从API获取轻量级菜单数据（仅用于导航）
 let menuDataList: any[] = []
 try {
-  const menuResponse = await $fetch<{ success: boolean, data: any[] }>('/api/menu')
+  const menuResponse = await $fetch<{ success: boolean, data: any[] }>('/api/menu/categories')
   menuDataList = menuResponse?.data || []
 }
 catch (error) {
-  console.error('Failed to fetch menu data:', error)
+  console.error('Failed to fetch menu categories:', error)
   // 如果API失败，使用空数组作为后备
   menuDataList = []
 }

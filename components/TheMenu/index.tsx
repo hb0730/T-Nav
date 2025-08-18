@@ -34,17 +34,33 @@ export default defineComponent({
       }
     }
     /**
-     * @description 点击菜单
+     * @description 点击菜单 - 支持滚动加载模式
      */
     function handleMenuItemClick(key: string) {
-      // scrollIntoView 滚动会使fixed顶部导航导致位置不符遮挡 //好像也没解决
-      const el = document.getElementById(key)
-      if (el) {
-        document.getElementsByClassName('c-content')[0].firstElementChild?.scrollTo({
-          top: el.offsetTop - (document.getElementById('navbar')?.offsetHeight ?? 0),
-          behavior: 'smooth',
-        })
+      // 尝试使用滚动加载组件的scrollToCategory方法
+      const scrollToCategory = inject('scrollToCategory', null) as ((categoryTitle: string) => void) | null
+
+      if (scrollToCategory) {
+        // 使用滚动加载模式
+        scrollToCategory(key)
       }
+      else {
+        // 使用传统的DOM滚动模式
+        const el = document.getElementById(key)
+        if (el) {
+          const contentElement = document.getElementsByClassName('c-content')[0]?.firstElementChild
+          if (contentElement) {
+            contentElement.scrollTo({
+              top: el.offsetTop - (document.getElementById('navbar')?.offsetHeight ?? 0),
+              behavior: 'smooth',
+            })
+          }
+        }
+        else {
+          console.warn(`无法找到锚点元素: ${key}`)
+        }
+      }
+
       // 判断是否移动端，如果是移动端跳转则自动收缩menu
       if (isSmallScreen.value) {
         toggleNavCollapse()

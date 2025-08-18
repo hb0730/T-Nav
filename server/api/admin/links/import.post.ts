@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   try {
     const formData = await readMultipartFormData(event)
-    
+
     if (!formData || formData.length === 0) {
       throw createError({
         statusCode: 400,
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const data = JSON.parse(file.data.toString())
-    
+
     // 验证数据格式
     if (!data.links || !Array.isArray(data.links)) {
       throw createError({

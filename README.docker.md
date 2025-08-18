@@ -55,12 +55,12 @@ docker run --rm -v t-nav-data:/data -v $(pwd):/backup alpine tar xzf /backup/t-n
 
 ## 环境变量
 
-| 变量名 | 默认值 | 说明 |
-|--------|--------|------|
-| `DATABASE_URL` | `file:/app/data/t-nav.db` | 数据库连接字符串 |
-| `JWT_SECRET` | `your-secret-key` | JWT 密钥（必须修改） |
-| `NODE_ENV` | `production` | 运行环境 |
-| `PORT` | `3030` | 服务端口 |
+| 变量名         | 默认值                    | 说明                 |
+| -------------- | ------------------------- | -------------------- |
+| `DATABASE_URL` | `file:/app/data/t-nav.db` | 数据库连接字符串     |
+| `JWT_SECRET`   | `your-secret-key`         | JWT 密钥（必须修改） |
+| `NODE_ENV`     | `production`              | 运行环境             |
+| `PORT`         | `3030`                    | 服务端口             |
 
 ## 健康检查
 
@@ -79,15 +79,17 @@ docker inspect --format='{{json .State.Health}}' t-nav
 ### 常见问题
 
 1. **容器启动失败**
+
    ```bash
    # 查看详细日志
    docker logs t-nav
-   
+
    # 检查环境变量
    docker exec t-nav env | grep -E "(DATABASE_URL|JWT_SECRET)"
    ```
 
 2. **数据库初始化失败**
+
    ```bash
    # 进入容器检查
    docker exec -it t-nav sh
