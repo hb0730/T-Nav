@@ -4,7 +4,7 @@ import { useTheme } from '~/composables/useTheme'
 import 'uno.css'
 import '~/assets/css/main.scss'
 
-const { theme, themeOverrides } = useTheme()
+const { theme, themeOverrides, loaded } = useTheme()
 const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
 
 // 在服务端和客户端都获取站点配置
@@ -87,6 +87,7 @@ onMounted(() => {
     :theme="theme"
     :theme-overrides="themeOverrides"
     inline-theme-disabled
+    :class="{ 'theme-loaded': loaded }"
   >
     <n-message-provider>
       <n-dialog-provider>
@@ -104,6 +105,24 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* 防止主题闪烁的过渡效果 */
+.n-config-provider:not(.theme-loaded) {
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.n-config-provider.theme-loaded {
+  opacity: 1;
+}
+
+/* 为所有主题相关的元素添加过渡效果 */
+.n-config-provider * {
+  transition: background-color 0.2s ease-in-out, 
+              color 0.2s ease-in-out, 
+              border-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
 }
 </style>
 
