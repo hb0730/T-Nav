@@ -164,13 +164,23 @@ onMounted(() => {
   opacity: 1;
 }
 
-/* 为所有主题相关的元素添加过渡效果 */
-.n-config-provider * {
-  transition:
-    background-color 0.2s ease-in-out,
-    color 0.2s ease-in-out,
-    border-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+/* 优化的主题过渡效果 - 只对关键元素应用 */
+:root {
+  --theme-transition: background-color 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
+}
+
+/* 只对需要主题过渡的元素应用动画 */
+.n-layout,
+.n-layout-header,
+.n-layout-sider,
+.n-layout-content,
+.n-card,
+.n-button,
+.n-menu,
+.n-dropdown,
+[class*='nav-'],
+[class*='theme-'] {
+  transition: var(--theme-transition);
 }
 </style>
 

@@ -1,6 +1,7 @@
 import { usePreferredDark } from '@vueuse/core'
 import { darkTheme } from 'naive-ui'
 import { darkThemeOverrides, lightThemeOverrides } from '~/themes'
+import { perfMonitor } from '~/utils/performanceMonitor'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -28,6 +29,24 @@ function getServerTheme() {
 
   // 最终回退到浏览器偏好
   return headers['sec-ch-prefers-color-scheme'] === 'dark'
+}
+
+// 批量 DOM 更新函数
+function updateDOMBatch(isDarkTheme: boolean) {
+  if (import.meta.server)
+    return
+
+  // 使用 requestAnimationFrame 确保在渲染帧中执行
+  requestAnimationFrame(() => {
+    const html = document.documentElement
+
+    // 批量更新 DOM 属性
+    html.classList.toggle('dark', isDarkTheme)
+    html.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light')
+
+    // 触发一次重排即可，避免多次操作
+    void html.offsetHeight // 强制一次重排完成所有更新
+  })
 }
 
 export function useTheme() {
@@ -77,25 +96,17 @@ export function useTheme() {
     if (import.meta.server)
       return
 
-    const newActualTheme = computeActualTheme()
-    const newIsDark = newActualTheme === 'dark'
+    perfMonitor.measure('theme-sync', () => {
+      const newActualTheme = computeActualTheme()
+      const newIsDark = newActualTheme === 'dark'
 
-    // 更新状态
-    actualTheme.value = newActualTheme
-    isDark.value = newIsDark
+      // 先更新状态
+      actualTheme.value = newActualTheme
+      isDark.value = newIsDark
 
-    // 同步到 DOM
-    if (import.meta.client) {
-      const html = document.documentElement
-      if (newIsDark) {
-        html.classList.add('dark')
-        html.setAttribute('data-theme', 'dark')
-      }
-      else {
-        html.classList.remove('dark')
-        html.setAttribute('data-theme', 'light')
-      }
-    }
+      // 延迟 DOM 更新，避免阻塞状态更新
+      updateDOMBatch(newIsDark)
+    })
   }
 
   // 监听系统偏好变化（仅在 system 模式下生效）

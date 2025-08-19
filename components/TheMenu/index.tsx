@@ -23,8 +23,13 @@ export default defineComponent({
   setup(props) {
     const { isSmallScreen, toggleNavCollapse } = useGlobal()
     const requestUrl = useRequestURL()
+
+    // 在 setup 中获取 inject 的值
+    const scrollToCategory = inject('scrollToCategory', null) as ((categoryTitle: string) => void) | null
+
     // 是否为首页
     const index = computed(() => requestUrl.pathname === '/')
+
     /**
      * @description 点击a标签, 如果为首页则不跳转
      */
@@ -33,13 +38,11 @@ export default defineComponent({
         e.preventDefault()
       }
     }
+
     /**
      * @description 点击菜单 - 支持滚动加载模式
      */
     function handleMenuItemClick(key: string) {
-      // 尝试使用滚动加载组件的scrollToCategory方法
-      const scrollToCategory = inject('scrollToCategory', null) as ((categoryTitle: string) => void) | null
-
       if (scrollToCategory) {
         // 使用滚动加载模式
         scrollToCategory(key)
