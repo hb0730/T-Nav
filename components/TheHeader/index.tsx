@@ -6,12 +6,9 @@ export default defineComponent({
   name: 'TheHeader',
   setup() {
     const { toggleNavCollapse, navCollapse } = useGlobal()
-    const { isDark, toggleTheme } = useTheme()
+    const { themeInfo } = useTheme()
     const navCollapseIcon = computed(() => {
       return navCollapse.value ? 'i-tabler-indent-decrease' : 'i-tabler-indent-increase'
-    })
-    const themeIcon = computed(() => {
-      return isDark.value ? 'i-tabler-moon' : 'i-tabler-sun'
     })
     return () => (
       <>
@@ -28,14 +25,10 @@ export default defineComponent({
             <n-tooltip trigger="hover" placement="bottom">
               {{
                 trigger: () => (
-                  <>
-                    <n-button circle ghost class="c-button" onClick={toggleTheme}>
-                      <i class={[themeIcon.value, 'text-5']}></i>
-                    </n-button>
-                  </>
+                  <theme-switch />
                 ),
                 default: () => (
-                  <span>{isDark.value ? '暗黑模式' : '明亮模式' }</span>
+                  <span>{themeInfo.value.label}</span>
                 ),
               }}
             </n-tooltip>

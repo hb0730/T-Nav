@@ -4,8 +4,16 @@ import { useTheme } from '~/composables/useTheme'
 import 'uno.css'
 import '~/assets/css/main.scss'
 
-const { theme, themeOverrides, loaded } = useTheme()
+const { theme, themeOverrides, loaded, isDark } = useTheme()
 const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
+
+// 设置文档的主题类
+useHead({
+  htmlAttrs: {
+    'data-theme': () => isDark.value ? 'dark' : 'light',
+    'class': () => isDark.value ? 'dark' : 'light',
+  },
+})
 
 // 在服务端和客户端都获取站点配置
 await fetchSiteConfig()

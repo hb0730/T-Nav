@@ -1,17 +1,19 @@
-import { useColorMode, usePreferredDark } from '@vueuse/core'
+import { usePreferredDark } from '@vueuse/core'
 import { darkTheme } from 'naive-ui'
 import { darkThemeOverrides, lightThemeOverrides } from '~/themes'
+
+type ThemeMode = 'light' | 'dark' | 'system'
 
 function getServerTheme() {
   if (!import.meta.server)
     return null
 
   const headers = useRequestHeaders()
-  const cookieTheme = useCookie('theme-mode', { default: () => 'auto' })
+  const cookieTheme = useCookie('theme-preference', { default: () => 'system' })
 
   // 优先使用 cookie 中的主题设置
-  if (cookieTheme.value && ['light', 'dark', 'auto'].includes(cookieTheme.value)) {
-    if (cookieTheme.value === 'auto') {
+  if (cookieTheme.value && ['light', 'dark', 'system'].includes(cookieTheme.value)) {
+    if (cookieTheme.value === 'system') {
       // 使用浏览器偏好
       return headers['sec-ch-prefers-color-scheme'] === 'dark'
     }
@@ -28,80 +30,103 @@ export function useTheme() {
   // 服务端主题检测
   const serverTheme = getServerTheme()
 
+  // 用户偏好设置（存储用户的主动选择）
+  const themePreference = useCookie<ThemeMode>('theme-preference', {
+    default: () => 'system',
+    sameSite: 'lax',
+    secure: false,
+    httpOnly: false,
+  })
+
+  // 实际主题状态（存储当前生效的主题）
+  const actualTheme = useCookie<'light' | 'dark'>('theme-actual', {
+    default: () => 'light',
+    sameSite: 'lax',
+    secure: false,
+    httpOnly: false,
+  })
+
   // 初始化主题状态
   const isDark = useState('isDark', () => {
     if (import.meta.server) {
       return serverTheme ?? false
     }
-    // 客户端初始化时尝试从 cookie 读取
-    const themeCookie = useCookie('theme-mode', { default: () => 'auto' })
-    if (themeCookie.value === 'dark')
-      return true
-    if (themeCookie.value === 'light')
-      return false
-    // auto 模式暂时返回 false，会在 onMounted 时同步
-    return false
+    // 客户端初始化时使用实际主题
+    return actualTheme.value === 'dark'
   })
 
-  // 客户端才初始化 useColorMode
-  const colorMode = import.meta.client
-    ? useColorMode({
-        storageKey: 'vueuse-color-mode-preference',
-        disableTransition: false,
-      })
-    : ref('auto')
-
+  // 系统偏好检测
   const preferredDark = import.meta.client ? usePreferredDark() : ref(false)
 
-  // 同步主题设置到 cookie
-  const themeCookie = useCookie('theme-mode', {
-    default: () => 'auto',
-    sameSite: 'lax',
-    secure: true,
-    httpOnly: false,
-  })
+  // 计算实际应该使用的主题
+  const computeActualTheme = (): 'light' | 'dark' => {
+    if (themePreference.value === 'system') {
+      return preferredDark.value ? 'dark' : 'light'
+    }
+    return themePreference.value as 'light' | 'dark'
+  }
 
-  // 客户端主题同步函数
+  // 主题同步函数
   const syncTheme = () => {
     if (import.meta.server)
       return
 
-    const newIsDark = colorMode.value === 'dark'
-      || (colorMode.value === 'auto' && preferredDark.value)
+    const newActualTheme = computeActualTheme()
+    const newIsDark = newActualTheme === 'dark'
 
+    // 更新状态
+    actualTheme.value = newActualTheme
     isDark.value = newIsDark
-    themeCookie.value = colorMode.value
+
+    // 同步到 DOM
+    if (import.meta.client) {
+      const html = document.documentElement
+      if (newIsDark) {
+        html.classList.add('dark')
+        html.setAttribute('data-theme', 'dark')
+      }
+      else {
+        html.classList.remove('dark')
+        html.setAttribute('data-theme', 'light')
+      }
+    }
   }
 
-  // 监听偏好变化（仅客户端）
+  // 监听系统偏好变化（仅在 system 模式下生效）
   if (import.meta.client) {
     watch(preferredDark, () => {
-      if (colorMode.value === 'auto') {
+      if (themePreference.value === 'system') {
         syncTheme()
       }
     })
 
-    watch(colorMode, () => {
+    watch(themePreference, () => {
       syncTheme()
     })
+  }
+
+  const setTheme = (mode: ThemeMode) => {
+    if (import.meta.server)
+      return
+
+    themePreference.value = mode
+    syncTheme()
   }
 
   const toggleTheme = () => {
     if (import.meta.server)
       return
 
-    // 循环切换：light -> dark -> auto
-    if (colorMode.value === 'light') {
-      colorMode.value = 'dark'
+    // 循环切换：light -> dark -> system
+    if (themePreference.value === 'light') {
+      setTheme('dark')
     }
-    else if (colorMode.value === 'dark') {
-      colorMode.value = 'auto'
+    else if (themePreference.value === 'dark') {
+      setTheme('system')
     }
     else {
-      colorMode.value = 'light'
+      setTheme('light')
     }
-
-    syncTheme()
   }
 
   const theme = computed(() => {
@@ -110,6 +135,27 @@ export function useTheme() {
 
   const themeOverrides = computed(() => {
     return isDark.value ? darkThemeOverrides : lightThemeOverrides
+  })
+
+  // 获取当前主题的显示信息
+  const themeInfo = computed(() => {
+    const preference = themePreference.value
+    const actual = actualTheme.value
+
+    return {
+      preference,
+      actual,
+      icon: preference === 'system'
+        ? 'i-tabler-device-desktop'
+        : actual === 'dark'
+          ? 'i-tabler-moon'
+          : 'i-tabler-sun',
+      label: preference === 'system'
+        ? `跟随系统 (${actual === 'dark' ? '深色' : '浅色'})`
+        : actual === 'dark'
+          ? '深色模式'
+          : '浅色模式',
+    }
   })
 
   // 客户端水合时同步主题
@@ -128,9 +174,12 @@ export function useTheme() {
   return {
     loaded,
     isDark: readonly(isDark),
+    themePreference: readonly(themePreference),
+    actualTheme: readonly(actualTheme),
+    themeInfo,
+    setTheme,
     toggleTheme,
     theme,
     themeOverrides,
-    colorMode: readonly(colorMode),
   }
 }
