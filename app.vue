@@ -7,12 +7,51 @@ import '~/assets/css/main.scss'
 const { theme, themeOverrides, loaded, isDark } = useTheme()
 const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
 
+// 防止主题闪烁的内联脚本
+const themeInitScript = `
+;(function() {
+  try {
+    const themePreference = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('theme-preference='))
+      ?.split('=')[1] || 'system'
+    
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    
+    let actualTheme
+    if (themePreference === 'system') {
+      actualTheme = prefersDark ? 'dark' : 'light'
+    } else {
+      actualTheme = themePreference
+    }
+    
+    const html = document.documentElement
+    if (actualTheme === 'dark') {
+      html.classList.add('dark')
+      html.setAttribute('data-theme', 'dark')
+    } else {
+      html.classList.remove('dark')
+      html.setAttribute('data-theme', 'light')
+    }
+    
+    document.cookie = 'theme-actual=' + actualTheme + '; path=/; samesite=lax'
+  } catch (error) {
+    console.warn('Theme initialization failed:', error)
+  }
+})()`
+
 // 设置文档的主题类
 useHead({
   htmlAttrs: {
     'data-theme': () => isDark.value ? 'dark' : 'light',
     'class': () => isDark.value ? 'dark' : 'light',
   },
+  script: [
+    {
+      innerHTML: themeInitScript,
+      // 内联脚本，在 head 中立即执行
+    },
+  ],
 })
 
 // 在服务端和客户端都获取站点配置

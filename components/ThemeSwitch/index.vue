@@ -2,6 +2,14 @@
 import type { DropdownOption } from 'naive-ui'
 import { useTheme } from '~/composables/useTheme'
 
+interface Props {
+  variant?: 'default' | 'admin'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'default',
+})
+
 const { themeInfo, setTheme, themePreference } = useTheme()
 
 const themeOptions = computed<DropdownOption[]>(() => [
@@ -44,7 +52,13 @@ function handleSelect(key: string) {
     placement="bottom"
     @select="handleSelect"
   >
-    <n-button circle ghost class="c-button text-5">
+    <n-button
+      circle
+      :ghost="props.variant === 'default'"
+      :quaternary="props.variant === 'admin'"
+      :class="props.variant === 'default' ? 'c-button text-5' : ''"
+      :title="themeInfo.label"
+    >
       <i :class="themeInfo.icon" />
     </n-button>
   </n-dropdown>

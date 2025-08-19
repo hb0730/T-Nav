@@ -2,7 +2,7 @@
 import { useAuth } from '~/composables/useAuth'
 import { useTheme } from '~/composables/useTheme'
 
-const { theme, themeOverrides, isDark, toggleTheme } = useTheme()
+const { theme, themeOverrides } = useTheme()
 const { user, logout, loadUserFromToken, checkAuth } = useAuth()
 const router = useRouter()
 const route = useRoute()
@@ -116,12 +116,7 @@ onMounted(async () => {
               </div>
               <div class="flex items-center gap-2">
                 <span class="text-sm text-gray-600">{{ user?.username }}</span>
-                <n-button circle quaternary @click="toggleTheme">
-                  <template #icon>
-                    <i v-if="isDark" class="i-tabler-sun" />
-                    <i v-else class="i-tabler-moon" />
-                  </template>
-                </n-button>
+                <theme-switch variant="admin" />
                 <n-button circle quaternary @click="goHome">
                   <template #icon>
                     <i class="i-tabler-home" />

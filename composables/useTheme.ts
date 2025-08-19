@@ -9,18 +9,24 @@ function getServerTheme() {
     return null
 
   const headers = useRequestHeaders()
-  const cookieTheme = useCookie('theme-preference', { default: () => 'system' })
+  const themePreference = useCookie('theme-preference', { default: () => 'system' })
+  const themeActual = useCookie('theme-actual', { default: () => 'light' })
 
-  // 优先使用 cookie 中的主题设置
-  if (cookieTheme.value && ['light', 'dark', 'system'].includes(cookieTheme.value)) {
-    if (cookieTheme.value === 'system') {
+  // 如果有实际主题 cookie，直接使用
+  if (themeActual.value && ['light', 'dark'].includes(themeActual.value)) {
+    return themeActual.value === 'dark'
+  }
+
+  // 回退到偏好设置计算
+  if (themePreference.value && ['light', 'dark', 'system'].includes(themePreference.value)) {
+    if (themePreference.value === 'system') {
       // 使用浏览器偏好
       return headers['sec-ch-prefers-color-scheme'] === 'dark'
     }
-    return cookieTheme.value === 'dark'
+    return themePreference.value === 'dark'
   }
 
-  // 回退到浏览器偏好
+  // 最终回退到浏览器偏好
   return headers['sec-ch-prefers-color-scheme'] === 'dark'
 }
 

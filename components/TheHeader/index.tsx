@@ -1,12 +1,10 @@
 import { useGlobal } from '~/composables/useGlobal'
-import { useTheme } from '~/composables/useTheme'
 import './index.scss'
 
 export default defineComponent({
   name: 'TheHeader',
   setup() {
     const { toggleNavCollapse, navCollapse } = useGlobal()
-    const { themeInfo } = useTheme()
     const navCollapseIcon = computed(() => {
       return navCollapse.value ? 'i-tabler-indent-decrease' : 'i-tabler-indent-increase'
     })
@@ -22,16 +20,7 @@ export default defineComponent({
             <the-command-palette></the-command-palette>
           </div>
           <div class="nav-right flex items-center">
-            <n-tooltip trigger="hover" placement="bottom">
-              {{
-                trigger: () => (
-                  <theme-switch />
-                ),
-                default: () => (
-                  <span>{themeInfo.value.label}</span>
-                ),
-              }}
-            </n-tooltip>
+            <theme-switch />
             <n-tooltip trigger="hover" placement="bottom">
               {{
                 trigger: () => (
