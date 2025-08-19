@@ -11,7 +11,7 @@ export default defineComponent({
       return navCollapse.value ? 'i-tabler-indent-decrease' : 'i-tabler-indent-increase'
     })
     const themeIcon = computed(() => {
-      return isDark.value ? 'i-tabler-sun' : 'i-tabler-moon'
+      return isDark.value ? 'i-tabler-moon' : 'i-tabler-sun'
     })
     return () => (
       <>
@@ -35,7 +35,7 @@ export default defineComponent({
                   </>
                 ),
                 default: () => (
-                  <span>{isDark.value ? '明亮模式' : '暗黑模式'}</span>
+                  <span>{isDark.value ? '暗黑模式' : '明亮模式' }</span>
                 ),
               }}
             </n-tooltip>
