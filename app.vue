@@ -10,33 +10,76 @@ const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
 // 防止主题闪烁的内联脚本
 const themeInitScript = `
 ;(function() {
-  try {
-    const themePreference = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('theme-preference='))
-      ?.split('=')[1] || 'system'
-    
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    
-    let actualTheme
-    if (themePreference === 'system') {
-      actualTheme = prefersDark ? 'dark' : 'light'
-    } else {
-      actualTheme = themePreference
+  function getCookieValue(name) {
+    try {
+      const value = document.cookie
+        .split('; ')
+        .find(row => row.startsWith(name + '='))
+      return value ? decodeURIComponent(value.split('=')[1]) : null
+    } catch {
+      return null
     }
-    
-    const html = document.documentElement
-    if (actualTheme === 'dark') {
-      html.classList.add('dark')
-      html.setAttribute('data-theme', 'dark')
-    } else {
-      html.classList.remove('dark')
-      html.setAttribute('data-theme', 'light')
+  }
+  
+  function syncThemeToDOM() {
+    try {
+      // 获取主题偏好，优先使用最新的cookie值
+      const themePreference = getCookieValue('theme-preference') || 'system'
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      
+      let actualTheme
+      if (themePreference === 'system') {
+        actualTheme = prefersDark ? 'dark' : 'light'
+      } else {
+        actualTheme = themePreference
+      }
+      
+      const html = document.documentElement
+      
+      // 确保移除之前的状态
+      html.classList.remove('dark', 'light')
+      
+      // 设置新的主题状态
+      if (actualTheme === 'dark') {
+        html.classList.add('dark')
+        html.setAttribute('data-theme', 'dark')
+      } else {
+        html.classList.add('light')
+        html.setAttribute('data-theme', 'light')
+      }
+      
+      // 更新实际主题cookie
+      document.cookie = 'theme-actual=' + actualTheme + '; path=/; samesite=lax; expires=' + new Date(Date.now() + 365*24*60*60*1000).toUTCString()
+      
+      // 添加调试信息（开发环境）
+      if (typeof console !== 'undefined' && console.debug) {
+        console.debug('Theme synced:', { preference: themePreference, actual: actualTheme, prefersDark })
+      }
+    } catch (error) {
+      console.warn('Theme initialization failed:', error)
     }
+  }
+  
+  // 立即同步主题
+  syncThemeToDOM()
+  
+  // 监听cookie变化（通过storage事件检测）
+  if (window.addEventListener) {
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'theme-preference' || e.key === null) {
+        setTimeout(syncThemeToDOM, 0)
+      }
+    })
     
-    document.cookie = 'theme-actual=' + actualTheme + '; path=/; samesite=lax'
-  } catch (error) {
-    console.warn('Theme initialization failed:', error)
+    // 监听系统主题变化
+    if (window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', function() {
+          setTimeout(syncThemeToDOM, 0)
+        })
+      }
+    }
   }
 })()`
 

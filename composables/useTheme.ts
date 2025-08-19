@@ -126,8 +126,25 @@ export function useTheme() {
     if (import.meta.server)
       return
 
+    // 立即更新偏好设置
     themePreference.value = mode
+    
+    // 立即同步主题状态
     syncTheme()
+    
+    // 确保cookie立即更新
+    if (import.meta.client) {
+      // 使用更长的过期时间确保cookie持久化
+      document.cookie = `theme-preference=${mode}; path=/; samesite=lax; expires=${new Date(Date.now() + 365*24*60*60*1000).toUTCString()}`
+      
+      // 触发storage事件，通知其他标签页
+      try {
+        localStorage.setItem('theme-preference', mode)
+        localStorage.removeItem('theme-preference') // 立即删除，只为触发事件
+      } catch (e) {
+        // 忽略localStorage错误
+      }
+    }
   }
 
   const toggleTheme = () => {
@@ -187,6 +204,36 @@ export function useTheme() {
       }
     })
   })
+
+  // 监听路由变化时同步主题
+  if (import.meta.client) {
+    const route = useRoute()
+    watch(() => route.fullPath, () => {
+      // 路由切换时重新同步主题，确保DOM状态正确
+      nextTick(() => {
+        // 添加少量延迟确保页面DOM完全加载
+        setTimeout(() => {
+          syncTheme()
+        }, 10)
+      })
+    }, { immediate: false })
+    
+    // 监听浏览器导航事件
+    if (typeof window !== 'undefined') {
+      const handleRouteChange = () => {
+        setTimeout(() => {
+          syncTheme()
+        }, 5)
+      }
+      
+      window.addEventListener('popstate', handleRouteChange)
+      
+      // 清理事件监听器
+      onUnmounted(() => {
+        window.removeEventListener('popstate', handleRouteChange)
+      })
+    }
+  }
 
   return {
     loaded,
