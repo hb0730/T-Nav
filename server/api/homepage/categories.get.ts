@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
   try {
     // 获取查询参数
     const query = getQuery(event)
-    const limit = parseInt(query.limit as string) || 3 // 默认加载前3个分类的完整数据
-    
+    const limit = Number.parseInt(query.limit as string) || 3 // 默认加载前3个分类的完整数据
+
     // 获取分类列表（用于导航）
     const allCategories = await prisma.category.findMany({
       where: {

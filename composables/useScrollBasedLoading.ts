@@ -30,7 +30,7 @@ export function useScrollBasedLoading(options: ScrollLoadingOptions) {
 
   // 所有分类的占位信息
   const categoryPlaceholders = ref<CategoryPlaceholder[]>(
-    allCategories.map(cat => {
+    allCategories.map((cat) => {
       // 检查是否有预加载的数据
       const preloadedData = preloadedCategories.find(p => p.title === cat.title)
       return {
@@ -47,9 +47,9 @@ export function useScrollBasedLoading(options: ScrollLoadingOptions) {
 
   // 已加载的分类数据（包含预加载的数据）
   const loadedCategories = ref<Map<string, any>>(new Map())
-  
+
   // 将预加载的数据添加到已加载的分类中
-  preloadedCategories.forEach(category => {
+  preloadedCategories.forEach((category) => {
     loadedCategories.value.set(category.title, category)
   })
 
@@ -109,7 +109,7 @@ export function useScrollBasedLoading(options: ScrollLoadingOptions) {
     })
 
     // 并行加载多个分类
-    categoriesToLoad.forEach(title => {
+    categoriesToLoad.forEach((title) => {
       loadCategoryData(title)
     })
   }
@@ -155,7 +155,7 @@ export function useScrollBasedLoading(options: ScrollLoadingOptions) {
       nextTick(() => {
         // 检查可视区域，加载需要的分类
         checkVisibleCategories()
-        
+
         // 额外预加载接下来的2个分类（积极预加载策略）
         setTimeout(() => {
           const preloadNext = 2

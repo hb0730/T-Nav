@@ -109,8 +109,8 @@ onMounted(() => {
 
 /* 防止主题闪烁的过渡效果 */
 .n-config-provider:not(.theme-loaded) {
-  opacity: 0;
-  transition: opacity 0.15s ease-in-out;
+  opacity: 0.95;
+  transition: opacity 0.1s ease-in-out;
 }
 
 .n-config-provider.theme-loaded {
@@ -119,10 +119,11 @@ onMounted(() => {
 
 /* 为所有主题相关的元素添加过渡效果 */
 .n-config-provider * {
-  transition: background-color 0.2s ease-in-out, 
-              color 0.2s ease-in-out, 
-              border-color 0.2s ease-in-out,
-              box-shadow 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 </style>
 

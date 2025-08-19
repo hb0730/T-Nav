@@ -1,8 +1,9 @@
+import type { SearchableItem } from '~/composables/useAdvancedSearch'
 import { h } from 'vue'
+import { useAdvancedSearch } from '~/composables/useAdvancedSearch'
 import { useCommandPalette } from '~/composables/useCommandPalette'
-import { useMenuData } from '~/composables/useMenuData'
-import { useAdvancedSearch, type SearchableItem } from '~/composables/useAdvancedSearch'
 import { useGlobalSearchInstance } from '~/composables/useGlobalSearch'
+import { useMenuData } from '~/composables/useMenuData'
 
 interface MenuItem {
   title: string
@@ -37,7 +38,8 @@ export default defineComponent({
         items.forEach((item) => {
           if (item.children) {
             traverse(item.children)
-          } else {
+          }
+          else {
             flattenedItems.push({
               id: item.title,
               title: item.title,
@@ -78,17 +80,18 @@ export default defineComponent({
 
     function handleSelect(value: string, option?: any) {
       closeSearch()
-      
+
       // 优先使用option中的data，如果没有则从搜索结果中查找
       let result = option?.data
       if (!result) {
         result = highlightedResults.value.find(item => item.title === value)
       }
-      
+
       if (result?.url) {
         // 打开外部链接
         window.open(result.url, '_blank')
-      } else {
+      }
+      else {
         // 滚动到对应元素（用于页面内导航）
         const element = document.getElementById(value)
         if (element) {
@@ -111,10 +114,10 @@ export default defineComponent({
     return () => (
       <>
         <div class="flex items-center gap-1 flex-1">
-          <n-button 
-            class="flex-1 flex justify-start items-center text-4" 
-            overflow="hidden" 
-            bg="#2e33380d" 
+          <n-button
+            class="flex-1 flex justify-start items-center text-4"
+            overflow="hidden"
+            bg="#2e33380d"
             onClick={() => openSearch()}
           >
             <div class="flex items-center gap-1 text-gray-500 text-sm opacity-50">
@@ -132,7 +135,8 @@ export default defineComponent({
               class="w-screen-md m-t-20"
               onAfterLeave={() => closeSearch()}
               onUpdateShow={(value: boolean) => {
-                if (!value) closeSearch()
+                if (!value)
+                  closeSearch()
               }}
             >
               <n-card content-style="padding:12px">
@@ -155,14 +159,30 @@ export default defineComponent({
                   />
                   {searchResults.value.length > 0 && (
                     <div class="text-xs text-gray-500 px-1">
-                      找到 {searchResults.value.length} 个结果
+                      找到
+                      {' '}
+                      {searchResults.value.length}
+                      {' '}
+                      个结果
                     </div>
                   )}
                   <div class="text-xs text-gray-400 px-1 border-t pt-2">
                     <div class="flex gap-4">
-                      <span><kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd> 打开</span>
-                      <span><kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Esc</kbd> 关闭</span>
-                      <span><kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">↑↓</kbd> 选择</span>
+                      <span>
+                        <kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd>
+                        {' '}
+                        打开
+                      </span>
+                      <span>
+                        <kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Esc</kbd>
+                        {' '}
+                        关闭
+                      </span>
+                      <span>
+                        <kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">↑↓</kbd>
+                        {' '}
+                        选择
+                      </span>
                     </div>
                   </div>
                 </div>

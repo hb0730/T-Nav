@@ -14,10 +14,10 @@ export default defineEventHandler(async (event) => {
 
     // 解码URL参数
     const decodedTitle = decodeURIComponent(categoryTitle)
-    
+
     // 分页参数
-    const page = parseInt(query.page as string) || 1
-    const pageSize = parseInt(query.pageSize as string) || 50 // 每页50个
+    const page = Number.parseInt(query.page as string) || 1
+    const pageSize = Number.parseInt(query.pageSize as string) || 50 // 每页50个
     const skip = (page - 1) * pageSize
 
     // 获取分类基本信息

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
+import type { SearchableItem } from '~/composables/useAdvancedSearch'
 import type { FriendLinkSubmission, LinkSubmission } from '~/types/database'
-import { useAdvancedSearch, type SearchableItem } from '~/composables/useAdvancedSearch'
+import { useAdvancedSearch } from '~/composables/useAdvancedSearch'
 
 definePageMeta({
   layout: false,
@@ -397,7 +398,7 @@ const friendLinkSearchItems = computed(() => {
     description: item.description || '',
     contact: item.contact || '',
     status: item.status,
-  } as SearchableItem & { contact: string; status: string }))
+  } as SearchableItem & { contact: string, status: string }))
 })
 
 const linkSearchItems = computed(() => {
@@ -409,7 +410,7 @@ const linkSearchItems = computed(() => {
     tags: item.tags || [],
     contact: item.contact || '',
     status: item.status,
-  } as SearchableItem & { contact: string; status: string }))
+  } as SearchableItem & { contact: string, status: string }))
 })
 
 // 友链搜索

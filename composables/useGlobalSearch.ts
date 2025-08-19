@@ -1,5 +1,5 @@
-import { ref, onMounted, onUnmounted } from 'vue'
 import { useEventListener } from '@vueuse/core'
+import { ref } from 'vue'
 
 /**
  * 全局搜索状态管理
@@ -23,7 +23,8 @@ export function useGlobalSearch() {
   function toggleSearch() {
     if (isSearchModalOpen.value) {
       closeSearch()
-    } else {
+    }
+    else {
       openSearch()
     }
   }
@@ -46,19 +47,19 @@ export function useGlobalSearch() {
       }
 
       // 当没有输入框聚焦时，直接输入字符也可以打开搜索
-      if (!isSearchModalOpen.value && 
-          !event.ctrlKey && 
-          !event.metaKey && 
-          !event.altKey &&
-          event.key.length === 1 &&
-          event.key.match(/[a-zA-Z0-9\u4e00-\u9fa5]/)) {
+      if (!isSearchModalOpen.value
+        && !event.ctrlKey
+        && !event.metaKey
+        && !event.altKey
+        && event.key.length === 1
+        && event.key.match(/[a-z0-9\u4E00-\u9FA5]/i)) {
         const activeElement = document.activeElement
         const isInputActive = activeElement && (
-          activeElement.tagName === 'INPUT' ||
-          activeElement.tagName === 'TEXTAREA' ||
-          (activeElement as HTMLElement).contentEditable === 'true'
+          activeElement.tagName === 'INPUT'
+          || activeElement.tagName === 'TEXTAREA'
+          || (activeElement as HTMLElement).contentEditable === 'true'
         )
-        
+
         if (!isInputActive) {
           event.preventDefault()
           searchQuery.value = event.key
@@ -74,11 +75,12 @@ export function useGlobalSearch() {
   // 设置页面标题提示
   function updatePageTitle() {
     const originalTitle = document.title
-    
+
     return () => {
       if (isSearchModalOpen.value) {
-        document.title = '🔍 搜索中... - ' + originalTitle
-      } else {
+        document.title = `🔍 搜索中... - ${originalTitle}`
+      }
+      else {
         document.title = originalTitle
       }
     }
