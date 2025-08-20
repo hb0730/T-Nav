@@ -7,7 +7,7 @@ export interface SearchResult {
   url: string
   logo?: string
   description?: string
-  tags: string[]
+  tags: readonly string[]
   category?: {
     id: string
     title: string

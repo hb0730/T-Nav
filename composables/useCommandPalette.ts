@@ -4,7 +4,6 @@ export function useCommandPalette() {
     // client or server  mac/windows
     if (import.meta.client) {
       if (navigator.userAgent.toLowerCase().includes('mac')) {
-        console.log('mac')
         return '⌘ + K'
       }
       else {

@@ -26,7 +26,7 @@ const {
   isLoading,
   total,
   history,
-  loadMore,
+  loadMore: _loadMore,
   clearHistory,
   highlight,
 } = useSearch({
@@ -39,6 +39,7 @@ const {
 const showDropdown = ref(false)
 const selectedIndex = ref(-1)
 const inputRef = ref<HTMLElement>()
+const searchBoxRef = ref<HTMLElement>()
 
 // 显示的结果
 const displayResults = computed(() => {
@@ -55,11 +56,27 @@ function handleFocus() {
 }
 
 function handleBlur() {
+  // 使用 setTimeout 延迟关闭，避免点击结果时立即关闭
   setTimeout(() => {
-    showDropdown.value = false
-    selectedIndex.value = -1
+    closeDropdown()
   }, 200)
 }
+
+// 点击外部关闭下拉框
+function handleClickOutside(event: MouseEvent) {
+  if (searchBoxRef.value && !searchBoxRef.value.contains(event.target as Node)) {
+    closeDropdown()
+  }
+}
+
+// 设置外部点击监听
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 // 键盘导航
 function handleKeydown(e: KeyboardEvent) {
@@ -78,15 +95,19 @@ function handleKeydown(e: KeyboardEvent) {
       e.preventDefault()
       if (selectedIndex.value >= 0) {
         if (selectedIndex.value < displayResults.value.length) {
-          selectResult(displayResults.value[selectedIndex.value])
-        } else {
+          const result = displayResults.value[selectedIndex.value]
+          if (result) {
+            selectResult(result)
+          }
+        }
+        else {
           const historyIndex = selectedIndex.value - displayResults.value.length
-          selectHistory(displayHistory.value[historyIndex])
+          selectHistory(displayHistory.value[historyIndex] || '')
         }
       }
       break
     case 'Escape':
-      showDropdown.value = false
+      closeDropdown()
       inputRef.value?.blur()
       break
   }
@@ -94,8 +115,7 @@ function handleKeydown(e: KeyboardEvent) {
 
 function selectResult(result: SearchResult) {
   emit('select', result)
-  showDropdown.value = false
-  selectedIndex.value = -1
+  closeDropdown()
 }
 
 function selectHistory(historyItem: string) {
@@ -103,6 +123,12 @@ function selectHistory(historyItem: string) {
   nextTick(() => {
     inputRef.value?.focus()
   })
+}
+
+// 统一的关闭下拉框方法
+function closeDropdown() {
+  showDropdown.value = false
+  selectedIndex.value = -1
 }
 
 // 暴露方法
@@ -113,7 +139,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="search-box relative">
+  <div ref="searchBoxRef" class="search-box relative">
     <n-input
       ref="inputRef"
       v-model:value="query"
@@ -134,8 +160,24 @@ defineExpose({
     <transition name="fade">
       <div
         v-if="showDropdown && (displayResults.length || displayHistory.length || isLoading)"
-        class="search-dropdown absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-96 overflow-y-auto"
+        class="search-dropdown absolute top-full left-0 right-0 z-50 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-[70vh] overflow-y-auto"
+        :style="{
+          transform: 'translateY(4px)',
+          minHeight: '200px',
+        }"
       >
+        <!-- 关闭按钮 -->
+        <div v-if="!isLoading" class="flex justify-end p-2 border-b border-gray-200 dark:border-gray-600">
+          <n-button
+            size="tiny"
+            text
+            class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400"
+            title="关闭搜索结果"
+            @click="closeDropdown"
+          >
+            <i class="i-tabler-x text-sm" />
+          </n-button>
+        </div>
         <!-- 加载状态 -->
         <div v-if="isLoading" class="p-4 text-center">
           <n-spin size="small" />
@@ -178,7 +220,7 @@ defineExpose({
                   class="text-xs text-gray-500 truncate"
                   v-html="highlight(result.description)"
                 />
-                
+
                 <!-- 分类和标签 -->
                 <div class="flex items-center gap-2 mt-1">
                   <span
@@ -235,7 +277,9 @@ defineExpose({
         <!-- 无结果 -->
         <div v-else-if="query" class="p-4 text-center">
           <i class="i-tabler-search-off text-gray-300 text-2xl mb-2" />
-          <div class="text-sm text-gray-500">未找到相关结果</div>
+          <div class="text-sm text-gray-500">
+            未找到相关结果
+          </div>
         </div>
       </div>
     </transition>

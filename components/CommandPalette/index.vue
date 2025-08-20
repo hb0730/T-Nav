@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SearchResult } from '~/composables/useSearch'
-import { useGlobalSearchInstance } from '~/composables/useGlobalSearch'
 import { useCommandPalette } from '~/composables/useCommandPalette'
+import { useGlobalSearchInstance } from '~/composables/useGlobalSearch'
 
 const { textCommand } = useCommandPalette()
 const {
@@ -13,7 +13,7 @@ const {
   hasMore,
   open,
   close,
-  loadMore,
+  loadMore: _loadMore,
   setupShortcuts,
   highlight,
 } = useGlobalSearchInstance()
@@ -30,10 +30,17 @@ const inputRef = ref<HTMLElement>()
 // 处理选择
 function selectResult(result?: SearchResult) {
   const target = result || results.value[selectedIndex.value]
-  if (target?.url) {
+  if (target && target.url) {
     window.open(target.url, '_blank')
-    close()
+    handleClose()
   }
+}
+
+// 改进的关闭处理
+function handleClose() {
+  query.value = ''
+  selectedIndex.value = 0
+  close()
 }
 
 // 键盘导航
@@ -53,7 +60,7 @@ function handleKeydown(e: KeyboardEvent) {
       break
     case 'Escape':
       e.preventDefault()
-      close()
+      handleClose()
       break
   }
 }
@@ -65,7 +72,8 @@ watch(isOpen, (open) => {
     nextTick(() => {
       inputRef.value?.focus()
     })
-  } else {
+  }
+  else {
     query.value = ''
   }
 })
@@ -97,9 +105,16 @@ watch(results, () => {
     v-model:show="isOpen"
     preset="card"
     class="w-full max-w-2xl"
-    :closable="false"
+    :closable="true"
     :mask-closable="true"
+    :close-on-esc="true"
+    :style="{
+      marginTop: '5vh',
+      maxHeight: '85vh',
+    }"
     transform-origin="center"
+    @close="handleClose"
+    @mask-click="handleClose"
   >
     <div class="space-y-4">
       <!-- 搜索输入 -->
@@ -107,7 +122,7 @@ watch(results, () => {
         ref="inputRef"
         v-model:value="query"
         size="large"
-        placeholder="搜索网站、标签或描述... (Ctrl+K)"
+        :placeholder="`搜索网站、标签或描述... (${textCommand})`"
         :loading="isLoading"
         clearable
         @keydown="handleKeydown"
@@ -120,12 +135,12 @@ watch(results, () => {
       <!-- 搜索结果 -->
       <div
         v-if="results.length"
-        class="max-h-96 overflow-y-auto border rounded-lg"
+        class="max-h-[60vh] overflow-y-auto border rounded-lg"
       >
         <div class="p-2 text-xs text-gray-500 border-b bg-gray-50 dark:bg-gray-800">
           共找到 {{ total }} 个结果
         </div>
-        
+
         <div
           v-for="(result, index) in results"
           :key="result.id"
@@ -159,7 +174,7 @@ watch(results, () => {
                 class="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2"
                 v-html="highlight(result.description)"
               />
-              
+
               <!-- 分类和标签 -->
               <div class="flex items-center gap-2 text-xs">
                 <span
@@ -195,7 +210,7 @@ watch(results, () => {
             block
             text
             :loading="isLoading"
-            @click="loadMore"
+            @click="_loadMore"
           >
             加载更多
           </n-button>
@@ -209,7 +224,9 @@ watch(results, () => {
       >
         <i class="i-tabler-search-off text-4xl mb-2" />
         <div>未找到相关结果</div>
-        <div class="text-sm">尝试使用不同的关键词</div>
+        <div class="text-sm">
+          尝试使用不同的关键词
+        </div>
       </div>
 
       <!-- 帮助提示 -->
@@ -219,7 +236,7 @@ watch(results, () => {
       >
         <div class="space-y-2">
           <div>💡 支持搜索网站标题、描述和标签</div>
-          <div>🔥 使用 <kbd class="px-1 bg-gray-100 dark:bg-gray-800 rounded">Ctrl+K</kbd> 快速打开搜索</div>
+          <div>🔥 使用 <kbd class="px-1 bg-gray-100 dark:bg-gray-800 rounded">{{ textCommand }}</kbd> 快速打开搜索</div>
           <div>⚡ 支持键盘导航：↑↓ 选择，Enter 打开</div>
         </div>
       </div>
