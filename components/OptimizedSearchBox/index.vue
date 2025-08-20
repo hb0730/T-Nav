@@ -1,31 +1,29 @@
 <script setup lang="ts">
-import type { SearchableItem, SearchResult } from '~/composables/useAdvancedSearch'
+import type { SearchableLink } from '~/composables/useOptimizedSearch'
 import { computed, nextTick, ref, watch } from 'vue'
-import { useAdvancedSearch } from '~/composables/useAdvancedSearch'
+import { useOptimizedSearch } from '~/composables/useOptimizedSearch'
 
 interface Props {
-  items: SearchableItem[]
   placeholder?: string
   size?: 'small' | 'medium' | 'large'
   maxDisplayResults?: number
   showAdvancedButton?: boolean
-  categories?: Array<{ id: string, title: string }>
-  fields?: string[]
-  threshold?: number
+  pageSize?: number
+  autoFocus?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  placeholder: '搜索...',
+  placeholder: '搜索链接、标签、描述...',
   size: 'medium',
   maxDisplayResults: 8,
   showAdvancedButton: true,
-  fields: () => ['title', 'description', 'tags', 'url'],
-  threshold: 0.3,
+  pageSize: 20,
+  autoFocus: false,
 })
 
 const emit = defineEmits<{
-  select: [result: SearchResult]
-  search: [query: string, results: SearchResult[]]
+  select: [result: SearchableLink]
+  search: [query: string, results: SearchableLink[]]
 }>()
 
 // 搜索相关状态
@@ -33,13 +31,19 @@ const {
   searchQuery,
   searchResults,
   highlightedResults,
+  pagination,
   isSearching,
   searchHistory,
+  searchStats,
+  searchNow,
+  loadMore,
   clearHistory,
-} = useAdvancedSearch(computed(() => filteredItems.value), {
-  fields: props.fields,
-  threshold: props.threshold,
-  maxResults: 100,
+  clearResults,
+} = useOptimizedSearch({
+  pageSize: props.pageSize,
+  debounceMs: 300,
+  enableCache: true,
+  autoSearch: true,
 })
 
 // UI 状态
@@ -49,50 +53,46 @@ const selectedIndex = ref(-1)
 const searchInputRef = ref()
 
 // 高级搜索选项
-const selectedFields = ref([...props.fields])
-const selectedCategory = ref<string | null>(null)
-const includeDeprecated = ref(false)
-const showScore = ref(false)
-
-// 分类选项
-const categoryOptions = computed(() => [
-  { label: '全部分类', value: null },
-  ...(props.categories?.map(cat => ({
-    label: cat.title,
-    value: cat.id,
-  })) || []),
-])
-
-// 过滤后的项目（应用高级搜索条件）
-const filteredItems = computed(() => {
-  let items = [...props.items]
-
-  // 分类筛选
-  if (selectedCategory.value) {
-    items = items.filter(item => item.category === selectedCategory.value)
-  }
-
-  // 是否包含已废弃项目
-  if (!includeDeprecated.value) {
-    items = items.filter(item => !item.deprecated)
-  }
-
-  return items
+const enabledFields = ref({
+  title: true,
+  description: true,
+  tags: true,
+  url: false,
 })
 
-// 显示的搜索结果
+// 显示的搜索结果（限制数量）
 const displayResults = computed(() => {
   return highlightedResults.value.slice(0, props.maxDisplayResults)
 })
 
+// 显示的搜索历史
+const displayHistory = computed(() => {
+  return searchHistory.value.slice(0, 8)
+})
+
 // 监听搜索结果变化
 watch([searchQuery, searchResults], ([query, results]) => {
-  emit('search', query, results)
+  emit('search', query, [...results])
 })
+
+// 监听自动聚焦
+watch(() => props.autoFocus, (autoFocus) => {
+  if (autoFocus) {
+    nextTick(() => {
+      searchInputRef.value?.focus()
+    })
+  }
+}, { immediate: true })
 
 // 切换高级搜索
 function toggleAdvancedSearch() {
   showAdvanced.value = !showAdvanced.value
+}
+
+// 处理输入框获得焦点
+function handleFocus() {
+  showDropdown.value = true
+  selectedIndex.value = -1
 }
 
 // 处理失去焦点
@@ -107,7 +107,7 @@ function handleBlur() {
 // 处理键盘事件
 function handleKeydown(event: KeyboardEvent) {
   const resultsCount = displayResults.value.length
-  const historyCount = searchQuery.value ? 0 : Math.min(searchHistory.value.length, 8)
+  const historyCount = searchQuery.value ? 0 : displayHistory.value.length
   const totalCount = resultsCount + historyCount
 
   switch (event.key) {
@@ -123,11 +123,17 @@ function handleKeydown(event: KeyboardEvent) {
       event.preventDefault()
       if (selectedIndex.value >= 0) {
         if (resultsCount > 0 && selectedIndex.value < resultsCount) {
-          selectResult(displayResults.value[selectedIndex.value])
+          const selectedResult = displayResults.value[selectedIndex.value]
+          if (selectedResult) {
+            selectResult(selectedResult)
+          }
         }
         else if (historyCount > 0) {
           const historyIndex = selectedIndex.value - resultsCount
-          selectHistory(searchHistory.value[historyIndex])
+          const selectedHistory = displayHistory.value[historyIndex]
+          if (selectedHistory) {
+            selectHistory(selectedHistory)
+          }
         }
       }
       break
@@ -139,7 +145,7 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 // 选择搜索结果
-function selectResult(result: SearchResult) {
+function selectResult(result: SearchableLink) {
   emit('select', result)
   showDropdown.value = false
   selectedIndex.value = -1
@@ -153,17 +159,32 @@ function selectHistory(query: string) {
   })
 }
 
+// 加载更多结果
+async function handleLoadMore() {
+  try {
+    await loadMore()
+  }
+  catch (error) {
+    console.error('加载更多结果失败:', error)
+  }
+}
+
+// 清空搜索
+function handleClearSearch() {
+  clearResults()
+  searchInputRef.value?.focus()
+}
+
 // 暴露方法
 defineExpose({
   focus: () => searchInputRef.value?.focus(),
-  clear: () => {
-    searchQuery.value = ''
-  },
+  clear: handleClearSearch,
+  searchNow: (query: string) => searchNow(query),
 })
 </script>
 
 <template>
-  <div class="search-box-container">
+  <div class="optimized-search-container">
     <!-- 搜索输入框 -->
     <div class="relative">
       <n-input-group>
@@ -173,7 +194,7 @@ defineExpose({
           :placeholder="placeholder"
           :size="size"
           clearable
-          @focus="showDropdown = true"
+          @focus="handleFocus"
           @blur="handleBlur"
           @keydown="handleKeydown"
         >
@@ -211,12 +232,14 @@ defineExpose({
         <!-- 搜索结果 -->
         <div v-else-if="searchResults.length > 0" class="py-2">
           <div class="px-3 py-1 text-xs text-gray-500 font-medium border-b border-gray-100 dark:border-gray-700">
-            搜索结果 ({{ searchResults.length }})
+            {{ searchStats.resultsText }}
           </div>
+
           <div
             v-for="(result, index) in displayResults"
             :key="result.id"
-            class="px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" :class="[
+            class="px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            :class="[
               index === selectedIndex && 'bg-blue-50 dark:bg-blue-900',
             ]"
             @click="selectResult(result)"
@@ -245,23 +268,31 @@ defineExpose({
               <div class="flex-1 min-w-0">
                 <div
                   class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate"
-                  v-html="result.displayTitle || result.title"
+                  v-html="(result as any).highlightedTitle || result.title"
                 />
                 <div
-                  v-if="result.displayDescription || result.description"
+                  v-if="(result as any).highlightedDescription || result.description"
                   class="text-xs text-gray-500 dark:text-gray-400 truncate mt-1"
-                  v-html="result.displayDescription || result.description"
+                  v-html="(result as any).highlightedDescription || result.description"
                 />
+
+                <!-- 分类信息 -->
+                <div v-if="result.category" class="flex items-center gap-1 mt-1">
+                  <n-icon :size="12" class="text-gray-400">
+                    <i :class="result.category.icon || 'i-tabler-folder'" />
+                  </n-icon>
+                  <span class="text-xs text-gray-400">{{ result.category.title }}</span>
+                </div>
 
                 <!-- 标签 -->
                 <div v-if="result.tags && result.tags.length > 0" class="flex flex-wrap gap-1 mt-1">
                   <n-tag
-                    v-for="tag in result.tags.slice(0, 3)"
-                    :key="tag"
+                    v-for="(tag, tagIndex) in result.tags.slice(0, 3)"
+                    :key="tagIndex"
                     size="small"
                     class="text-xs"
                   >
-                    {{ tag }}
+                    <span v-html="(result as any).highlightedTags?.[tagIndex] || tag" />
                   </n-tag>
                   <span v-if="result.tags.length > 3" class="text-xs text-gray-400">
                     +{{ result.tags.length - 3 }}
@@ -269,9 +300,11 @@ defineExpose({
                 </div>
               </div>
 
-              <!-- 分数（调试模式） -->
-              <div v-if="showScore" class="flex-shrink-0 text-xs text-gray-400">
-                {{ Math.round(result.score * 100) }}%
+              <!-- 外部链接图标 -->
+              <div class="flex-shrink-0">
+                <n-icon :size="14" class="text-gray-400">
+                  <i class="i-tabler-external-link" />
+                </n-icon>
               </div>
             </div>
           </div>
@@ -281,7 +314,26 @@ defineExpose({
             v-if="searchResults.length > maxDisplayResults"
             class="px-3 py-2 text-xs text-gray-500 text-center border-t border-gray-100 dark:border-gray-700"
           >
-            还有 {{ searchResults.length - maxDisplayResults }} 个结果，输入更多关键词以缩小范围
+            还有 {{ searchResults.length - maxDisplayResults }} 个结果
+          </div>
+
+          <!-- 加载更多按钮 -->
+          <div
+            v-if="pagination.hasNextPage"
+            class="px-3 py-2 border-t border-gray-100 dark:border-gray-700"
+          >
+            <n-button
+              text
+              size="small"
+              class="w-full"
+              :loading="isSearching"
+              @click="handleLoadMore"
+            >
+              <template #icon>
+                <i class="i-tabler-chevron-down" />
+              </template>
+              加载更多
+            </n-button>
           </div>
         </div>
 
@@ -299,9 +351,10 @@ defineExpose({
             </n-button>
           </div>
           <div
-            v-for="(item, index) in searchHistory.slice(0, 8)"
+            v-for="(item, index) in displayHistory"
             :key="item"
-            class="px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2" :class="[
+            class="px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
+            :class="[
               index === selectedIndex && 'bg-blue-50 dark:bg-blue-900',
             ]"
             @click="selectHistory(item)"
@@ -323,7 +376,7 @@ defineExpose({
             未找到相关结果
           </div>
           <div class="text-xs mt-1">
-            尝试使用不同的关键词
+            尝试使用不同的关键词或标签
           </div>
         </div>
       </div>
@@ -335,53 +388,51 @@ defineExpose({
         v-if="showAdvanced"
         class="advanced-search-panel mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600"
       >
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- 搜索字段选择 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 搜索范围选择 -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               搜索范围
             </label>
-            <n-checkbox-group v-model:value="selectedFields">
-              <div class="space-y-1">
-                <n-checkbox value="title" label="标题" />
-                <n-checkbox value="description" label="描述" />
-                <n-checkbox value="tags" label="标签" />
-                <n-checkbox value="url" label="链接" />
-              </div>
-            </n-checkbox-group>
-          </div>
-
-          <!-- 分类筛选 -->
-          <div v-if="categories && categories.length > 0">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              分类筛选
-            </label>
-            <n-select
-              v-model:value="selectedCategory"
-              :options="categoryOptions"
-              placeholder="选择分类"
-              clearable
-            />
-          </div>
-
-          <!-- 搜索选项 -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              搜索选项
-            </label>
             <div class="space-y-2">
-              <n-checkbox v-model:checked="includeDeprecated" label="包含已废弃项目" />
-              <n-checkbox v-model:checked="showScore" label="显示匹配分数" />
+              <n-checkbox v-model:checked="enabledFields.title" label="标题" />
+              <n-checkbox v-model:checked="enabledFields.description" label="描述" />
+              <n-checkbox v-model:checked="enabledFields.tags" label="标签" />
+              <n-checkbox v-model:checked="enabledFields.url" label="链接地址" />
+            </div>
+          </div>
+
+          <!-- 搜索统计 -->
+          <div v-if="searchResults.length > 0">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              搜索统计
+            </label>
+            <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+              <div>{{ searchStats.resultsText }}</div>
+              <div v-if="pagination.totalPages > 1">
+                第 {{ pagination.page }} / {{ pagination.totalPages }} 页
+              </div>
+              <div v-if="searchQuery">
+                关键词：<span class="font-medium">"{{ searchQuery }}"</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 搜索统计 -->
-        <div v-if="searchResults.length > 0" class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-          <div class="text-sm text-gray-600 dark:text-gray-400">
-            找到 <span class="font-medium text-blue-600">{{ searchResults.length }}</span> 个结果
-            <span v-if="searchQuery">，关键词："{{ searchQuery }}"</span>
-          </div>
+        <!-- 快捷操作 -->
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 flex gap-2">
+          <n-button size="small" @click="handleClearSearch">
+            <template #icon>
+              <i class="i-tabler-x" />
+            </template>
+            清空搜索
+          </n-button>
+          <n-button size="small" @click="clearHistory">
+            <template #icon>
+              <i class="i-tabler-history" />
+            </template>
+            清除历史
+          </n-button>
         </div>
       </div>
     </transition>
@@ -413,10 +464,29 @@ defineExpose({
   background-color: #fef08a;
   padding: 0 1px;
   border-radius: 2px;
+  font-weight: 500;
 }
 
 :deep(.dark mark) {
   background-color: #ca8a04;
   color: white;
+}
+
+/* 滚动条样式 */
+.search-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.search-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 2px;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
 }
 </style>

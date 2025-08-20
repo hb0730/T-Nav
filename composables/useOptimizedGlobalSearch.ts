@@ -1,12 +1,30 @@
 import { useEventListener } from '@vueuse/core'
-import { ref } from 'vue'
+import { readonly, ref } from 'vue'
+import { useOptimizedSearch } from './useOptimizedSearch'
 
 /**
- * 全局搜索状态管理
+ * 优化的全局搜索状态管理
  */
-export function useGlobalSearch() {
+export function useOptimizedGlobalSearch() {
   const isSearchModalOpen = ref(false)
-  const searchQuery = ref('')
+
+  // 使用优化的搜索功能（禁用搜索历史以简化全局搜索）
+  const {
+    searchQuery,
+    searchResults,
+    highlightedResults,
+    isSearching,
+    searchStats,
+    searchNow,
+    loadMore,
+    clearResults,
+  } = useOptimizedSearch({
+    pageSize: 20,
+    debounceMs: 300,
+    enableCache: true,
+    autoSearch: true,
+    enableHistory: false, // 全局搜索不需要历史记录
+  })
 
   // 打开搜索模态框
   function openSearch() {
@@ -16,7 +34,7 @@ export function useGlobalSearch() {
   // 关闭搜索模态框
   function closeSearch() {
     isSearchModalOpen.value = false
-    searchQuery.value = ''
+    // 不清空搜索查询，保持用户输入
   }
 
   // 切换搜索模态框
@@ -87,8 +105,20 @@ export function useGlobalSearch() {
   }
 
   return {
+    // 状态
     isSearchModalOpen: readonly(isSearchModalOpen),
     searchQuery,
+    searchResults,
+    highlightedResults,
+    isSearching,
+    searchStats,
+
+    // 搜索方法
+    searchNow,
+    loadMore,
+    clearResults,
+
+    // 模态框控制方法
     openSearch,
     closeSearch,
     toggleSearch,
@@ -98,14 +128,14 @@ export function useGlobalSearch() {
 }
 
 // 全局单例
-let globalSearchInstance: ReturnType<typeof useGlobalSearch> | null = null
+let globalSearchInstance: ReturnType<typeof useOptimizedGlobalSearch> | null = null
 
 /**
- * 获取全局搜索实例（单例模式）
+ * 获取优化的全局搜索实例（单例模式）
  */
-export function useGlobalSearchInstance() {
+export function useOptimizedGlobalSearchInstance() {
   if (!globalSearchInstance) {
-    globalSearchInstance = useGlobalSearch()
+    globalSearchInstance = useOptimizedGlobalSearch()
   }
   return globalSearchInstance
 }

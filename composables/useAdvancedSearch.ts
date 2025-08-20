@@ -18,7 +18,7 @@ export interface SearchResult extends SearchableItem {
   matchedFields: string[]
 }
 
-export interface SearchOptions {
+export interface AdvancedSearchOptions {
   fields?: string[]
   threshold?: number
   maxResults?: number
@@ -27,7 +27,7 @@ export interface SearchOptions {
   debounceMs?: number
 }
 
-const DEFAULT_OPTIONS: Required<SearchOptions> = {
+const DEFAULT_OPTIONS: Required<AdvancedSearchOptions> = {
   fields: ['title', 'description', 'tags', 'url'],
   threshold: 0.3,
   maxResults: 50,
@@ -41,7 +41,7 @@ const DEFAULT_OPTIONS: Required<SearchOptions> = {
  */
 export function useAdvancedSearch<T extends SearchableItem>(
   items: Ref<T[]> | T[],
-  options: SearchOptions = {},
+  options: AdvancedSearchOptions = {},
   externalQuery?: Ref<string>,
 ) {
   const config = { ...DEFAULT_OPTIONS, ...options }
