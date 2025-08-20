@@ -1,93 +1,90 @@
 <script lang="ts" setup>
 import { useDynamicSiteConfig } from '~/composables/useSiteConfig'
-import { useTheme } from '~/composables/useTheme'
+import { ThemeCore } from '~/plugins/theme/core/ThemeCore'
+import { darkTheme } from 'naive-ui'
+import { darkThemeOverrides, lightThemeOverrides } from '~/themes'
 import 'uno.css'
 import '~/assets/css/main.scss'
 
-const { theme, themeOverrides, loaded, isDark } = useTheme()
 const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
 
-// 防止主题闪烁的内联脚本
-const themeInitScript = `
-;(function() {
-  function getCookieValue(name) {
-    try {
-      const value = document.cookie
-        .split('; ')
-        .find(row => row.startsWith(name + '='))
-      return value ? decodeURIComponent(value.split('=')[1]) : null
-    } catch {
-      return null
+// 直接使用 useCookie 确保服务端和客户端一致
+const themePreferenceCookie = useCookie('theme-preference', { 
+  default: () => 'system',
+  sameSite: 'lax'
+})
+const themeActualCookie = useCookie('theme-actual', { 
+  default: () => 'light',
+  sameSite: 'lax'
+})
+
+// 服务端安全的主题计算
+const serverSafeIsDark = computed(() => {
+  // 直接使用 theme-actual cookie 的值
+  return themeActualCookie.value === 'dark'
+})
+
+// 直接创建与 cookie 状态同步的 Naive UI 主题配置
+const theme = computed(() => {
+  return serverSafeIsDark.value ? darkTheme : undefined
+})
+
+const themeOverrides = computed(() => {
+  return serverSafeIsDark.value ? darkThemeOverrides : lightThemeOverrides
+})
+
+// 监听客户端的主题变化，确保 cookie 状态同步
+if (import.meta.client) {
+  // 监听 storage 事件来同步跨标签页的主题变化
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'theme-preference' || e.key === null) {
+      // 强制触发 cookie 重新读取
+      nextTick(() => {
+        const newPreference = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('theme-preference='))
+          ?.split('=')[1] || 'system'
+        const newActual = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('theme-actual='))
+          ?.split('=')[1] || 'light'
+        
+        if (themePreferenceCookie.value !== newPreference) {
+          themePreferenceCookie.value = newPreference as any
+        }
+        if (themeActualCookie.value !== newActual) {
+          themeActualCookie.value = newActual as any
+        }
+      })
     }
-  }
+  })
   
-  function syncThemeToDOM() {
-    try {
-      // 获取主题偏好，优先使用最新的cookie值
-      const themePreference = getCookieValue('theme-preference') || 'system'
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      
-      let actualTheme
-      if (themePreference === 'system') {
-        actualTheme = prefersDark ? 'dark' : 'light'
-      } else {
-        actualTheme = themePreference
-      }
-      
-      const html = document.documentElement
-      
-      // 确保移除之前的状态
-      html.classList.remove('dark', 'light')
-      
-      // 设置新的主题状态
-      if (actualTheme === 'dark') {
-        html.classList.add('dark')
-        html.setAttribute('data-theme', 'dark')
-      } else {
-        html.classList.add('light')
-        html.setAttribute('data-theme', 'light')
-      }
-      
-      // 更新实际主题cookie
-      document.cookie = 'theme-actual=' + actualTheme + '; path=/; samesite=lax; expires=' + new Date(Date.now() + 365*24*60*60*1000).toUTCString()
-      
-      // 添加调试信息（开发环境）
-      if (typeof console !== 'undefined' && console.debug) {
-        console.debug('Theme synced:', { preference: themePreference, actual: actualTheme, prefersDark })
-      }
-    } catch (error) {
-      console.warn('Theme initialization failed:', error)
-    }
-  }
-  
-  // 立即同步主题
-  syncThemeToDOM()
-  
-  // 监听cookie变化（通过storage事件检测）
-  if (window.addEventListener) {
-    window.addEventListener('storage', function(e) {
-      if (e.key === 'theme-preference' || e.key === null) {
-        setTimeout(syncThemeToDOM, 0)
-      }
-    })
+  // 也监听 cookie 变化（通过轮询检测）
+  let lastActual = themeActualCookie.value
+  setInterval(() => {
+    const currentActual = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('theme-actual='))
+      ?.split('=')[1] || 'light'
     
-    // 监听系统主题变化
-    if (window.matchMedia) {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-      if (mediaQuery.addEventListener) {
-        mediaQuery.addEventListener('change', function() {
-          setTimeout(syncThemeToDOM, 0)
-        })
-      }
+    if (currentActual !== lastActual) {
+      lastActual = currentActual
+      themeActualCookie.value = currentActual as any
     }
-  }
-})()`
+  }, 100) // 每100ms检查一次
+}
+
+// 使用主题插件的初始化脚本
+const themeInitScript = ThemeCore.getInitScript()
 
 // 设置文档的主题类
 useHead({
   htmlAttrs: {
-    'data-theme': () => isDark.value ? 'dark' : 'light',
-    'class': () => isDark.value ? 'dark' : 'light',
+    'data-theme': () => serverSafeIsDark.value ? 'dark' : 'light',
+    'class': () => {
+      const themeClass = serverSafeIsDark.value ? 'dark' : 'light'
+      return `${themeClass} theme-loaded`
+    },
   },
   script: [
     {
@@ -177,7 +174,6 @@ onMounted(() => {
     :theme="theme"
     :theme-overrides="themeOverrides"
     inline-theme-disabled
-    :class="{ 'theme-loaded': loaded }"
   >
     <n-message-provider>
       <n-dialog-provider>
@@ -197,34 +193,7 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
-/* 防止主题闪烁的过渡效果 */
-.n-config-provider:not(.theme-loaded) {
-  opacity: 0.95;
-  transition: opacity 0.1s ease-in-out;
-}
-
-.n-config-provider.theme-loaded {
-  opacity: 1;
-}
-
-/* 优化的主题过渡效果 - 只对关键元素应用 */
-:root {
-  --theme-transition: background-color 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
-}
-
-/* 只对需要主题过渡的元素应用动画 */
-.n-layout,
-.n-layout-header,
-.n-layout-sider,
-.n-layout-content,
-.n-card,
-.n-button,
-.n-menu,
-.n-dropdown,
-[class*='nav-'],
-[class*='theme-'] {
-  transition: var(--theme-transition);
-}
+/* 主题样式由插件自动管理 */
 </style>
 
 <style lang="scss" scoped>

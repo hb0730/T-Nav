@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth'
-import { useTheme } from '~/composables/useTheme'
+import { useThemePlugin } from '~/plugins/theme/composables/useThemePlugin'
 
-const { theme, themeOverrides } = useTheme()
+const { theme, themeOverrides } = useThemePlugin()
 const { user, logout, loadUserFromToken, checkAuth } = useAuth()
 const router = useRouter()
 const route = useRoute()

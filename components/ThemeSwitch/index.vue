@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DropdownOption } from 'naive-ui'
-import { useTheme } from '~/composables/useTheme'
+import { useThemePlugin } from '~/plugins/theme/composables/useThemePlugin'
 
 interface Props {
   variant?: 'default' | 'admin'
@@ -10,7 +10,38 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'default',
 })
 
-const { themeInfo, setTheme, themePreference } = useTheme()
+const { setTheme } = useThemePlugin()
+
+// 直接使用与 app.vue 相同的 cookie 状态
+const themePreferenceCookie = useCookie('theme-preference', { 
+  default: () => 'system',
+  sameSite: 'lax'
+})
+const themeActualCookie = useCookie('theme-actual', { 
+  default: () => 'light',
+  sameSite: 'lax'
+})
+
+// 创建与 app.vue 一致的主题信息
+const themeInfo = computed(() => {
+  const preference = themePreferenceCookie.value
+  const actual = themeActualCookie.value
+
+  return {
+    preference,
+    actual,
+    icon: preference === 'system'
+      ? 'i-tabler-device-desktop'
+      : actual === 'dark'
+        ? 'i-tabler-moon'
+        : 'i-tabler-sun',
+    label: preference === 'system'
+      ? `跟随系统 (${actual === 'dark' ? '深色' : '浅色'})`
+      : actual === 'dark'
+        ? '深色模式'
+        : '浅色模式',
+  }
+})
 
 const themeOptions = computed<DropdownOption[]>(() => [
   {
@@ -18,7 +49,7 @@ const themeOptions = computed<DropdownOption[]>(() => [
     key: 'light',
     icon: () => h('i', { class: 'i-tabler-sun' }),
     props: {
-      class: themePreference.value === 'light' ? 'selected-theme' : '',
+      class: themePreferenceCookie.value === 'light' ? 'selected-theme' : '',
     },
   },
   {
@@ -26,7 +57,7 @@ const themeOptions = computed<DropdownOption[]>(() => [
     key: 'dark',
     icon: () => h('i', { class: 'i-tabler-moon' }),
     props: {
-      class: themePreference.value === 'dark' ? 'selected-theme' : '',
+      class: themePreferenceCookie.value === 'dark' ? 'selected-theme' : '',
     },
   },
   {
@@ -34,13 +65,40 @@ const themeOptions = computed<DropdownOption[]>(() => [
     key: 'system',
     icon: () => h('i', { class: 'i-tabler-device-desktop' }),
     props: {
-      class: themePreference.value === 'system' ? 'selected-theme' : '',
+      class: themePreferenceCookie.value === 'system' ? 'selected-theme' : '',
     },
   },
 ])
 
 function handleSelect(key: string) {
   setTheme(key as 'light' | 'dark' | 'system')
+}
+
+// 监听客户端的主题变化，确保图标状态同步
+if (import.meta.client) {
+  // 监听 cookie 变化（通过轮询检测）
+  let lastPreference = themePreferenceCookie.value
+  let lastActual = themeActualCookie.value
+  
+  setInterval(() => {
+    const currentPreference = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('theme-preference='))
+      ?.split('=')[1] || 'system'
+    const currentActual = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('theme-actual='))
+      ?.split('=')[1] || 'light'
+    
+    if (currentPreference !== lastPreference) {
+      lastPreference = currentPreference
+      themePreferenceCookie.value = currentPreference as any
+    }
+    if (currentActual !== lastActual) {
+      lastActual = currentActual
+      themeActualCookie.value = currentActual as any
+    }
+  }, 100) // 每100ms检查一次
 }
 </script>
 

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
-import type { SearchableItem } from '~/composables/useAdvancedSearch'
 import type { FriendLinkSubmission, LinkSubmission } from '~/types/database'
-import { useAdvancedSearch } from '~/composables/useAdvancedSearch'
 
 definePageMeta({
   layout: false,
@@ -389,65 +387,33 @@ function handleReject(type: 'friend-link' | 'link', id: string, title: string) {
 
 const rejectReason = ref('')
 
-// 转换为SearchableItem格式
-const friendLinkSearchItems = computed(() => {
-  return friendLinkSubmissions.value.map(item => ({
-    id: item.id,
-    title: item.title,
-    url: item.url,
-    description: item.description || '',
-    contact: item.contact || '',
-    status: item.status,
-  } as SearchableItem & { contact: string, status: string }))
-})
+// 简化的本地搜索
+function filterSubmissions(items: any[], query: string) {
+  if (!query.trim()) return items
+  
+  const lowerQuery = query.toLowerCase()
+  return items.filter(item => {
+    return (
+      item.title?.toLowerCase().includes(lowerQuery) ||
+      item.url?.toLowerCase().includes(lowerQuery) ||
+      item.description?.toLowerCase().includes(lowerQuery) ||
+      item.contact?.toLowerCase().includes(lowerQuery) ||
+      (item.tags && item.tags.some((tag: string) => tag.toLowerCase().includes(lowerQuery)))
+    )
+  })
+}
 
-const linkSearchItems = computed(() => {
-  return linkSubmissions.value.map(item => ({
-    id: item.id,
-    title: item.title,
-    url: item.url,
-    description: item.description || '',
-    tags: item.tags || [],
-    contact: item.contact || '',
-    status: item.status,
-  } as SearchableItem & { contact: string, status: string }))
-})
+// 搜索状态
+const friendLinkSearchQuery = ref('')
+const linkSearchQuery = ref('')
 
-// 友链搜索
-const {
-  searchQuery: friendLinkSearchQuery,
-  searchResults: friendLinkSearchResults,
-  isSearching: friendLinkSearching,
-} = useAdvancedSearch(friendLinkSearchItems, {
-  fields: ['title', 'url', 'description', 'contact'],
-  threshold: 0.3,
-  debounceMs: 300,
-})
-
-// 导航站搜索
-const {
-  searchQuery: linkSearchQuery,
-  searchResults: linkSearchResults,
-  isSearching: linkSearching,
-} = useAdvancedSearch(linkSearchItems, {
-  fields: ['title', 'url', 'description', 'contact', 'tags'],
-  threshold: 0.3,
-  debounceMs: 300,
-})
-
-// 最终显示的数据（搜索结果优先）
+// 最终显示的数据
 const displayFriendLinkSubmissions = computed(() => {
-  if (friendLinkSearchQuery.value.trim()) {
-    return friendLinkSearchResults.value
-  }
-  return friendLinkSubmissions.value
+  return filterSubmissions(friendLinkSubmissions.value, friendLinkSearchQuery.value)
 })
 
 const displayLinkSubmissions = computed(() => {
-  if (linkSearchQuery.value.trim()) {
-    return linkSearchResults.value
-  }
-  return linkSubmissions.value
+  return filterSubmissions(linkSubmissions.value, linkSearchQuery.value)
 })
 
 // 同步搜索查询

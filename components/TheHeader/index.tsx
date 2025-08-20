@@ -17,7 +17,7 @@ export default defineComponent({
             </n-button>
           </div>
           <div class="nav-main flex-1 flex items-center justify-center m-x-3">
-            <the-command-palette></the-command-palette>
+            <command-palette></command-palette>
           </div>
           <div class="nav-right flex items-center">
             <theme-switch />

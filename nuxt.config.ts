@@ -56,6 +56,12 @@ export default defineNuxtConfig({
     },
   },
 
+  // 插件配置
+  plugins: [
+    '~/plugins/theme/index.ts',
+    '~/plugins/theme/client.ts',
+  ],
+
   // 自动导入配置
   imports: {
     dirs: ['composables/**'],
