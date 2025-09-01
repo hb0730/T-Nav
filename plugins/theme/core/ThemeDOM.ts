@@ -55,33 +55,50 @@ export class ThemeDOM {
     }
   }
   
+  function getSystemPreference() {
+    try {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    } catch {
+      return 'light'
+    }
+  }
+  
   function syncThemeToDOM() {
     try {
       const themePreference = getCookieValue('theme-preference') || 'system'
-      const themeActual = getCookieValue('theme-actual') || 'light'
+      let themeActual = getCookieValue('theme-actual')
+      
+      // 如果偏好是 system 且没有存储的实际主题，检测系统偏好
+      if (themePreference === 'system' && !themeActual) {
+        themeActual = getSystemPreference()
+      }
+      
+      // 默认为 light
+      themeActual = themeActual || 'light'
       
       const html = document.documentElement
       const isDark = themeActual === 'dark'
       
-      // 只同步 DOM 状态，不修改 cookie
+      // 同步 DOM 状态
       html.classList.toggle('dark', isDark)
       html.classList.toggle('light', !isDark)
       html.setAttribute('data-theme', themeActual)
       html.style.setProperty('--theme-mode', themeActual)
       
-      // 立即设置为已加载状态，避免闪烁
-      html.classList.add('theme-loaded')
+      // 延迟设置已加载状态，确保样式应用完成
+      requestAnimationFrame(function() {
+        html.classList.add('theme-loaded')
+      })
     } catch (error) {
       console.warn('Theme sync failed:', error)
     }
   }
   
-  // 立即同步主题 - 只读取 cookie 同步 DOM，不修改状态
+  // 立即同步主题
   syncThemeToDOM()
   
   // 监听主题变化
   if (window.addEventListener) {
-    // 监听 storage 事件（跨标签页同步）
     window.addEventListener('storage', function(e) {
       if (e.key === 'theme-preference' || e.key === null) {
         requestAnimationFrame(syncThemeToDOM)

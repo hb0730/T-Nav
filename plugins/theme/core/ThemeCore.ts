@@ -97,26 +97,11 @@ export class ThemeCore {
     this.actualTheme.value = actual
     this.isDark.value = isDarkTheme
 
-    // 更新存储
+    // 更新存储和DOM
     if (import.meta.client) {
-      // 检查当前系统主题是否与存储的实际主题一致（仅当偏好为 'system' 时）
-      if (preference === 'system') {
-        const systemPreference = ThemeStorage.getSystemPreference()
-        const storedActual = ThemeStorage.getActual()
-        
-        // 如果系统主题与存储的不一致，更新存储
-        if (systemPreference !== storedActual) {
-          this.actualTheme.value = systemPreference
-          this.isDark.value = systemPreference === 'dark'
-          ThemeStorage.setActual(systemPreference)
-          ThemeDOM.updateTheme(systemPreference === 'dark')
-        } else {
-          ThemeDOM.updateTheme(isDarkTheme)
-        }
-      } else {
-        ThemeStorage.setActual(actual)
-        ThemeDOM.updateTheme(isDarkTheme)
-      }
+      // 始终更新存储以确保一致性
+      ThemeStorage.setActual(actual)
+      ThemeDOM.updateTheme(isDarkTheme)
     }
   }
 

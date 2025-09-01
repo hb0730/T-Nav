@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth'
-import { useThemePlugin } from '~/plugins/theme/composables/useThemePlugin'
-
-const { theme, themeOverrides } = useThemePlugin()
 const { user, logout, loadUserFromToken, checkAuth } = useAuth()
 const router = useRouter()
 const route = useRoute()
@@ -72,13 +69,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <n-config-provider
-    :theme="theme"
-    :theme-overrides="themeOverrides"
-    inline-theme-disabled
-  >
-    <n-message-provider>
-      <n-dialog-provider>
+  <n-message-provider>
+    <n-dialog-provider>
         <n-layout has-sider class="h-100vh">
           <n-layout-sider
             bordered
@@ -92,7 +84,7 @@ onMounted(async () => {
           >
             <div class="h-16 flex items-center justify-center border-b">
               <h1 v-if="!collapsed" class="text-lg font-bold">
-                T-Nav 管理端
+                T-Nav管理端
               </h1>
               <h1 v-else class="text-lg font-bold">
                 T
@@ -136,5 +128,4 @@ onMounted(async () => {
         </n-layout>
       </n-dialog-provider>
     </n-message-provider>
-  </n-config-provider>
 </template>

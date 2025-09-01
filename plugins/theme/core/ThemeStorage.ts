@@ -86,14 +86,23 @@ export class ThemeStorage {
     const themePreference = preference || this.getPreference()
 
     if (themePreference === 'system') {
-      // 在服务端时，优先使用已存储的实际主题值，避免 hydration mismatch
+      // 服务端：首次访问时保守使用 light，后续访问使用存储值
       if (import.meta.server) {
-        const stored = this.getActual()
-        // 如果有存储的实际主题值，使用它；否则默认使用 light
-        return stored || 'light'
+        const storedActual = this.getActual()
+        // 如果已有存储值，使用存储值确保一致性；否则保守使用 light
+        return storedActual || 'light'
       }
-      // 客户端使用系统主题检测
-      return this.getSystemPreference()
+      
+      // 客户端：始终检测真实系统偏好，但与存储值比较
+      const systemPreference = this.getSystemPreference()
+      const storedActual = this.getActual()
+      
+      // 如果是首次访问（无存储值）或存储值与系统偏好不同，返回系统偏好
+      if (!storedActual || storedActual !== systemPreference) {
+        return systemPreference
+      }
+      
+      return storedActual
     }
 
     return themePreference as 'light' | 'dark'

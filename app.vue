@@ -8,11 +8,7 @@ import '~/assets/css/main.scss'
 
 const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
 
-// 直接使用 useCookie 确保服务端和客户端一致
-const themePreferenceCookie = useCookie('theme-preference', { 
-  default: () => 'system',
-  sameSite: 'lax'
-})
+// 直接使用 useCookie 确保 SSR 安全，避免 ThemeCore 单例污染
 const themeActualCookie = useCookie('theme-actual', { 
   default: () => 'light',
   sameSite: 'lax'
@@ -20,11 +16,10 @@ const themeActualCookie = useCookie('theme-actual', {
 
 // 服务端安全的主题计算
 const serverSafeIsDark = computed(() => {
-  // 直接使用 theme-actual cookie 的值
   return themeActualCookie.value === 'dark'
 })
 
-// 直接创建与 cookie 状态同步的 Naive UI 主题配置
+// 使用 cookie 状态创建主题配置
 const theme = computed(() => {
   return serverSafeIsDark.value ? darkTheme : undefined
 })
@@ -33,46 +28,7 @@ const themeOverrides = computed(() => {
   return serverSafeIsDark.value ? darkThemeOverrides : lightThemeOverrides
 })
 
-// 监听客户端的主题变化，确保 cookie 状态同步
-if (import.meta.client) {
-  // 监听 storage 事件来同步跨标签页的主题变化
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'theme-preference' || e.key === null) {
-      // 强制触发 cookie 重新读取
-      nextTick(() => {
-        const newPreference = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('theme-preference='))
-          ?.split('=')[1] || 'system'
-        const newActual = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('theme-actual='))
-          ?.split('=')[1] || 'light'
-        
-        if (themePreferenceCookie.value !== newPreference) {
-          themePreferenceCookie.value = newPreference as any
-        }
-        if (themeActualCookie.value !== newActual) {
-          themeActualCookie.value = newActual as any
-        }
-      })
-    }
-  })
-  
-  // 也监听 cookie 变化（通过轮询检测）
-  let lastActual = themeActualCookie.value
-  setInterval(() => {
-    const currentActual = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('theme-actual='))
-      ?.split('=')[1] || 'light'
-    
-    if (currentActual !== lastActual) {
-      lastActual = currentActual
-      themeActualCookie.value = currentActual as any
-    }
-  }, 100) // 每100ms检查一次
-}
+// 主题状态同步由 ThemeCore 统一管理，移除重复逻辑
 
 // 使用主题插件的初始化脚本
 const themeInitScript = ThemeCore.getInitScript()
