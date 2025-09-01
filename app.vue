@@ -1,7 +1,7 @@
 <script lang="ts" setup>
+import { darkTheme } from 'naive-ui'
 import { useDynamicSiteConfig } from '~/composables/useSiteConfig'
 import { ThemeCore } from '~/plugins/theme/core/ThemeCore'
-import { darkTheme } from 'naive-ui'
 import { darkThemeOverrides, lightThemeOverrides } from '~/themes'
 import 'uno.css'
 import '~/assets/css/main.scss'
@@ -9,9 +9,9 @@ import '~/assets/css/main.scss'
 const { siteConfig, fetchSiteConfig } = useDynamicSiteConfig()
 
 // 直接使用 useCookie 确保 SSR 安全，避免 ThemeCore 单例污染
-const themeActualCookie = useCookie('theme-actual', { 
+const themeActualCookie = useCookie('theme-actual', {
   default: () => 'light',
-  sameSite: 'lax'
+  sameSite: 'lax',
 })
 
 // 服务端安全的主题计算
@@ -126,20 +126,40 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-config-provider
-    :theme="theme"
-    :theme-overrides="themeOverrides"
-    inline-theme-disabled
-  >
-    <n-message-provider>
-      <n-dialog-provider>
-        <NuxtLayout>
-          <NuxtPage />
-        </NuxtLayout>
-      </n-dialog-provider>
-    </n-message-provider>
-    <n-global-style />
-  </n-config-provider>
+  <ClientOnly>
+    <n-config-provider
+      :theme="theme"
+      :theme-overrides="themeOverrides"
+      inline-theme-disabled
+    >
+      <n-message-provider>
+        <n-dialog-provider>
+          <NuxtLayout>
+            <NuxtPage />
+          </NuxtLayout>
+        </n-dialog-provider>
+      </n-message-provider>
+      <n-global-style />
+    </n-config-provider>
+    <template #fallback>
+      <!-- 服务端渲染的简化版本，使用默认light主题确保SEO -->
+      <n-config-provider
+        :theme="undefined"
+        :theme-overrides="lightThemeOverrides"
+        inline-theme-disabled
+      >
+        <n-message-provider>
+          <n-dialog-provider>
+            <div class="fallback-layout">
+              <NuxtLayout>
+                <NuxtPage />
+              </NuxtLayout>
+            </div>
+          </n-dialog-provider>
+        </n-message-provider>
+      </n-config-provider>
+    </template>
+  </ClientOnly>
 </template>
 
 <style>
@@ -150,6 +170,18 @@ onMounted(() => {
 }
 
 /* 主题样式由插件自动管理 */
+
+/* fallback 样式，确保服务端渲染时有基本样式 */
+.fallback-layout {
+  min-height: 100vh;
+  background-color: #f1f5f9;
+  color: #374151;
+}
+
+.fallback-layout .dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
 </style>
 
 <style lang="scss" scoped>
