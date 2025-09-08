@@ -24,33 +24,33 @@
     "icons:safelist": "tsx scripts/generate-icon-safelist.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.14.0",
+    "@prisma/client": "^6.15.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-    "nuxt": "^4.0.3",
+    "nuxt": "^4.1.0",
     "vue": "latest"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.2.1",
+    "@antfu/eslint-config": "^5.2.2",
     "@bg-dev/nuxt-naiveui": "2.0.0-rc.5",
     "@iconify-json/logos": "^1.2.9",
     "@iconify-json/tabler": "^1.2.22",
-    "@nuxtjs/robots": "^5.5.0",
+    "@nuxtjs/robots": "^5.5.1",
     "@nuxtjs/sitemap": "^7.4.3",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@unocss/nuxt": "^66.4.2",
-    "@vueuse/nuxt": "^13.7.0",
-    "eslint": "^9.33.0",
+    "@unocss/nuxt": "^66.5.0",
+    "@vueuse/nuxt": "^13.9.0",
+    "eslint": "^9.34.0",
     "eslint-plugin-format": "^1.0.1",
-    "prisma": "^6.14.0",
-    "sass": "^1.90.0",
-    "tsx": "^4.20.4",
-    "unocss": "^66.4.2",
+    "prisma": "^6.15.0",
+    "sass": "^1.92.0",
+    "tsx": "^4.20.5",
+    "unocss": "^66.5.0",
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
-    "node": "22.18.0",
-    "pnpm": "10.15.0"
+    "node": "22.19.0",
+    "pnpm": "10.15.1"
   }
 }
