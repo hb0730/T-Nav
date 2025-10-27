@@ -1,4 +1,4 @@
-FROM node:22.20.0-alpine3.21 AS builder
+FROM node:22.21.0-alpine3.21 AS builder
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ COPY . .
 # 生成 Prisma Client 并构建
 RUN pnpm db:generate && pnpm build:prod
 
-FROM node:22.20.0-alpine3.21 AS runner
+FROM node:22.21.0-alpine3.21 AS runner
 
 WORKDIR /app
 
