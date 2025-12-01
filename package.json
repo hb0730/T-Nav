@@ -39,18 +39,18 @@
     "@nuxtjs/sitemap": "^7.4.7",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@unocss/nuxt": "^66.5.4",
+    "@unocss/nuxt": "^66.5.9",
     "@vueuse/nuxt": "^13.9.0",
     "eslint": "^9.39.1",
     "eslint-plugin-format": "^1.0.2",
     "prisma": "^6.19.0",
-    "sass": "^1.93.3",
+    "sass": "^1.94.2",
     "tsx": "^4.20.6",
-    "unocss": "^66.5.4",
+    "unocss": "^66.5.9",
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
     "node": "22.21.1",
-    "pnpm": "10.20.0"
+    "pnpm": "10.24.0"
   }
 }
