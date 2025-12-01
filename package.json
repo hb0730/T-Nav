@@ -40,7 +40,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@unocss/nuxt": "^66.5.9",
-    "@vueuse/nuxt": "^13.9.0",
+    "@vueuse/nuxt": "^14.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-format": "^1.0.2",
     "prisma": "^6.19.0",
