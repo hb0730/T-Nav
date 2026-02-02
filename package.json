@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.3",
     "nuxt": "^4.3.0",
     "vue": "latest"
@@ -37,7 +37,7 @@
     "@iconify-json/tabler": "^1.2.26",
     "@nuxtjs/robots": "^5.7.0",
     "@nuxtjs/sitemap": "^7.6.0",
-    "@types/bcryptjs": "^2.4.6",
+    "@types/bcryptjs": "^3.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@unocss/nuxt": "^66.6.0",
     "@vueuse/nuxt": "^13.9.0",
