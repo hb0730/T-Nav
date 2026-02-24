@@ -1,5 +1,4 @@
-import { useDebounceFn, useLocalStorage } from '@vueuse/core'
-import type { Ref } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 
 export interface SearchResult {
   id: string
@@ -16,7 +15,6 @@ export interface SearchResult {
 }
 
 export interface SearchOptions {
-  debounce?: number
   pageSize?: number
   enableHistory?: boolean
   enableCache?: boolean
@@ -28,7 +26,6 @@ export interface SearchOptions {
  */
 export function useSearch(options: SearchOptions = {}) {
   const {
-    debounce = 300,
     pageSize = 20,
     enableHistory = true,
     enableCache = true,
@@ -43,7 +40,7 @@ export function useSearch(options: SearchOptions = {}) {
   const hasMore = ref(false)
 
   // 搜索历史
-  const history = enableHistory 
+  const history = enableHistory
     ? useLocalStorage<string[]>('search-history', [])
     : ref<string[]>([])
 
@@ -52,6 +49,7 @@ export function useSearch(options: SearchOptions = {}) {
 
   // 执行搜索
   async function search(q: string = query.value, p: number = 1) {
+    console.log(`搜索: "${q}" 第 ${p} 页`)
     if (!q.trim()) {
       results.value = []
       total.value = 0
@@ -65,14 +63,15 @@ export function useSearch(options: SearchOptions = {}) {
       const cached = cache.get(cacheKey)!
       if (p === 1) {
         results.value = cached
-      } else {
+      }
+      else {
         results.value.push(...cached)
       }
       return
     }
 
     isLoading.value = true
-    
+
     try {
       const response = await $fetch<{
         success: boolean
@@ -85,12 +84,12 @@ export function useSearch(options: SearchOptions = {}) {
           }
         }
       }>('/api/search', {
-        query: { q, page: p, pageSize }
+        query: { q, page: p, pageSize },
       })
 
       if (response.success) {
         const { results: newResults, pagination } = response.data
-        
+
         // 缓存结果
         if (cache && newResults.length > 0) {
           cache.set(cacheKey, newResults)
@@ -99,10 +98,11 @@ export function useSearch(options: SearchOptions = {}) {
         // 更新状态
         if (p === 1) {
           results.value = newResults
-        } else {
+        }
+        else {
           results.value.push(...newResults)
         }
-        
+
         total.value = pagination.total
         page.value = p
         hasMore.value = pagination.hasNextPage
@@ -112,46 +112,36 @@ export function useSearch(options: SearchOptions = {}) {
           addToHistory(q)
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('搜索失败:', error)
-    } finally {
+    }
+    finally {
       isLoading.value = false
     }
   }
 
-  // 防抖搜索
-  const debouncedSearch = useDebounceFn(search, debounce)
-
-  // 监听查询变化
-  watchEffect(() => {
-    if (query.value.trim()) {
-      debouncedSearch(query.value, 1)
-    } else {
-      results.value = []
-      total.value = 0
-      hasMore.value = false
-    }
-  })
-
   // 加载更多
   async function loadMore() {
-    if (!hasMore.value || isLoading.value) return
+    if (!hasMore.value || isLoading.value)
+      return
     await search(query.value, page.value + 1)
   }
 
   // 搜索历史管理
   function addToHistory(q: string) {
-    if (!enableHistory || !q.trim()) return
-    
+    if (!enableHistory || !q.trim())
+      return
+
     const trimmed = q.trim()
     const idx = history.value.indexOf(trimmed)
-    
+
     if (idx > -1) {
       history.value.splice(idx, 1)
     }
-    
+
     history.value.unshift(trimmed)
-    
+
     if (history.value.length > 20) {
       history.value.splice(20)
     }
@@ -172,8 +162,9 @@ export function useSearch(options: SearchOptions = {}) {
 
   // 高亮文本
   function highlight(text: string, q: string = query.value): string {
-    if (!text || !q) return text
-    
+    if (!text || !q)
+      return text
+
     const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
     return text.replace(regex, '<mark>$1</mark>')
   }

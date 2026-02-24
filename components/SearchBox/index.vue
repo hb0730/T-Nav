@@ -30,7 +30,6 @@ const {
   clearHistory,
   highlight,
 } = useSearch({
-  debounce: 300,
   pageSize: 20,
   enableHistory: props.enableHistory,
 })
