@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { SearchResult } from '~/composables/useSearch'
+import ToolCardLogo from '~/components/ToolCardLogo'
 import { useSearch } from '~/composables/useSearch'
 
 interface Props {
@@ -199,13 +200,14 @@ defineExpose({
             <div class="flex items-center gap-3">
               <!-- 图标 -->
               <div class="w-5 h-5 flex-shrink-0">
-                <img
+                <!-- <img
                   v-if="result.logo"
                   :src="result.logo"
                   :alt="result.title"
                   class="w-full h-full object-contain"
                 >
-                <i v-else class="i-tabler-link text-gray-400" />
+                <i v-else class="i-tabler-link text-gray-400" /> -->
+                <ToolCardLogo :logo="result.logo" :title="result.title" />
               </div>
 
               <!-- 内容 -->

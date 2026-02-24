@@ -1,5 +1,6 @@
 import DefaultLogo from '~/assets/imgs/site/header-logo.png'
 import TheIcon from '../TheIcon'
+import ToolCardLogo from '../ToolCardLogo'
 import styles from './index.module.scss'
 
 interface MenuItem {
@@ -24,29 +25,8 @@ export default defineComponent({
   setup(props) {
     const model = props.modelValue
 
-    const isDefaultLogo = computed(() => model.logo === null || model.logo === undefined || model.logo === '')
-    const isPathIcon = computed(() => model.logo && (model.logo.startsWith('/') || model.logo.startsWith('http') || model.logo.startsWith('data:image')))
-    const isIcon = computed(() => model.logo && !isPathIcon.value)
     const isDeprecated = computed(() => model.deprecated)
 
-    const logo = computed(() => {
-      if (isIcon.value) {
-        return <TheIcon icon={model.logo} class="w-full h-full text-4xl" />
-      }
-      return (
-        <img
-          height="auto"
-          width="auto"
-          class={isDefaultLogo.value ? styles['default-logo'] : ''}
-          src={model.logo || DefaultLogo}
-          loading="lazy"
-          alt={model.title}
-          data-was-processed="true"
-          data-src={model.logo || DefaultLogo}
-        >
-        </img>
-      )
-    })
     return () => (
       <>
         <nuxt-link id={model.title} to={isDeprecated.value ? '' : model.url} target="_blank" class={[styles['decoration-none'], isDeprecated.value && 'grayscale']}>
@@ -58,7 +38,7 @@ export default defineComponent({
                     <div class={['flex flex-col', styles['card-content']]}>
                       <div class="flex items-start flex-1 overflow-hidden">
                         <div class="w-16 h-16 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                          {logo.value}
+                          <ToolCardLogo logo={model.logo} title={model.title} />
                         </div>
                         <div class="flex-1 flex flex-col ml-4 justify-between min-h-16">
                           <div>

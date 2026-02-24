@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { SearchResult } from '~/composables/useSearch'
+import ToolCardLogo from '~/components/ToolCardLogo'
 import { useCommandPalette } from '~/composables/useCommandPalette'
 import { useGlobalSearchInstance } from '~/composables/useGlobalSearch'
 
@@ -152,7 +153,7 @@ watch(results, () => {
           <div class="flex items-start gap-3">
             <!-- Logo -->
             <div class="w-8 h-8 flex-shrink-0 mt-1">
-              <img
+              <!-- <img
                 v-if="result.logo"
                 :src="result.logo"
                 :alt="result.title"
@@ -160,7 +161,8 @@ watch(results, () => {
               >
               <div v-else class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
                 <i class="i-tabler-link text-gray-400" />
-              </div>
+              </div> -->
+              <ToolCardLogo :logo="result.logo" :title="result.title" />
             </div>
 
             <!-- 内容 -->
