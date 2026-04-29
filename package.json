@@ -35,7 +35,7 @@
     "@bg-dev/nuxt-naiveui": "2.0.0",
     "@iconify-json/logos": "^1.2.11",
     "@iconify-json/tabler": "^1.2.33",
-    "@nuxtjs/robots": "^5.7.1",
+    "@nuxtjs/robots": "^6.0.8",
     "@nuxtjs/sitemap": "^7.6.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
