@@ -27,14 +27,14 @@
     "@prisma/client": "^6.19.3",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.3",
-    "nuxt": "^4.4.4",
+    "nuxt": "^4.4.5",
     "vue": "latest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
     "@bg-dev/nuxt-naiveui": "2.0.0",
     "@iconify-json/logos": "^1.2.11",
-    "@iconify-json/tabler": "^1.2.34",
+    "@iconify-json/tabler": "^1.2.35",
     "@nuxtjs/robots": "^5.7.1",
     "@nuxtjs/sitemap": "^7.6.0",
     "@types/bcryptjs": "^2.4.6",
@@ -45,12 +45,12 @@
     "eslint-plugin-format": "^1.5.0",
     "prisma": "^6.19.3",
     "sass": "^1.99.0",
-    "tsx": "^4.21.0",
+    "tsx": "^4.22.0",
     "unocss": "^66.6.8",
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
-    "node": "22.22.2",
+    "node": "22.22.3",
     "pnpm": "10.33.4"
   }
 }
