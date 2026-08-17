@@ -45,7 +45,7 @@
     "eslint-plugin-format": "^1.5.0",
     "prisma": "^6.19.3",
     "sass": "^1.102.0",
-    "tsx": "^4.23.10",
+    "tsx": "^4.23.12",
     "unocss": "^66.7.5",
     "vite-plugin-remove-console": "^2.2.0"
   },

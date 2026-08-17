@@ -67,7 +67,7 @@ importers:
         specifier: ^1.102.0
         version: 1.102.0
       tsx:
-        specifier: ^4.23.10
+        specifier: ^4.23.12
         version: 4.23.12
       unocss:
         specifier: ^66.7.5
@@ -7894,7 +7894,7 @@ snapshots:
       local-pkg: 1.2.1
       mlly: 1.8.2
       nostics: 1.2.0
-      nypm: 0.6.8
+      nypm: 0.6.9
       vite: 8.2.1(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.102.0)(terser@5.47.1)(tsx@4.23.12)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@modelcontextprotocol/sdk'
