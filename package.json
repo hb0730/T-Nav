@@ -24,7 +24,7 @@
     "icons:safelist": "tsx scripts/generate-icon-safelist.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.3",
+    "@prisma/client": "^7.10.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.3",
     "nuxt": "^4.5.2",
