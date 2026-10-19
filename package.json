@@ -27,30 +27,30 @@
     "@prisma/client": "^6.19.3",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.3",
-    "nuxt": "^4.6.0",
+    "nuxt": "^4.6.1",
     "vue": "latest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
     "@bg-dev/nuxt-naiveui": "2.0.0",
-    "@iconify-json/logos": "^1.2.15",
+    "@iconify-json/logos": "^1.2.16",
     "@iconify-json/tabler": "^1.2.42",
     "@nuxtjs/robots": "^5.7.1",
-    "@nuxtjs/sitemap": "^7.6.0",
+    "@nuxtjs/sitemap": "^7.6.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@unocss/nuxt": "^66.10.5",
+    "@unocss/nuxt": "^66.11.0",
     "@vueuse/nuxt": "^13.9.0",
     "eslint": "^9.39.5",
     "eslint-plugin-format": "^1.5.0",
     "prisma": "^6.19.3",
-    "sass": "^1.105.1",
+    "sass": "^1.105.2",
     "tsx": "^4.23.15",
-    "unocss": "^66.10.5",
+    "unocss": "^66.11.0",
     "vite-plugin-remove-console": "^2.2.0"
   },
   "volta": {
     "node": "22.23.3",
-    "pnpm": "10.34.6"
+    "pnpm": "10.34.7"
   }
 }
